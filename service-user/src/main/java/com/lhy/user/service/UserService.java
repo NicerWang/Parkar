@@ -9,8 +9,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author HangYu Li
- * @since 2021-10-29
+ * @since 2021-10-30
  */
 public interface UserService extends IService<User> {
+    public String login(User user) throws Exception;
 
+    public boolean register(User user);
 }
