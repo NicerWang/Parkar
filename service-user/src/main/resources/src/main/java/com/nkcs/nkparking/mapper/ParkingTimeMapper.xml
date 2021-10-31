@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nkcs.nkparking.mapper.ParkingTimeMapper">
+  <resultMap id="BaseResultMap" type="com.nkcs.nkparking.model.ParkingTime">
+    <id column="time_id" jdbcType="INTEGER" property="timeId" />
+    <result column="space_id" jdbcType="INTEGER" property="spaceId" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    time_id, space_id, start_time, end_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from parking_time
+    where time_id = #{timeId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectBySpaceId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from parking_time
+    where space_id = #{spaceId,jdbcType=INTEGER}
+    order by end_time asc
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from parking_time
+    where time_id = #{timeId,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.nkcs.nkparking.model.ParkingTime">
+    insert into parking_time (time_id, space_id, start_time, 
+      end_time)
+    values (#{timeId,jdbcType=INTEGER}, #{spaceId,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.nkcs.nkparking.model.ParkingTime" useGeneratedKeys="true" keyProperty="timeId">
+    insert into parking_time
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="timeId != null">
+        time_id,
+      </if>
+      <if test="spaceId != null">
+        space_id,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="timeId != null">
+        #{timeId,jdbcType=INTEGER},
+      </if>
+      <if test="spaceId != null">
+        #{spaceId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nkcs.nkparking.model.ParkingTime">
+    update parking_time
+    <set>
+      <if test="spaceId != null">
+        space_id = #{spaceId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where time_id = #{timeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nkcs.nkparking.model.ParkingTime">
+    update parking_time
+    set space_id = #{spaceId,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP}
+    where time_id = #{timeId,jdbcType=INTEGER}
+  </update>
+</mapper>
