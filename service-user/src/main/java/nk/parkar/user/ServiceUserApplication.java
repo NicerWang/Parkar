@@ -1,4 +1,4 @@
-package com.lhy.user;
+package nk.parkar.user;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

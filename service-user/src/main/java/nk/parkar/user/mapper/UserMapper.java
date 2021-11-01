@@ -1,6 +1,6 @@
-package com.lhy.user.mapper;
+package nk.parkar.user.mapper;
 
-import com.lhy.user.entity.User;
+import nk.parkar.user.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

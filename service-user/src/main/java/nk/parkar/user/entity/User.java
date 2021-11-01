@@ -1,4 +1,4 @@
-package com.lhy.user.entity;
+package nk.parkar.user.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;

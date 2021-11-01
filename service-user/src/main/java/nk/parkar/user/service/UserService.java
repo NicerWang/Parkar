@@ -1,6 +1,6 @@
-package com.lhy.user.service;
+package nk.parkar.user.service;
 
-import com.lhy.user.entity.User;
+import nk.parkar.user.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

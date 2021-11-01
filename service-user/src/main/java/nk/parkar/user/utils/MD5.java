@@ -1,4 +1,4 @@
-package com.lhy.user.utils;
+package nk.parkar.user.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

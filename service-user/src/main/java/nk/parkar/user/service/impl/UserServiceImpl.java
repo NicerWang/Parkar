@@ -1,12 +1,12 @@
-package com.lhy.user.service.impl;
+package nk.parkar.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lhy.user.entity.User;
-import com.lhy.user.mapper.UserMapper;
-import com.lhy.user.service.UserService;
+import nk.parkar.user.entity.User;
+import nk.parkar.user.mapper.UserMapper;
+import nk.parkar.user.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lhy.user.utils.JwtUtils;
-import com.lhy.user.utils.MD5;
+import nk.parkar.user.utils.JWTUtil;
+import nk.parkar.user.utils.MD5;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -40,7 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         phoneUser.setLastLoginTime(new Date(System.currentTimeMillis()));
         baseMapper.updateById(phoneUser);
-        return JwtUtils.getJwtToken(phoneUser.getId(), phoneUser.getUsername());
+        return JWTUtil.Sign(phoneUser.getId());
     }
 
     @Override

@@ -1,9 +1,9 @@
-package com.lhy.user.controller;
+package nk.parkar.user.controller;
 
 
-import com.lhy.user.entity.User;
-import com.lhy.user.service.UserService;
-import com.lhy.user.utils.R;
+import nk.parkar.user.entity.User;
+import nk.parkar.user.service.UserService;
+import nk.parkar.user.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

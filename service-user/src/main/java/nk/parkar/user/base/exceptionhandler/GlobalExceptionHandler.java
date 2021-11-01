@@ -1,6 +1,6 @@
-package com.lhy.user.base.exceptionhandler;
+package nk.parkar.user.base.exceptionhandler;
 
-import com.lhy.user.utils.R;
+import nk.parkar.user.utils.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
