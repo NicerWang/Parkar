@@ -1,4 +1,4 @@
-package nk.parkar.user.utils;
+package nk.parkar.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
