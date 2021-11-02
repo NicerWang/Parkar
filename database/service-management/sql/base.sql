@@ -1,3 +1,10 @@
+CREATE TABLE `parking_space` (
+                                 `space_id` int NOT NULL AUTO_INCREMENT,
+                                 `occupied` tinyint NOT NULL DEFAULT '0',
+                                 `mode` int DEFAULT '0',
+                                 `ban` tinyint DEFAULT '0',
+                                 PRIMARY KEY (`space_id`)
+) ;
 CREATE TABLE `parking_time` (
     `time_id` int NOT NULL AUTO_INCREMENT,
     `space_id` int DEFAULT NULL,
@@ -22,10 +29,3 @@ CREATE TABLE `parking_order` (
      CONSTRAINT `space_id` FOREIGN KEY (`space_id`) REFERENCES `parking_space` (`space_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-CREATE TABLE `parking_space` (
-     `space_id` int NOT NULL AUTO_INCREMENT,
-     `occupied` tinyint NOT NULL DEFAULT '0',
-     `mode` int DEFAULT '0',
-     `ban` tinyint DEFAULT '0',
-     PRIMARY KEY (`space_id`)
-) ;
