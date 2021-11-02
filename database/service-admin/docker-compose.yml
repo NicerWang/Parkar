@@ -8,11 +8,16 @@ services:
     volumes:
       - ./conf:/etc/mysql/conf.d
       - ./sql:/docker-entrypoint-initdb.d
+      - ./db:/var/lib/mysql
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=true
-      - MYSQL_DATABASE=admin
+      - MYSQL_DATABASE=parkar
       - MYSQL_USER=user
       - MYSQL_PASSWORD=parkarparkar
+    ports:
+      - "3306:3306"
   admin_service:
     container_name: "admin_service"
     image: nicerwang/parkar-admin:latest
+    ports:
+      - "8080:8080"

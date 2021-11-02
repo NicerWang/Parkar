@@ -38,6 +38,14 @@ jobs:
           file: ./service-user/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+      - name: Copy SQL files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST_USER }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          source: "database/service-user/*"
+          target: "~/Parkar"
       - name: Deploy bash
         uses: fifsky/ssh-action@master
         with:
@@ -78,6 +86,14 @@ jobs:
           file: ./service-admin/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+      - name: Copy SQL files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST_ADMIN }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          source: "database/service-admin/*"
+          target: "~/Parkar"
       - name: Deploy bash
         uses: fifsky/ssh-action@master
         with:
@@ -118,12 +134,20 @@ jobs:
           file: ./service-management/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+      - name: Copy SQL files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST_MANAGEMENT }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          source: "database/service-management/*"
+          target: "~/Parkar"
       - name: Deploy bash
         uses: fifsky/ssh-action@master
         with:
           command: |
             sh start-management.sh
-          host: ${{ secrets.HOST_MANAGENENT }}
+          host: ${{ secrets.HOST_MANAGEMENT }}
           user: ${{ secrets.USER }}
           key: ${{ secrets.PRIVATE_KEY }}
   frontend-user:
