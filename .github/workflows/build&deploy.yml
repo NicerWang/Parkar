@@ -42,10 +42,10 @@ jobs:
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST_USER }}
-          username: ${{ secrets.USERNAME }}
+          username: ${{ secrets.USER }}
           key: ${{ secrets.PRIVATE_KEY }}
-          source: "../database/service-user"
-          target: "~/Parkar/"
+          source: "../database/service-user/*"
+          target: "~/Parkar"
       - name: Deploy bash
         uses: fifsky/ssh-action@master
         with:
@@ -90,10 +90,10 @@ jobs:
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST_ADMIN }}
-          username: ${{ secrets.USERNAME }}
+          username: ${{ secrets.USER }}
           key: ${{ secrets.PRIVATE_KEY }}
-          source: "../database/service-admin/"
-          target: "~/Parkar/"
+          source: "../database/service-admin/*"
+          target: "~/Parkar"
       - name: Deploy bash
         uses: fifsky/ssh-action@master
         with:
@@ -138,10 +138,10 @@ jobs:
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST_MANAGEMENT }}
-          username: ${{ secrets.USERNAME }}
+          username: ${{ secrets.USER }}
           key: ${{ secrets.PRIVATE_KEY }}
-          source: "../database/service-management/"
-          target: "~/Parkar/"
+          source: "../database/service-management/*"
+          target: "~/Parkar"
       - name: Deploy bash
         uses: fifsky/ssh-action@master
         with:
