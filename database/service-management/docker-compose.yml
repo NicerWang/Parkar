@@ -16,3 +16,5 @@ services:
   management_service:
     container_name: "management_service"
     image: nicerwang/parkar-management:latest
+    ports:
+      - "8080:8080"

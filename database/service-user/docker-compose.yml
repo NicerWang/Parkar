@@ -16,3 +16,5 @@ services:
   user_service:
     container_name: "user_service"
     image: nicerwang/parkar-user:latest
+    ports:
+      - "8080:8080"
