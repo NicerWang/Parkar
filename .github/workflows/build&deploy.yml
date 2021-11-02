@@ -44,7 +44,7 @@ jobs:
           host: ${{ secrets.HOST_USER }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.PRIVATE_KEY }}
-          source: "../database/service-user/*"
+          source: "database/service-user/*"
           target: "~/Parkar"
       - name: Deploy bash
         uses: fifsky/ssh-action@master
@@ -92,7 +92,7 @@ jobs:
           host: ${{ secrets.HOST_ADMIN }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.PRIVATE_KEY }}
-          source: "../database/service-admin/*"
+          source: "database/service-admin/*"
           target: "~/Parkar"
       - name: Deploy bash
         uses: fifsky/ssh-action@master
@@ -140,7 +140,7 @@ jobs:
           host: ${{ secrets.HOST_MANAGEMENT }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.PRIVATE_KEY }}
-          source: "../database/service-management/*"
+          source: "database/service-management/*"
           target: "~/Parkar"
       - name: Deploy bash
         uses: fifsky/ssh-action@master
