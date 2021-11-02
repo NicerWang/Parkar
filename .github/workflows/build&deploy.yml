@@ -147,7 +147,7 @@ jobs:
         with:
           command: |
             sh start-management.sh
-          host: ${{ secrets.HOST_MANAGENENT }}
+          host: ${{ secrets.HOST_MANAGEMENT }}
           user: ${{ secrets.USER }}
           key: ${{ secrets.PRIVATE_KEY }}
   frontend-user:
