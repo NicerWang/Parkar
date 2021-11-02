@@ -1,0 +1,18 @@
+version: "3.3"
+services:
+  mysql:
+    container_name: "management_mysql"
+    image: mysql:8.0.26
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./conf:/etc/mysql/conf.d
+      - ./sql:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_DATABASE=admin
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=parkarparkar
+  management_service:
+    container_name: "management_service"
+    image: nicerwang/parkar-management:latest

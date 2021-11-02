@@ -1,10 +1,17 @@
 # Service-Management
 
 
-
-
-
 ### ALL DataBase Manipulations:
+
+```mysql
+CREATE TABLE `parking_space` (
+  `space_id` int NOT NULL AUTO_INCREMENT,
+  `occupied` tinyint NOT NULL DEFAULT '0',
+  `mode` int DEFAULT '0',
+  `ban` tinyint DEFAULT '0',
+  PRIMARY KEY (`space_id`)
+) ;
+```
 
 ```mysql
 CREATE TABLE `parking_time` (
@@ -34,15 +41,7 @@ CREATE TABLE `parking_order` (
 ) ;
 ```
 
-```mysql
-CREATE TABLE `parking_space` (
-  `space_id` int NOT NULL AUTO_INCREMENT,
-  `occupied` tinyint NOT NULL DEFAULT '0',
-  `mode` int DEFAULT '0',
-  `ban` tinyint DEFAULT '0',
-  PRIMARY KEY (`space_id`)
-) ;
-```
+
 
 
 
