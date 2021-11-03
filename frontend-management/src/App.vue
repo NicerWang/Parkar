@@ -2,7 +2,7 @@
   <navbar v-show="$route.fullPath.search('login') === -1"></navbar>
   <loading :status="status" v-show="isLoading" v-bind:align="isLoading"></loading>
   <router-view v-slot="{ Component }" v-show="!isLoading">
-    <transition name="fade" mode="out-in">
+    <transition name="fade" mode="out-in" >
       <component :is="Component"/>
     </transition>
   </router-view>
@@ -49,13 +49,14 @@ export default {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
 }
+
 
 * {
   user-select: none

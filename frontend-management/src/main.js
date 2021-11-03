@@ -6,9 +6,9 @@ import axios from "axios";
 import "bootstrap";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import "animate.css"
-import "echarts-wordcloud"
 
 axios.defaults.baseURL = "/api/";
+// axios.defaults.baseURL = "http://81.70.254.128/"
 // axios.defaults.baseURL = "http://localhost:8080/"
 axios.defaults.withCredentials=true;
 

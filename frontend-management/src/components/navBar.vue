@@ -41,17 +41,10 @@ export default {
       ])
     }
     const logout = ()=>{
+      localStorage.removeItem("token")
       store.dispatch("LogOut");
       store.dispatch("Finished")
       router.push("/login");
-      axios({
-        url:"LogOutServlet",
-        async:true
-      }).then(()=>{
-        store.dispatch("LogOut");
-        store.dispatch("Finished")
-        router.push("/login");
-      })
     }
     return{
       items_before,

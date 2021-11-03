@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin")
-public class AdminController {
+public class LoginController {
     private AdminService adminService;
 
     @Autowired
@@ -21,11 +20,6 @@ public class AdminController {
         if(adminService.login(admin.getName(),admin.getPwd()))
             return JWTUtil.Sign(admin.getName(),true);
         else return "Error";
-    }
-
-    @PostMapping("/check/{token}")
-    public boolean login(@PathVariable("token") String token) throws Exception {
-        return JWTUtil.checkAdmin(token);
     }
 }
 

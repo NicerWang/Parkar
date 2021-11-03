@@ -1,7 +1,7 @@
 <template>
   <div class="form-signin">
     <div class="alert alert-danger" role="alert" v-show="wrong">
-      Wrong Password or Telephone
+      Wrong Password or Name
     </div>
     <form>
       <br>
@@ -9,10 +9,10 @@
       <img class="mb-4" src="../assets/logo.jpg" alt="" width="72" height="72" style="border-radius: 10px">
       <h1 class="h3 mb-3 fw-normal">Sign in to<br>Parkar For Management</h1>
       <div class="form-floating">
-        <input type="tel" :class="telCls" id="floatingInput" placeholder="Telephone" v-model="tel">
-        <label for="floatingInput">Telephone</label>
+        <input type="name" :class="nameCls" id="floatingInput" placeholder="Name" v-model="name">
+        <label for="floatingInput">Name</label>
         <div class="invalid-tooltip">
-          Need exactly 11 numbers.
+          Need at least 4 characters(No special symbol).
         </div>
       </div>
       <div class="form-floating">
@@ -42,13 +42,13 @@ export default {
 
     const store = useStore();
     const router = useRouter();
-    const telPattern = /^[0-9]{11}$/;
+    const namePattern = /^[a-zA-Z0-9]{4,}$/;
     const pwdPattern = /^[a-zA-Z0-9]{8,16}$/;
 
-    let tel = ref("");
+    let name = ref("");
     let pwd = ref("");
     let wrong = ref(false);
-    let telCls = ref({
+    let nameCls = ref({
       'form-control':true,
       'is-invalid':false
     })
@@ -57,49 +57,50 @@ export default {
       'is-invalid':false
     })
 
-    watch([tel,pwd],()=>{
-      if(tel.value !== "") telCls.value['is-invalid'] = !telPattern.test(tel.value);
+    watch([name,pwd],()=>{
+      if(name.value !== "") nameCls.value['is-invalid'] = !namePattern.test(name.value);
       if(pwd.value !== "") pwdCls.value['is-invalid'] = !pwdPattern.test(pwd.value);
     })
 
-
     const sendRequest = () => {
-      store.dispatch("SignIn");
-      router.push("/index");
-      store.dispatch("Finished");
-      // axios({
-      //   method: "POST",
-      //   url: "LogInServlet",
-      //   params: {
-      //     tel: tel.value,
-      //     pwd: pwd.value,
-      //   }
-      // }).then((res) => {
-      //   if (res.data[0]) {
-      //     store.dispatch("SignIn");
-      //     router.push("/index");
-      //   } else {
-      //     pwd.value = "";
-      //     wrong.value = true;
-      //   }
-      //   store.dispatch("Finished");
-      // });
+      axios({
+        method: "POST",
+        url: "admin/login",
+        data: {
+          name: name.value,
+          pwd: pwd.value,
+        }
+      }).then((res) => {
+        if (res.data === "Error") {
+          pwd.value = "";
+          wrong.value = true;
+        } else {
+          localStorage.setItem("token",res.data)
+          store.dispatch("SignIn");
+          router.push("/index");
+        }
+        store.dispatch("Finished");
+      });
+
     }
 
     const signIn = () => {
       store.dispatch("Load")
-      if (!telPattern.test(tel.value) || !pwdPattern.test(pwd.value)) {
+      if (!namePattern.test(name.value) || !pwdPattern.test(pwd.value)) {
         store.dispatch("Finished")
       }
-      else sendRequest();
+      else setTimeout(function () {
+        sendRequest();
+      },500)
+
     }
     store.dispatch("Finished");
 
     return {
-      tel,
+      name,
       pwd,
       wrong,
-      telCls,
+      nameCls,
       pwdCls,
       signIn
     }
@@ -124,7 +125,7 @@ export default {
   z-index: 2;
 }
 
-.form-signin input[type="tel"] {
+.form-signin input[type="name"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
