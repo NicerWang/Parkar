@@ -24,7 +24,7 @@ public class SwaggerConfig {
                 .groupName("webApi")
                 .apiInfo(webApiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.lhy.user.controller"))
+                .apis(RequestHandlerSelectors.basePackage("nk.parkar.user.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
