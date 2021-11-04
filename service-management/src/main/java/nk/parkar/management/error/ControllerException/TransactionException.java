@@ -5,7 +5,7 @@ import java.util.List;
 
 public class TransactionException extends RuntimeException{
     private String processName;
-    private List<String> description;
+    private final List<String> description;
 
     public TransactionException(String processName) {
         this.processName = processName;
@@ -26,9 +26,5 @@ public class TransactionException extends RuntimeException{
 
     public List<String> getDescription() {
         return description;
-    }
-
-    public void setDescription(List<String> description) {
-        this.description = description;
     }
 }

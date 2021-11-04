@@ -36,8 +36,8 @@ public class SwaggerConfiguration {
                 .apis(RequestHandlerSelectors.basePackage("nk.parkar.management.controller"))
                 .paths(PathSelectors.any())
                 .build();
-
     }
+
 
     private ApiInfo apiInfo(){
         return new ApiInfoBuilder()

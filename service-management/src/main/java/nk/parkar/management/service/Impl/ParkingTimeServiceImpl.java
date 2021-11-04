@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class ParkingTimeServiceImpl implements ParkingTimeService {
 
-    @Autowired
+    @Autowired(required = false)
     private ParkingTimeMapper parkingTimeMapper;
 
     @Override

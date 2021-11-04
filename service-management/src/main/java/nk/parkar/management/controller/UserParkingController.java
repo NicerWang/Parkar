@@ -1,10 +1,12 @@
 package nk.parkar.management.controller;
 
 import nk.parkar.management.error.ControllerException.IllegalArgumentException;
+import nk.parkar.management.model.ParkingOrder;
 import nk.parkar.management.model.ParkingTime;
 import nk.parkar.management.service.ParkingOrderService;
 import nk.parkar.management.service.ParkingSpaceService;
 import nk.parkar.management.service.ParkingTimeService;
+import nk.parkar.management.util.JWTUtil;
 import nk.parkar.management.util.entity.UnavailableTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +18,23 @@ import java.util.regex.Pattern;
 @RestController
 public class UserParkingController {
 
-    @Autowired
     private ParkingTimeService parkingTimeService;
-    @Autowired
     private ParkingSpaceService parkingSpaceService;
-    @Autowired
     private ParkingOrderService parkingOrderService;
+
+
+    @Autowired
+    public void setParkingTimeService(ParkingTimeService parkingTimeService) {
+        this.parkingTimeService = parkingTimeService;
+    }
+    @Autowired
+    public void setParkingSpaceService(ParkingSpaceService parkingSpaceService) {
+        this.parkingSpaceService = parkingSpaceService;
+    }
+    @Autowired
+    public void setParkingOrderService(ParkingOrderService parkingOrderService) {
+        this.parkingOrderService = parkingOrderService;
+    }
 
     /**
      * 查询指定时间段的可用车位id
@@ -32,12 +45,21 @@ public class UserParkingController {
      *      endTime:Long
      *      }
     */
-    @GetMapping("/user/order/{mode}/space/{startTime}/{endTime}")
+    @GetMapping("/order/{mode}/space/{startTime}/{endTime}")
     public Object getSpaceByAvailableTime(@PathVariable("mode") String mode,
                                           @PathVariable("startTime") String startTimeStr,
-                                          @PathVariable("endTime") String endTimeStr){
+                                          @PathVariable("endTime") String endTimeStr,
+                                          @RequestHeader("token") String token){
 
-        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/user/order/{mode}/space/{startTime}/{endTime}");
+
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/order/{mode}/space/{startTime}/{endTime}");
+
+        if(JWTUtil.check(token)==null){
+            illegalArgumentException.addDescription("invalid token: "+token);
+            illegalArgumentException.addArgumentInfo("token");
+            throw illegalArgumentException;
+        }
+
         //判断mode是否合法
         checkMode(illegalArgumentException,mode);
         //判断startTime endTime是否形式合法
@@ -74,11 +96,18 @@ public class UserParkingController {
      *     unavailableTimeList:[UnavailableTime...]
      * }
      * */
-    @GetMapping("/user/order/{mode}/time/{spaceId}")
+    @GetMapping("/order/{mode}/time/{spaceId}")
     public Object getUnavailableTimeBySpaceId(@PathVariable("spaceId") String spaceIdStr,
-                                              @PathVariable("mode") String mode){
+                                              @PathVariable("mode") String mode,
+                                              @RequestHeader("token") String token){
 
-        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/user/order/{mode}/time/{spaceId}");
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/order/{mode}/time/{spaceId}");
+
+        if(JWTUtil.check(token)==null){
+            illegalArgumentException.addDescription("invalid token: "+token);
+            illegalArgumentException.addArgumentInfo("token");
+            throw illegalArgumentException;
+        }
 
         //判断mode是否合法
         checkMode(illegalArgumentException,mode);
@@ -101,7 +130,7 @@ public class UserParkingController {
         List<ParkingTime> parkingTimeList = parkingTimeService.queryTimeBySpaceId(spaceId);
         List<ParkingTime> middleTimeList = new ArrayList<>();
         //获取当前时间
-        Long currentTime = new Date().getTime();
+        long currentTime = new Date().getTime();
         //对不可用时段进行初步筛选
         for(ParkingTime parkingTime:parkingTimeList){
             if (parkingTime.getEndTime().getTime()>currentTime){
@@ -120,19 +149,21 @@ public class UserParkingController {
             retMap.put("mode",mode);
             List<UnavailableTime> unavailableTimeList = new ArrayList<>();
             String pattern = "yyyy--MM-dd HH:mm:ss";
-            Long minDis = 0l;
+            Long minDis = 0L;
             //根据租赁模式设置最小可用间隔 及 返回的时间格式
-            if(mode.equals("year")){
-                pattern="yyyy-MM-dd";
-                minDis = Long.parseLong("31536000000");
-            }
-            else if(mode.equals("month")){
-                pattern="yyyy-MM-dd";
-                minDis = Long.parseLong("2592000000");
-            }
-            else if(mode.equals("day")){
-                pattern="yyyy-MM-dd HH:mm";
-                minDis = Long.parseLong("3600000");
+            switch (mode) {
+                case "year":
+                    pattern = "yyyy-MM-dd";
+                    minDis = Long.parseLong("31536000000");
+                    break;
+                case "month":
+                    pattern = "yyyy-MM-dd";
+                    minDis = Long.parseLong("2592000000");
+                    break;
+                case "day":
+                    pattern = "yyyy-MM-dd HH:mm";
+                    minDis = Long.parseLong("3600000");
+                    break;
             }
 
             //筛选不可用时间
@@ -175,18 +206,29 @@ public class UserParkingController {
      *     newOrder:ParkingOrder
      * }
      * */
-    @PostMapping("/user/order/{mode}/{userId}/{spaceId}/{startTime}/{endTime}")
+    @PostMapping("/order/{mode}/{userId}/{spaceId}/{startTime}/{endTime}")
     public Object addOrderFromUser(@PathVariable("mode") String mode,
-                                   @PathVariable("userId") String userIdStr,
+                                   @PathVariable("userId") String userId,
                                    @PathVariable("spaceId") String spaceIdStr,
                                    @PathVariable("startTime") String startTimeStr,
-                                   @PathVariable("endTime") String endTimeStr){
+                                   @PathVariable("endTime") String endTimeStr,
+                                   @RequestHeader("token") String token){
 
-        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/user/order/{mode}/{spaceId}/{startTime}/{endTime}");
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/order/{mode}/{spaceId}/{startTime}/{endTime}");
+
+        if(JWTUtil.check(token)==null){
+            illegalArgumentException.addDescription("invalid token: "+token);
+            illegalArgumentException.addArgumentInfo("token");
+            throw illegalArgumentException;
+        }
+
         //判断mode是否合法
         checkMode(illegalArgumentException,mode);
         //判断userId形式是否合法
-        checkUserIdFormat(illegalArgumentException,userIdStr);
+        if(!checkUserId(userId)){
+            illegalArgumentException.addDescription("illegal userId");
+            illegalArgumentException.addArgumentInfo("userId");
+        }
         //判断spaceId形式是否合法
         checkSpaceIdFormat(illegalArgumentException,spaceIdStr);
         //判断time形式是否合法
@@ -200,7 +242,7 @@ public class UserParkingController {
         checkSpaceIdValue(illegalArgumentException,spaceId);
 
         //判断time数值是否合法
-        Long currentTime = new Date().getTime();
+        long currentTime = new Date().getTime();
         Long startTime = startTimeStr.length()==13?Long.parseLong(startTimeStr.substring(0,10)):Long.parseLong(startTimeStr);
         Long endTime = endTimeStr.length()==13?Long.parseLong(endTimeStr.substring(0,10)):Long.parseLong(endTimeStr);
         if(startTime.compareTo(endTime)>=0||startTime.compareTo(currentTime/1000)<0){
@@ -210,59 +252,71 @@ public class UserParkingController {
         if(!illegalArgumentException.getArgumentInfoList().isEmpty()){
             throw illegalArgumentException;
         }
-        Integer userId = Integer.parseInt(userIdStr);
         return parkingOrderService.insertOrderFromUser(userId, spaceId, mode, startTime, endTime);
     }
 
 
-    private boolean checkMode(IllegalArgumentException illegalArgumentException,String mode){
+    /**
+    * 查询用户所有预约
+     *
+     * retMap{
+     *     orderList:[ParkingOrder...]
+     * }
+    * */
+    @GetMapping("/order/{userId}")
+    public Object getOrderListByUserId(@PathVariable("userId") String userId,@RequestHeader("token") String token){
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/order/{userId}");
+
+        if(JWTUtil.check(token)==null){
+            illegalArgumentException.addDescription("invalid token: "+token);
+            illegalArgumentException.addArgumentInfo("token");
+            throw illegalArgumentException;
+        }
+
+        if(checkUserId(userId)){
+            List<ParkingOrder> parkingOrderList = parkingOrderService.queryByUserId(userId);
+            Map<String ,Object> retMap = new HashMap<>();
+            retMap.put("orderList",parkingOrderList);
+            return retMap;
+        }
+        else{
+            illegalArgumentException.addArgumentInfo("userId");
+            illegalArgumentException.addDescription("illegal userId: "+userId);
+            throw illegalArgumentException;
+        }
+    }
+
+    private void checkMode(IllegalArgumentException illegalArgumentException, String mode){
         if(!mode.equals("day")&&!mode.equals("month")&&!mode.equals("year")){
             illegalArgumentException.addDescription("illegal mode:"+mode);
             illegalArgumentException.addArgumentInfo("mode");
-            return false;
         }
-        return true;
     }
 
-
-    private boolean checkTimeFormat(IllegalArgumentException illegalArgumentException,String startTimeStr,String endTimeStr){
+    private void checkTimeFormat(IllegalArgumentException illegalArgumentException, String startTimeStr, String endTimeStr){
         String pattern = "^\\d{10}|\\d{13}$";
-        boolean result = true;
         if(!Pattern.matches(pattern,startTimeStr)){
             illegalArgumentException.addDescription("illegal startTime:"+startTimeStr+" ==> startTime is not a unix_timestamp");
             illegalArgumentException.addArgumentInfo("startTime");
-            result=false;
         }
         if(!Pattern.matches(pattern,endTimeStr)){
             illegalArgumentException.addDescription("illegal endTime:"+endTimeStr+"  ==> endTime is not a unix_timestamp");
             illegalArgumentException.addArgumentInfo("endTime");
-            result=false;
         }
-        return result;
     }
 
-
-    private boolean checkSpaceIdFormat(IllegalArgumentException illegalArgumentException,String spaceIdStr){
+    private void checkSpaceIdFormat(IllegalArgumentException illegalArgumentException, String spaceIdStr){
         String pattern = "^\\d+$";
         if(!Pattern.matches(pattern,spaceIdStr)){
             illegalArgumentException.addDescription("illegal spaceId:"+spaceIdStr);
             illegalArgumentException.addArgumentInfo("spaceId");
-            return false;
         }
-        return true;
     }
 
+    private boolean checkUserId(String userId) {
 
-    private boolean checkUserIdFormat(IllegalArgumentException illegalArgumentException, String userIdStr) {
-        String pattern = "^\\d+$";
-        if(!Pattern.matches(pattern,userIdStr)){
-            illegalArgumentException.addDescription("illegal userId:"+userIdStr);
-            illegalArgumentException.addArgumentInfo("userId");
-            return false;
-        }
         return true;
     }
-
 
     private boolean checkSpaceIdValue(IllegalArgumentException illegalArgumentException,Integer spaceId){
         if (parkingSpaceService.querySpaceById(spaceId)==null){
