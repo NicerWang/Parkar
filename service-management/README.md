@@ -50,3 +50,8 @@ CREATE TABLE `parking_order` (
 run and visit:
 
 /swagger-ui.html
+
+特殊情况：
+管理员更改车位信息时(put:administrator/parking/space/{spaceId}),除车位Id以外的参数以传统方式进行添加
+如 ../administrator/parking/space/{spaceId}?ban=1
+   ../administrator/parking/space/{spaceId}?occupied=1&mode=2
