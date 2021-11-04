@@ -44,7 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public boolean register(User user) throws Exception {
+    public void register(User user) throws Exception {
         User newUser = new User();
         String username = user.getUsername();
         String password = user.getPassword();
@@ -70,6 +70,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         newUser.setBalance(0);
         newUser.setIsDisabled(0);
         baseMapper.insert(newUser);
-        return true;
     }
 }

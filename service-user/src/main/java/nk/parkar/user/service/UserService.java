@@ -14,5 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface UserService extends IService<User> {
     public String login(User user) throws Exception;
 
-    public boolean register(User user) throws Exception;
+    public void register(User user) throws Exception;
 }
