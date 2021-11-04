@@ -1,15 +1,13 @@
 package nk.parkar.management.error.ControllerException;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class IllegalArgumentException extends RuntimeException{
-    private List<String> argumentInfoList;
-    private String requestPath;
-    private List<String> description;
+    private final List<String> argumentInfoList;
+    private final String requestPath;
+    private final List<String> description;
 
 
     public IllegalArgumentException(String requestPath) {
@@ -19,9 +17,7 @@ public class IllegalArgumentException extends RuntimeException{
     }
 
     public void addArgumentInfo(String...args){
-        for(String arg:args){
-            argumentInfoList.add(arg);
-        }
+        Collections.addAll(argumentInfoList, args);
     }
 
     public void addDescription(String newContent){

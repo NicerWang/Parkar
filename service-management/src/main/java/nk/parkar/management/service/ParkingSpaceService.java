@@ -8,4 +8,6 @@ public interface ParkingSpaceService {
     ParkingSpace querySpaceById(Integer spaceId);
 
     List<Integer> querySpaceByTime(Long startTime, Long endTime);
+
+    ParkingSpace updateSelective(ParkingSpace parkingSpace);
 }

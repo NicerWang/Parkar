@@ -19,14 +19,14 @@ import java.util.Map;
 @Service
 public class ParkingOrderServiceImpl implements ParkingOrderService {
 
-    @Autowired
+    @Autowired(required = false)
     ParkingOrderMapper parkingOrderMapper;
-    @Autowired
+    @Autowired(required = false)
     ParkingTimeMapper parkingTimeMapper;
 
     @Override
     @Transactional
-    public Map<String,Object> insertOrderFromUser(Integer userId, Integer spaceId, String mode, Long startTime, Long endTime) {
+    public Map<String,Object> insertOrderFromUser(String userId, Integer spaceId, String mode, Long startTime, Long endTime) {
 
         TransactionException transactionException = new TransactionException("insertOrderFromUser");
         List<ParkingTime> parkingTimeList = parkingTimeMapper.selectBySpaceId(spaceId);
@@ -44,23 +44,25 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
             }
         }
         BigDecimal unitPrice = new BigDecimal("0");
-        Integer modeCode = 0;
+        int modeCode = 0;
         BigDecimal totalPrice;
-        Long tempTimeUnits = 0l;
-        Long dis = endTime-startTime;
-        if(mode.equals("day")){
-            unitPrice =new BigDecimal("4.0");
-            tempTimeUnits = dis-3600*(dis/3600)>60?dis/3600+1:dis/3600;
-        }
-        else if(mode.equals("month")){
-            unitPrice =new BigDecimal("1.5");
-            modeCode=1;
-            tempTimeUnits=dis/3600;
-        }
-        else if(mode.equals("year")){
-            unitPrice =new BigDecimal("1.2");
-            modeCode = 2;
-            tempTimeUnits=dis/3600;
+        long tempTimeUnits = 0L;
+        long dis = endTime-startTime;
+        switch (mode) {
+            case "day":
+                unitPrice = new BigDecimal("4.0");
+                tempTimeUnits = dis - 3600 * (dis / 3600) > 60 ? dis / 3600 + 1 : dis / 3600;
+                break;
+            case "month":
+                unitPrice = new BigDecimal("1.5");
+                modeCode = 1;
+                tempTimeUnits = dis / 3600;
+                break;
+            case "year":
+                unitPrice = new BigDecimal("1.2");
+                modeCode = 2;
+                tempTimeUnits = dis / 3600;
+                break;
         }
         BigDecimal timeUnits = new BigDecimal(tempTimeUnits);
         totalPrice = timeUnits.multiply(unitPrice);
@@ -91,5 +93,20 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
         retMap.put("newTime",newTime);
         retMap.put("newOrder",newOrder);
         return retMap;
+    }
+
+    @Override
+    public List<ParkingOrder> queryByUserId(String userId) {
+        return parkingOrderMapper.selectByUserId(userId);
+    }
+
+    @Override
+    public List<ParkingOrder> queryAll() {
+        return parkingOrderMapper.selectAll();
+    }
+
+    @Override
+    public List<ParkingOrder> queryByPaidStat(Byte paid) {
+        return parkingOrderMapper.selectByPaidStat(paid);
     }
 }
