@@ -63,8 +63,8 @@ public class R {
     }
 
     private static class ResultCode{
-        public final static Integer SUCCESS = 20000;
+        public final static Integer SUCCESS = 200;
 
-        public final static Integer ERROR = 20001;
+        public final static Integer ERROR = 403;
     }
 }
