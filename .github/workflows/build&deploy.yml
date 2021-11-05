@@ -9,9 +9,11 @@ jobs:
   service-user:
     runs-on: ubuntu-latest
     steps:
-      - name: Get version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Docker - Fetch metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: nicerwang/parkar-user
       - uses: actions/checkout@v2
       - name: JAVA - Set up JDK
         uses: actions/setup-java@v2
@@ -20,17 +22,22 @@ jobs:
           distribution: 'adopt'
       - name: Maven - Build
         run: cd service-user && mvn package -Dmaven.test.skip=true
-      - name: Login to ACR
-        uses: aliyun/acr-login@v1
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
         with:
-          login-server: https://registry.cn-hangzhou.aliyuncs.com
-          username: "${{ secrets.ACR_USER }}"
-          password: "${{ secrets.ACR_KEY }}"
-      - name: Build and push image
-        run: |
-          cd service-user
-          docker build -t registry.cn-hangzhou.aliyuncs.com/parkar/user:${{ steps.get_version.outputs.VERSION }} .
-          docker push registry.cn-hangzhou.aliyuncs.com/parkar/user:${{ steps.get_version.outputs.VERSION }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Docker - Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Docker - Push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service-user/
+          file: ./service-user/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
       - name: Copy SQL files
         uses: appleboy/scp-action@master
         with:
@@ -50,9 +57,11 @@ jobs:
   service-admin:
     runs-on: ubuntu-latest
     steps:
-      - name: Get version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Docker - Fetch metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: nicerwang/parkar-admin
       - uses: actions/checkout@v2
       - name: JAVA - Set up JDK
         uses: actions/setup-java@v2
@@ -61,17 +70,22 @@ jobs:
           distribution: 'adopt'
       - name: Maven - Build
         run: cd service-admin && mvn package -Dmaven.test.skip=true
-      - name: Login to ACR
-        uses: aliyun/acr-login@v1
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
         with:
-          login-server: https://registry.cn-hangzhou.aliyuncs.com
-          username: "${{ secrets.ACR_USER }}"
-          password: "${{ secrets.ACR_KEY }}"
-      - name: Build and push image
-        run: |
-          cd service-admin
-          docker build -t registry.cn-hangzhou.aliyuncs.com/parkar/admin:${{ steps.get_version.outputs.VERSION }} .
-          docker push registry.cn-hangzhou.aliyuncs.com/parkar/admin:${{ steps.get_version.outputs.VERSION }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Docker - Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Docker - Push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service-admin/
+          file: ./service-admin/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
       - name: Copy SQL files
         uses: appleboy/scp-action@master
         with:
@@ -91,9 +105,11 @@ jobs:
   service-management:
     runs-on: ubuntu-latest
     steps:
-      - name: Get version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Docker - Fetch metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: nicerwang/parkar-management
       - uses: actions/checkout@v2
       - name: JAVA - Set up JDK
         uses: actions/setup-java@v2
@@ -102,17 +118,22 @@ jobs:
           distribution: 'adopt'
       - name: Maven - Build
         run: cd service-management && mvn package -Dmaven.test.skip=true
-      - name: Login to ACR
-        uses: aliyun/acr-login@v1
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
         with:
-          login-server: https://registry.cn-hangzhou.aliyuncs.com
-          username: "${{ secrets.ACR_USER }}"
-          password: "${{ secrets.ACR_KEY }}"
-      - name: Build and push image
-        run: |
-          cd service-management
-          docker build -t registry.cn-hangzhou.aliyuncs.com/parkar/management:${{ steps.get_version.outputs.VERSION }} .
-          docker push registry.cn-hangzhou.aliyuncs.com/parkar/management:${{ steps.get_version.outputs.VERSION }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Docker - Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Docker - Push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./service-management/
+          file: ./service-management/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
       - name: Copy SQL files
         uses: appleboy/scp-action@master
         with:
@@ -132,25 +153,32 @@ jobs:
   frontend-user:
     runs-on: ubuntu-latest
     steps:
-      - name: Get version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Docker - Fetch metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: nicerwang/parkar-frontend-user
       - uses: actions/checkout@v2
       - name: Node.js - Set up
         uses: actions/setup-node@v2.4.1
       - name: NPM - Build
         run: cd frontend-user && npm install --registry=https://registry.npm.taobao.org && npm run build
-      - name: Login to ACR
-        uses: aliyun/acr-login@v1
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
         with:
-          login-server: https://registry.cn-hangzhou.aliyuncs.com
-          username: "${{ secrets.ACR_USER }}"
-          password: "${{ secrets.ACR_KEY }}"
-      - name: Build and push image
-        run: |
-          cd frontend-user
-          docker build -t registry.cn-hangzhou.aliyuncs.com/parkar/frontend-user:${{ steps.get_version.outputs.VERSION }} .
-          docker push registry.cn-hangzhou.aliyuncs.com/parkar/frontend-user:${{ steps.get_version.outputs.VERSION }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Docker - Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Docker - Push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./frontend-user/
+          file: ./frontend-user/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
       - name: Deploy bash
         uses: fifsky/ssh-action@master
         with:
@@ -162,25 +190,32 @@ jobs:
   frontend-management:
     runs-on: ubuntu-latest
     steps:
-      - name: Get version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Docker - Fetch metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: nicerwang/parkar-frontend-management
       - uses: actions/checkout@v2
       - name: Node.js - Set up
         uses: actions/setup-node@v2.4.1
       - name: NPM - Build
-        run: cd frontend-management && npm install --registry=https://registry.npm.taobao.org && npm run build
-      - name: Login to ACR
-        uses: aliyun/acr-login@v1
+        run: cd frontend-management &&  npm install --registry=https://registry.npm.taobao.org && npm run build
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
         with:
-          login-server: https://registry.cn-hangzhou.aliyuncs.com
-          username: "${{ secrets.ACR_USER }}"
-          password: "${{ secrets.ACR_KEY }}"
-      - name: Build and push image
-        run: |
-          cd frontend-management
-          docker build -t registry.cn-hangzhou.aliyuncs.com/parkar/frontend-management:${{ steps.get_version.outputs.VERSION }} .
-          docker push registry.cn-hangzhou.aliyuncs.com/parkar/frontend-management:${{ steps.get_version.outputs.VERSION }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Docker - Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Docker - Push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./frontend-management/
+          file: ./frontend-management/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
       - name: Deploy bash
         uses: fifsky/ssh-action@master
         with:
