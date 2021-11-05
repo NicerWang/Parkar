@@ -7,6 +7,8 @@ import java.util.List;
 public interface ParkingTimeMapper {
     int deleteByPrimaryKey(Integer timeId);
 
+    int deleteByNoPrimaryKey(ParkingTime record);
+
     int insert(ParkingTime record);
 
     int insertSelective(ParkingTime record);

@@ -286,6 +286,37 @@ public class UserParkingController {
         }
     }
 
+
+    @PutMapping("/order/cancel/{orderId}")
+    public Map<String,Object> cancelOrder(@PathVariable("orderId")Integer orderId,@RequestHeader("token") String token){
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/order/cancel/{orderId}");
+
+        if(JWTUtil.check(token)==null){
+            illegalArgumentException.addDescription("invalid token: "+token);
+            illegalArgumentException.addArgumentInfo("token");
+            throw illegalArgumentException;
+        }
+        ParkingOrder parkingOrder = parkingOrderService.queryByOrderId(orderId);
+        if(parkingOrder==null){
+            illegalArgumentException.addDescription("no such order in table parking_order by orderId: "+orderId);
+            illegalArgumentException.addArgumentInfo("orderId");
+            throw illegalArgumentException;
+        }
+        if((parkingOrder.getStartTime().getTime()-(new Date().getTime())<1800)){
+            illegalArgumentException.addArgumentInfo("orderId");
+            illegalArgumentException.addDescription("orders can only be cancelled 30 minutes prior to the effective time");
+            throw illegalArgumentException;
+        }
+        ParkingTime parkingTime = new ParkingTime();
+        parkingTime.setSpaceId(parkingOrder.getSpaceId());
+        parkingTime.setStartTime(parkingOrder.getStartTime());
+        parkingTime.setEndTime(parkingOrder.getEndTime());
+        parkingOrderService.cancelOrder(orderId,parkingTime);
+        Map<String,Object> retMap = new HashMap<>();
+        retMap.put("cancelOrder",parkingOrder);
+        return retMap;
+    }
+
     private void checkMode(IllegalArgumentException illegalArgumentException, String mode){
         if(!mode.equals("day")&&!mode.equals("month")&&!mode.equals("year")){
             illegalArgumentException.addDescription("illegal mode:"+mode);

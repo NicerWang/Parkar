@@ -30,6 +30,14 @@
     where time_id = #{timeId,jdbcType=INTEGER}
   </delete>
 
+  <delete id="deleteByNoPrimaryKey" parameterType="nk.parkar.management.model.ParkingTime">
+    delete from parking_time
+    where
+          space_id=#{spaceId,jdbcType=INTEGER} and
+          start_time=#{startTime,jdbcType=TIMESTAMP} and
+          end_time=#{endTime,jdbcType=TIMESTAMP}
+  </delete>
+
   <insert id="insert" parameterType="nk.parkar.management.model.ParkingTime">
     insert into parking_time (time_id, space_id, start_time, 
       end_time)

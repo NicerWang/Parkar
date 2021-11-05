@@ -2,6 +2,7 @@ package nk.parkar.management.service;
 
 
 import nk.parkar.management.model.ParkingOrder;
+import nk.parkar.management.model.ParkingTime;
 
 import java.util.List;
 import java.util.Map;
@@ -14,4 +15,8 @@ public interface ParkingOrderService {
     List<ParkingOrder> queryAll();
 
     List<ParkingOrder> queryByPaidStat(Byte paid);
+
+    ParkingOrder queryByOrderId(Integer orderId);
+
+    void cancelOrder(Integer orderId, ParkingTime parkingTime);
 }

@@ -22,7 +22,6 @@ public class AdminParkingController {
     private ParkingSpaceService parkingSpaceService;
     private ParkingTimeService parkingTimeService;
     private ParkingOrderService parkingOrderService;
-    private JWTUtil jwtUtil=new JWTUtil();
 
 
     @Autowired
@@ -199,7 +198,7 @@ public class AdminParkingController {
             parkingSpace.setMode(modeCode);
         }
         if(ban!=null){
-            Byte isBan=null;
+            Byte isBan;
             if(ban.equals("0")){
                 isBan=Byte.parseByte("0");
             }
@@ -220,11 +219,11 @@ public class AdminParkingController {
     }
 
 
+
+
+
     private boolean checkPaidFormat(String paidStr){
-        if(paidStr.equals("0")||paidStr.equals("1"))
-            return true;
-        else
-            return false;
+        return paidStr.equals("0") || paidStr.equals("1");
     }
 
     private boolean checkUserId(String userIdStr) {
