@@ -1,5 +1,7 @@
 package nk.parkar.user.base.exceptionhandler;
 
+import nk.parkar.user.base.exceptionhandler.exception.TokenNotExitException;
+import nk.parkar.user.base.exceptionhandler.exception.UserNotExitException;
 import nk.parkar.user.utils.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,5 +22,19 @@ public class GlobalExceptionHandler {
     public R error(Exception e){
         e.printStackTrace();
         return R.error().message(e.getMessage());
+    }
+
+    @ExceptionHandler(TokenNotExitException.class)
+    @ResponseBody
+    public R error(TokenNotExitException e){
+        e.printStackTrace();
+        return R.error().message("Token not exit!");
+    }
+
+    @ExceptionHandler(UserNotExitException.class)
+    @ResponseBody
+    public R error(UserNotExitException e){
+        e.printStackTrace();
+        return R.error().message("User not exit!");
     }
 }
