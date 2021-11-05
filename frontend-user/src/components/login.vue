@@ -64,26 +64,25 @@ export default {
 
 
     const sendRequest = () => {
-      store.dispatch("SignIn");
-      router.push("/index");
-      store.dispatch("Finished");
-      // axios({
-      //   method: "POST",
-      //   url: "LogInServlet",
-      //   params: {
-      //     tel: tel.value,
-      //     pwd: pwd.value,
-      //   }
-      // }).then((res) => {
-      //   if (res.data[0]) {
-      //     store.dispatch("SignIn");
-      //     router.push("/index");
-      //   } else {
-      //     pwd.value = "";
-      //     wrong.value = true;
-      //   }
-      //   store.dispatch("Finished");
-      // });
+      axios({
+        method: "POST",
+        url: "/user/login",
+        data: {
+          phone: tel.value,
+          password: pwd.value,
+        }
+      }).then((res) => {
+        console.log(res);
+        if (res.data["success"] === false) {
+          pwd.value = "";
+          wrong.value = true;
+        } else {
+          localStorage.setItem("token",res.data.data.token);
+          store.dispatch("SignIn");
+          router.push("/index");
+        }
+        store.dispatch("Finished");
+      });
     }
 
     const signIn = () => {
@@ -91,7 +90,9 @@ export default {
       if (!telPattern.test(tel.value) || !pwdPattern.test(pwd.value)) {
         store.dispatch("Finished")
       }
-      else sendRequest();
+      else setTimeout(()=>{
+        sendRequest();
+      },300);
     }
     store.dispatch("Finished");
 

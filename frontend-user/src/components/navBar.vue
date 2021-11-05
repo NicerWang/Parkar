@@ -3,7 +3,7 @@
       <a href="/" class="d-flex align-items-center mb-0  me-auto text-dark text-decoration-none">
         &nbsp;&nbsp;&nbsp;
         <img src="../assets/logo.jpg" alt="" width="40" height="40" style="border-radius: 5px">
-        <span class="fs-4">&nbsp;Parker For User</span>
+        <span class="fs-4">&nbsp;Parkar For User</span>
       </a>
       <ul class="nav nav-pills">
         <li class="nav-item" v-for="(item,idx) in items_before"><router-link :to="item.to" :class="item.cls">{{ item.msg }}</router-link></li>

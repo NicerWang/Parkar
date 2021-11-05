@@ -79,27 +79,33 @@ export default {
     })
 
     const reg = ()=>{
-      store.dispatch("Load")
+      store.dispatch("Load");
       if(!namePattern.test(name.value) || !telPattern.test(tel.value) || !pwdPattern.test(pwd.value)){
         store.dispatch("Finished");
         wrong.value = true;
       }else{
-        axios({
-          async:false,
-          url:"AddUserServlet",
-          params:{
-            name:name.value,
-            tel:tel.value,
-            pwd:pwd.value
-          }
-        }).then((res)=>{
-          if(res.data['status'] === true){
-            router.replace("/login")
-          }else{
-            wrong.value = true;
-          }
-          store.dispatch("Finished");
-        })
+        setTimeout(()=>{
+          axios({
+            method:"POST",
+            async:false,
+            url:"/user/register",
+            data:{
+              username:name.value,
+              phone:tel.value,
+              password:pwd.value,
+              address:"home",
+              sex:"male",
+            }
+          }).then((res)=>{
+            if(res.data["success"] === true){
+              router.replace("/login");
+            }else{
+              wrong.value = true;
+            }
+            store.dispatch("Finished");
+          })
+        },300);
+
       }
     };
 

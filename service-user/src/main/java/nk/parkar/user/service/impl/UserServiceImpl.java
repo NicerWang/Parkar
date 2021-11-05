@@ -111,7 +111,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setUsername(username);
         }
         if(password != null){
-            user.setPassword(password);
+            user.setPassword(MD5.encrypt(password));
         }
         if(phone != null){
             user.setPhone(phone);

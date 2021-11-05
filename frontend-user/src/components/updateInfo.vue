@@ -71,11 +71,12 @@ export default {
 
     //AJAX Request
     axios({
-      url: "GetUserInfoServlet"
+      url: "user/getUserInfo",
+      headers: {'token': localStorage.getItem("token")},
     }).then((res) => {
-      let user = res.data;
-      tel.value = user['tel'];
-      name.value = user['name'];
+      let user = res.data.data.userInformation;
+      tel.value = user['phone'];
+      name.value = user['username'];
     })
 
     const update = () => {
@@ -90,11 +91,12 @@ export default {
         }
       }
       axios({
-        url: "UpdateUserInfoServlet",
-        params: {
-          name: name.value.trim(),
-          pwd: pwd.value.trim(),
-          tel: tel.value,
+        method:"POST",
+        url: "user/updateUserInfo",
+        headers: {'token': localStorage.getItem("token")},
+        data: {
+          username: name.value.trim(),
+          password: pwd.value.trim(),
         },
         async: false
       }).then(() => {
