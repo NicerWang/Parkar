@@ -282,7 +282,7 @@ public class UserParkingController {
     }
 
 
-    @PutMapping("/order/cancel")
+    @PutMapping("/order/cancel/{orderId}")
     public Map<String,Object> cancelOrder(@PathVariable("orderId")Integer orderId,@RequestHeader("token") String token){
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/order/cancel/{orderId}");
 
