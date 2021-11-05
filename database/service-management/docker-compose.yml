@@ -18,6 +18,6 @@ services:
       - "3306:3306"
   management_service:
     container_name: "management_service"
-    image: nicerwang/parkar-management:latest
+    image: registry.cn-hangzhou.aliyuncs.com/parkar/management:latest
     ports:
       - "8080:8080"
