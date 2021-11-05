@@ -7,14 +7,15 @@ import nk.parkar.management.model.ParkingTime;
 import nk.parkar.management.service.ParkingOrderService;
 import nk.parkar.management.service.ParkingSpaceService;
 import nk.parkar.management.service.ParkingTimeService;
+import nk.parkar.management.util.CheckUtil;
 import nk.parkar.management.util.JWTUtil;
 import nk.parkar.management.util.entity.UnavailableTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @RestController
 public class AdminParkingController {
@@ -22,30 +23,26 @@ public class AdminParkingController {
     private ParkingSpaceService parkingSpaceService;
     private ParkingTimeService parkingTimeService;
     private ParkingOrderService parkingOrderService;
-
-
     @Autowired
     public void setParkingOrderService(ParkingOrderService parkingOrderService) {
         this.parkingOrderService = parkingOrderService;
     }
-
     @Autowired
     public void setParkingSpaceService(ParkingSpaceService parkingSpaceService) {
         this.parkingSpaceService = parkingSpaceService;
     }
-
     @Autowired
     public void setParkingTimeService(ParkingTimeService parkingTimeService) {
         this.parkingTimeService = parkingTimeService;
     }
 
 
-
     /**
      * 查询指定车位的租赁模式、占用状态、禁用状态、占用时段
      * */
     @GetMapping("/administrator/parking/space/{spaceId}")
-    public Map<String,Object> getSpaceInfoBySpaceId(@PathVariable("spaceId") String  spaceIdStr,@RequestHeader("token") String token){
+    public Map<String,Object> getSpaceInfoBySpaceId(@PathVariable("spaceId") String  spaceIdStr,
+                                                    @RequestHeader("token") String token){
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/administrator/parking/space/{spaceId}");
 
         if(!JWTUtil.checkAdmin(token)){
@@ -121,8 +118,10 @@ public class AdminParkingController {
         return retMap;
     }
 
+
     @GetMapping("/administrator/parking/order/list/{paidStat}")
-    public Map<String,Object> getAllOrderByPaidStat(@PathVariable("paidStat") String paidStr,@RequestHeader("token") String token){
+    public Map<String,Object> getAllOrderByPaidStat(@PathVariable("paidStat") String paidStr,
+                                                    @RequestHeader("token") String token){
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/administrator/parking/order/list/{paidStat}");
 
         if(!JWTUtil.checkAdmin(token)){
@@ -131,7 +130,7 @@ public class AdminParkingController {
             throw illegalArgumentException;
         }
 
-        if(!checkPaidFormat(paidStr)){
+        if(!CheckUtil.checkPaidFormat(paidStr)){
             illegalArgumentException.addArgumentInfo("paidStat");
             illegalArgumentException.addDescription("illegal paidStat: "+paidStr+"      available value:0 | 1");
             throw illegalArgumentException;
@@ -142,6 +141,7 @@ public class AdminParkingController {
         retMap.put("orderList",parkingOrderList);
         return retMap;
     }
+
 
     @PutMapping("/administrator/parking/space/{spaceId}")
     public Map<String,Object> updateSpaceInfoBySpaceId(@PathVariable("spaceId")String spaceIdStr,
@@ -157,7 +157,7 @@ public class AdminParkingController {
             throw illegalArgumentException;
         }
 
-        checkSpaceIdFormat(illegalArgumentException,spaceIdStr);
+        CheckUtil.checkSpaceIdFormat(illegalArgumentException,spaceIdStr);
         if(!illegalArgumentException.getArgumentInfoList().isEmpty()){
             throw illegalArgumentException;
         }
@@ -172,14 +172,14 @@ public class AdminParkingController {
         }
 
         if(occupied!=null){
-            if(!checkOccupied(illegalArgumentException,occupied)){
+            if(!CheckUtil.checkOccupied(illegalArgumentException,occupied)){
                 throw illegalArgumentException;
             }
             Byte isOccupied=Byte.parseByte(occupied);
             parkingSpace.setOccupied(isOccupied);
         }
         if(mode!=null){
-            if(!checkMode(illegalArgumentException,mode)){
+            if(!CheckUtil.checkMode(illegalArgumentException,mode)){
                 throw illegalArgumentException;
             }
             Integer modeCode=null;
@@ -220,24 +220,6 @@ public class AdminParkingController {
 
 
 
-
-
-    private boolean checkPaidFormat(String paidStr){
-        return paidStr.equals("0") || paidStr.equals("1");
-    }
-
-    private boolean checkUserId(String userIdStr) {
-
-        return true;
-    }
-    private void checkSpaceIdFormat(IllegalArgumentException illegalArgumentException, String spaceIdStr){
-        String pattern = "^\\d+$";
-        if(!Pattern.matches(pattern,spaceIdStr)){
-            illegalArgumentException.addDescription("illegal spaceId:"+spaceIdStr);
-            illegalArgumentException.addArgumentInfo("spaceId");
-        }
-    }
-
     private boolean checkSpaceIdValue(IllegalArgumentException illegalArgumentException,Integer spaceId){
         if (parkingSpaceService.querySpaceById(spaceId)==null){
             illegalArgumentException.addDescription("spaceId "+spaceId+" not found");
@@ -245,27 +227,5 @@ public class AdminParkingController {
             return false;
         }
         return true;
-    }
-
-    private boolean checkOccupied(IllegalArgumentException illegalArgumentException,String occupiedStr){
-        if(occupiedStr.equals("0")||occupiedStr.equals("1")){
-            return true;
-        }
-        else{
-            illegalArgumentException.addDescription("illegal occupied: "+occupiedStr);
-            illegalArgumentException.addArgumentInfo("occupied");
-            return false;
-        }
-    }
-
-    private boolean checkMode(IllegalArgumentException illegalArgumentException, String mode){
-        if(!mode.equals("day")&&!mode.equals("month")&&!mode.equals("year")){
-            illegalArgumentException.addDescription("illegal mode:"+mode);
-            illegalArgumentException.addArgumentInfo("mode");
-            return false;
-        }
-        else{
-            return true;
-        }
     }
 }
