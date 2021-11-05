@@ -22,7 +22,7 @@ import java.util.List;
 @EnableSwagger2
 public class SwaggerConfiguration {
     ParameterBuilder ticketPar = new ParameterBuilder();
-    List<Parameter> pars = new ArrayList<Parameter>();
+    List<Parameter> pars = new ArrayList<>();
     @Bean
     public Docket docket(){
         ticketPar.name("token").description("user token")

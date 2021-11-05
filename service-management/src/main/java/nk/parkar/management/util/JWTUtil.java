@@ -8,8 +8,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Date;
 
 public class JWTUtil {
-    private static String key = "sMHjoacWs9XFq4MEKsyiPzxzduJUPzJDqkL0cInHEso";
-    private static int ExpireTime = 1000 * 60 * 60;
+    private static final String key = "sMHjoacWs9XFq4MEKsyiPzxzduJUPzJDqkL0cInHEso";
+    private static final int ExpireTime = 1000 * 60 * 60;
 
     public static String Sign(String userID){
         return Sign(userID, false, new Date(new Date().getTime() + ExpireTime));
@@ -20,7 +20,7 @@ public class JWTUtil {
     }
 
     public static String Sign(String userID, boolean isAdmin, Date expire){
-        String token = null;
+        String token;
         Algorithm algorithm = Algorithm.HMAC256(key);
         token = JWT.create().withExpiresAt(expire)
                 .withSubject(userID)
@@ -31,7 +31,7 @@ public class JWTUtil {
     }
 
     public static String check(String token){
-        DecodedJWT jwt = null;
+        DecodedJWT jwt;
         Algorithm algorithm = Algorithm.HMAC256(key);
         JWTVerifier verifier = JWT.require(algorithm)
                 .withIssuer("Parkar")
@@ -45,7 +45,7 @@ public class JWTUtil {
     }
 
     public static boolean checkAdmin(String token){
-        DecodedJWT jwt = null;
+        DecodedJWT jwt;
         Algorithm algorithm = Algorithm.HMAC256(key);
         JWTVerifier verifier = JWT.require(algorithm)
                 .withIssuer("Parkar")

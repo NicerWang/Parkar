@@ -72,7 +72,7 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
         parkingOrder.setPaid((byte) 0);
         parkingOrder.setEndTime(new Date(endTime*1000));
         parkingOrder.setStartTime(new Date(startTime*1000));
-        parkingOrder.setUserId(userId.toString());
+        parkingOrder.setUserId(userId);
         parkingOrder.setPrice(totalPrice);
         parkingOrder.setSpaceId(spaceId);
         parkingOrderMapper.insertSelective(parkingOrder);
@@ -109,4 +109,22 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
     public List<ParkingOrder> queryByPaidStat(Byte paid) {
         return parkingOrderMapper.selectByPaidStat(paid);
     }
+
+    @Override
+    public ParkingOrder queryByOrderId(Integer orderId) {
+        return parkingOrderMapper.selectByPrimaryKey(orderId);
+    }
+
+    @Override
+    @Transactional
+    public void cancelOrder(Integer orderId, ParkingTime parkingTime) {
+        TransactionException transactionException = new TransactionException("cancelOrder");
+        if(parkingTimeMapper.deleteByNoPrimaryKey(parkingTime)<1){
+            transactionException.addDescription("no such period in table parking_time");
+            throw transactionException;
+       }
+       parkingOrderMapper.deleteByPrimaryKey(orderId);
+    }
+
+
 }
