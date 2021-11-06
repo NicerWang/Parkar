@@ -17,7 +17,7 @@ public class CheckUtil {
 
      public static boolean checkUserId(String userId){
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        HttpGet httpGet = new HttpGet("/api/user/userExit/userId/"+userId);
+        HttpGet httpGet = new HttpGet("http://39.106.179.185:8080/userExit/"+userId);
         httpGet.setHeader("token", "checkUserId");
         CloseableHttpResponse response = null;
         TransactionException transactionException = new TransactionException("checking userId");
