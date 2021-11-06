@@ -8,8 +8,8 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import "animate.css"
 import "echarts-wordcloud"
 
-// axios.defaults.baseURL = "/api/";
-axios.defaults.baseURL = "http://81.70.254.128/api/"
+axios.defaults.baseURL = "/api/";
+// axios.defaults.baseURL = "http://81.70.254.128/api/"
 axios.defaults.withCredentials=true;
 
 import App from './App.vue'
