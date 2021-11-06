@@ -27,7 +27,7 @@ public class VehicleController {
         if(isSuccess){
             return R.ok().message("Add vehicle successful!");
         }
-        return R.ok().message("Add vehicle failed!");
+        return R.error().message("Add vehicle failed!");
     }
 
     @PostMapping("/deleteVehicle")
