@@ -55,3 +55,7 @@ run and visit:
 管理员更改车位信息时(put:administrator/parking/space/{spaceId}),除车位Id以外的参数以传统方式进行添加
 如 ../administrator/parking/space/{spaceId}?ban=1
    ../administrator/parking/space/{spaceId}?occupied=1&mode=2
+   
+11.6新增api(Get): /machine/elevator/space/{licenseNumber} 传车牌号查最近的已预约车位及时间
+    变更api(Post):/order/{mode}/{spaceId}/{startTime}/{endTime}  ==> /order/{mode}/{spaceId}/{startTime}/{endTime}/{licenseNumber}
+                eg:/order/day/13/1636244716/1636266316/AE86
