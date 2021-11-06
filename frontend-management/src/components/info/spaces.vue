@@ -21,9 +21,9 @@
           <tbody>
           <tr v-for="i in spaces">
             <th scope="row">{{ i.spaceId }}</th>
-            <td>{{ i.occupied == 0 ? "False" : "True" }}</td>
+            <td>{{ i.occupied === 0 ? "False" : "True" }}</td>
             <td>{{ formatMode(i.mode) }}</td>
-            <td>{{ i.ban == 0 ? "False" : "True" }}</td>
+            <td>{{ i.ban === 0 ? "False" : "True" }}</td>
           </tr>
           </tbody>
         </table>

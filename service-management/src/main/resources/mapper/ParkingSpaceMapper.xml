@@ -100,7 +100,9 @@
     where space_id = #{spaceId,jdbcType=INTEGER}
   </update>
 
-  <select id="selectAll" resultType="nk.parkar.management.model.ParkingSpace">
-    select * from parking_space
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from parking_space
   </select>
 </mapper>
