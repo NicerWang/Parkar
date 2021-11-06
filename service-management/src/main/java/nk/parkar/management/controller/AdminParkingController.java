@@ -227,4 +227,21 @@ public class AdminParkingController {
         }
         return true;
     }
+
+    /**
+     * 查询所有位置 仅管理员可用
+     * */
+    @GetMapping("/administrator/parking/space/list")
+    public Map<String,Object> getAllSpaces(@RequestHeader("token") String token){
+        if(!JWTUtil.checkAdmin(token)){
+            IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/administrator/parking/space/list");
+            illegalArgumentException.addArgumentInfo("token");
+            illegalArgumentException.addDescription("powerless token: "+token);
+            throw illegalArgumentException;
+        }
+        List<ParkingSpace> parkingSpaceList = parkingSpaceService.getAllSpaces();
+        Map<String,Object> retMap = new HashMap<>();
+        retMap.put("spaceList",parkingSpaceList);
+        return retMap;
+    }
 }

@@ -19,4 +19,6 @@ public interface ParkingSpaceMapper {
     int updateByPrimaryKey(ParkingSpace record);
 
     List<Integer> selectByAvailableTime(Map<String,Object> paramList);
+
+    List<ParkingSpace> selectAll();
 }

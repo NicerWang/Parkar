@@ -26,7 +26,7 @@
   </select>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from parking_space
     where space_id = #{spaceId,jdbcType=INTEGER}
@@ -38,9 +38,9 @@
   </delete>
 
   <insert id="insert" parameterType="nk.parkar.management.model.ParkingSpace">
-    insert into parking_space (space_id, occupied, mode, 
+    insert into parking_space (space_id, occupied, mode,
       ban)
-    values (#{spaceId,jdbcType=INTEGER}, #{occupied,jdbcType=TINYINT}, #{mode,jdbcType=INTEGER}, 
+    values (#{spaceId,jdbcType=INTEGER}, #{occupied,jdbcType=TINYINT}, #{mode,jdbcType=INTEGER},
       #{ban,jdbcType=TINYINT})
   </insert>
 
@@ -99,4 +99,8 @@
       ban = #{ban,jdbcType=TINYINT}
     where space_id = #{spaceId,jdbcType=INTEGER}
   </update>
+
+  <select id="selectAll" resultType="nk.parkar.management.model.ParkingSpace">
+    select * from parking_space
+  </select>
 </mapper>

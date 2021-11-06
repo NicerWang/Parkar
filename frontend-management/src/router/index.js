@@ -2,6 +2,9 @@ import { createRouter, createWebHashHistory} from 'vue-router'
 const Login = ()=>import("../components/login.vue")
 const UpdateInfo = ()=>import("../components/updateInfo.vue")
 const Index = ()=>import("../components/index.vue")
+const Users = ()=>import("../components/info/users.vue")
+const Orders = ()=>import("../components/info/orders.vue")
+const Spaces = ()=>import("../components/info/spaces.vue")
 
 import store from "../store";
 
@@ -25,6 +28,21 @@ const routes = [
     name: 'UpdateInfo',
     component: UpdateInfo
   },
+  {
+    path: '/info/users',
+    name: 'Users',
+    component: Users
+  },
+  {
+    path: '/info/orders',
+    name: 'Orders',
+    component: Orders
+  },
+  {
+    path: '/info/spaces',
+    name: 'Spaces',
+    component: Spaces
+  },
 ]
 
 const router = createRouter({
@@ -36,7 +54,7 @@ router.beforeEach((to,from,next)=>{
     router.push("/index");
     return;
   }
-  if(to.fullPath.search("index|mine|logout|update") !== -1){
+  if(to.fullPath.search("index|info|logout|update") !== -1){
     if(store.state.isSignedIn){
       store.dispatch("Load");
       next();

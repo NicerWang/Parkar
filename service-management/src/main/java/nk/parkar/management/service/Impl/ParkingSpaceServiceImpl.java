@@ -40,4 +40,9 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
 
         return parkingSpaceMapper.selectByPrimaryKey(parkingSpace.getSpaceId());
     }
+
+    @Override
+    public List<ParkingSpace> getAllSpaces() {
+        return parkingSpaceMapper.selectAll();
+    }
 }
