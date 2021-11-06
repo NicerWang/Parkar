@@ -10,3 +10,8 @@ CREATE TABLE user(
      register_time DATETIME,
      last_login_time DATETIME
 );
+
+CREATE TABLE vehicle(
+    vehicle_id VARCHAR(50) PRIMARY KEY,
+    user_id VARCHAR(50)
+);
