@@ -26,7 +26,7 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
 
     @Override
     @Transactional
-    public Map<String,Object> insertOrderFromUser(String userId, Integer spaceId, String mode, Long startTime, Long endTime) {
+    public Map<String,Object> insertOrderFromUser(String userId, String licenseNumber, Integer spaceId, String mode, Long startTime, Long endTime) {
 
         TransactionException transactionException = new TransactionException("insertOrderFromUser");
         List<ParkingTime> parkingTimeList = parkingTimeMapper.selectBySpaceId(spaceId);
@@ -35,14 +35,31 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
                 Long tempStartTime = parkingTime.getStartTime().getTime()/1000;
                 Long tempEndTime = parkingTime.getEndTime().getTime()/1000;
 
-                if((tempStartTime.compareTo(endTime)<0&&tempStartTime.compareTo(startTime)>0)||
-                        (tempEndTime.compareTo(endTime)<0&&tempEndTime.compareTo(startTime)>0)||
-                        (tempEndTime.compareTo(endTime)==0&&tempStartTime.compareTo(startTime)==0)){
+//                if((tempStartTime.compareTo(endTime)<0&&tempStartTime.compareTo(startTime)>0)||
+//                        (tempEndTime.compareTo(endTime)<0&&tempEndTime.compareTo(startTime)>0)||
+//                        (tempEndTime.compareTo(endTime)==0&&tempStartTime.compareTo(startTime)==0)){
+                if((startTime.compareTo(tempStartTime)<0&&endTime.compareTo(tempStartTime)>0)||
+                        (startTime.compareTo(tempStartTime)>=0&&startTime.compareTo(tempEndTime)<0)){
                     transactionException.addDescription("the time period in the space has been occupied");
                     throw transactionException;
                 }
             }
         }
+
+        List<ParkingOrder> parkingOrderListByLicense = parkingOrderMapper.selectByLicenseNumber(licenseNumber);
+        int licenseIndex = parkingOrderListByLicense.size()-1;
+        while(licenseIndex>=0){
+            Long tempStartTime = parkingOrderListByLicense.get(licenseIndex).getStartTime().getTime()/1000;
+            Long tempEndTime = parkingOrderListByLicense.get(licenseIndex).getEndTime().getTime()/1000;
+            if((startTime.compareTo(tempStartTime)<0&&endTime.compareTo(tempStartTime)>0)||
+                    (startTime.compareTo(tempStartTime)>=0&&startTime.compareTo(tempEndTime)<0)){
+                transactionException.addDescription("Multiple parking spaces cannot be reserved at the same time with the same license plate number!");
+                throw transactionException;
+            }
+
+            licenseIndex--;
+        }
+
         BigDecimal unitPrice = new BigDecimal("0");
         int modeCode = 0;
         BigDecimal totalPrice;
@@ -75,6 +92,7 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
         parkingOrder.setUserId(userId);
         parkingOrder.setPrice(totalPrice);
         parkingOrder.setSpaceId(spaceId);
+        parkingOrder.setLicenseNumber(licenseNumber);
         parkingOrderMapper.insertSelective(parkingOrder);
 
         ParkingTime parkingTime = new ParkingTime();
@@ -124,6 +142,29 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
             throw transactionException;
        }
        parkingOrderMapper.deleteByPrimaryKey(orderId);
+    }
+
+    @Override
+    public ParkingOrder querySpaceIdByLicenseNumber(String licenseNumber) {
+        List<ParkingOrder> parkingOrderList = parkingOrderMapper.selectByLicenseNumber(licenseNumber);
+        if(parkingOrderList.isEmpty())
+            return null;
+        int retIndex=0;
+        while(retIndex<parkingOrderList.size()){
+            if((new Date().getTime())-parkingOrderList.get(retIndex).getStartTime().getTime()>1800000){
+                retIndex--;
+                break;
+            }
+            retIndex++;
+        }
+        if(retIndex<0) {
+            return null;
+        }
+        else{
+            if(retIndex>=parkingOrderList.size())
+                retIndex=parkingOrderList.size()-1;
+            return parkingOrderList.get(retIndex);
+        }
     }
 
 

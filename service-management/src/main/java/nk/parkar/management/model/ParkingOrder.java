@@ -8,6 +8,16 @@ public class ParkingOrder {
 
     private String userId;
 
+    private String licenseNumber;
+
+    public String getLicenseNumber() {
+        return licenseNumber;
+    }
+
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
+    }
+
     private Integer spaceId;
 
     private Date startTime;
@@ -83,4 +93,6 @@ public class ParkingOrder {
     public void setPaid(Byte paid) {
         this.paid = paid;
     }
+
+
 }

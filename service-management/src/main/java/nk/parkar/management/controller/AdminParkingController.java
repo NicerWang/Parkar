@@ -219,7 +219,6 @@ public class AdminParkingController {
     }
 
 
-
     private boolean checkSpaceIdValue(IllegalArgumentException illegalArgumentException,Integer spaceId){
         if (parkingSpaceService.querySpaceById(spaceId)==null){
             illegalArgumentException.addDescription("spaceId "+spaceId+" not found");

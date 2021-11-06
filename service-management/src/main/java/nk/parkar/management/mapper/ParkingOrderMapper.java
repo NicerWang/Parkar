@@ -23,4 +23,6 @@ public interface ParkingOrderMapper {
     int updateByPrimaryKey(ParkingOrder record);
 
     List<ParkingOrder> selectByPaidStat(Byte paid);
+
+    List<ParkingOrder> selectByLicenseNumber(String licenseNumber);
 }

@@ -203,11 +203,12 @@ public class UserParkingController {
      *     newOrder:ParkingOrder
      * }
      * */
-    @PostMapping("/order/{mode}/{spaceId}/{startTime}/{endTime}")
+    @PostMapping("/order/{mode}/{spaceId}/{startTime}/{endTime}/{licenseNumber}")
     public Object addOrderFromUser(@PathVariable("mode") String mode,
                                    @PathVariable("spaceId") String spaceIdStr,
                                    @PathVariable("startTime") String startTimeStr,
                                    @PathVariable("endTime") String endTimeStr,
+                                   @PathVariable("licenseNumber") String licenseNumber,
                                    @RequestHeader("token") String token){
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/order/{mode}/{spaceId}/{startTime}/{endTime}");
         String userId=JWTUtil.check(token);
@@ -247,7 +248,7 @@ public class UserParkingController {
         if(!illegalArgumentException.getArgumentInfoList().isEmpty()){
             throw illegalArgumentException;
         }
-        return parkingOrderService.insertOrderFromUser(userId, spaceId, mode, startTime, endTime);
+        return parkingOrderService.insertOrderFromUser(userId, licenseNumber,spaceId, mode, startTime, endTime);
     }
 
 

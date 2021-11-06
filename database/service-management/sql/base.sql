@@ -18,6 +18,7 @@ CREATE TABLE `parking_time` (
 CREATE TABLE `parking_order` (
      `order_id` int NOT NULL AUTO_INCREMENT,
      `user_id` varchar(255) DEFAULT NULL,
+     `license_number` varchar(255) DEFAULT NULL,
      `space_id` int DEFAULT NULL,
      `start_time` timestamp NULL DEFAULT NULL,
      `end_time` timestamp NULL DEFAULT NULL,

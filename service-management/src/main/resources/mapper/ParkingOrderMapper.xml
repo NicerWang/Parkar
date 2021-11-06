@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="nk.parkar.management.model.ParkingOrder">
     <id column="order_id" jdbcType="INTEGER" property="orderId" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="license_number" jdbcType="VARCHAR" property="licenseNumber"/>
     <result column="space_id" jdbcType="INTEGER" property="spaceId" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
@@ -12,7 +13,7 @@
     <result column="paid" jdbcType="TINYINT" property="paid" />
   </resultMap>
   <sql id="Base_Column_List">
-    order_id, user_id, space_id, start_time, end_time, price, mode, paid
+    order_id, user_id, license_number, space_id, start_time, end_time, price, mode, paid
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -42,16 +43,24 @@
     from parking_order
   </select>
 
+  <select id="selectByLicenseNumber" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from parking_order
+    where license_number = #{licenseNumber,jdbcType=VARCHAR}
+    order by start_time desc
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from parking_order
     where order_id = #{orderId,jdbcType=INTEGER}
   </delete>
 
   <insert id="insert" parameterType="nk.parkar.management.model.ParkingOrder">
-    insert into parking_order (order_id, user_id, space_id, 
+    insert into parking_order (order_id, user_id, license_number, space_id,
       start_time, end_time, price, 
       mode, paid)
-    values (#{orderId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{spaceId,jdbcType=INTEGER},
+    values (#{orderId,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{licenseNumber,jdbcType=VARCHAR}, #{spaceId,jdbcType=INTEGER},
       #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DECIMAL}, 
       #{mode,jdbcType=INTEGER}, #{paid,jdbcType=TINYINT})
   </insert>
@@ -64,6 +73,9 @@
       </if>
       <if test="userId != null">
         user_id,
+      </if>
+      <if test="licenseNumber != null">
+        license_number,
       </if>
       <if test="spaceId != null">
         space_id,
@@ -90,6 +102,9 @@
       </if>
       <if test="userId != null">
         #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="licenseNumber != null">
+        #{licenseNumber,jdbcType=VARCHAR},
       </if>
       <if test="spaceId != null">
         #{spaceId,jdbcType=INTEGER},
@@ -118,6 +133,9 @@
       <if test="userId != null">
         user_id = #{userId,jdbcType=VARCHAR},
       </if>
+      <if test="licenseNumber != null">
+        license_number = #{licenseNumber,jdbcType=VARCHAR},
+      </if>
       <if test="spaceId != null">
         space_id = #{spaceId,jdbcType=INTEGER},
       </if>
@@ -143,6 +161,7 @@
   <update id="updateByPrimaryKey" parameterType="nk.parkar.management.model.ParkingOrder">
     update parking_order
     set user_id = #{userId,jdbcType=VARCHAR},
+        license = #{licenseNumber,jdbcType=VARCHAR},
       space_id = #{spaceId,jdbcType=INTEGER},
       start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
