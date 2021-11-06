@@ -8,6 +8,8 @@ import nk.parkar.user.entity.vo.UserInfoVo;
 import nk.parkar.user.entity.vo.UserLoginVo;
 import nk.parkar.user.entity.vo.UserUpdateVo;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -27,4 +29,5 @@ public interface UserService extends IService<User> {
 
     public boolean isUserExit(String userId);
 
+    public List<User> getAllUsersInformation();
 }

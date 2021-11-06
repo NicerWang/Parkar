@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author HangYu Li
@@ -62,6 +63,16 @@ public class UserController {
             return R.ok().message("User exit");
         }
         return R.error().message("User not exit");
+    }
+
+    @GetMapping("/getAllUsersInformation")
+    public R getAllUsersInformation(HttpServletRequest request){
+        boolean isAdmin = JWTUtil.checkAdmin(request.getHeader("token"));
+        if(!isAdmin){
+            return R.error().message("You are not a admin!");
+        }
+        List<User> allUsers = userService.getAllUsersInformation();
+        return R.ok().message("Query successful!").data("allUsers",allUsers);
     }
 }
 

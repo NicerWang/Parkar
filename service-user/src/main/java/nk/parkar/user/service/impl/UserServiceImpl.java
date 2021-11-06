@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.sql.Date;
+import java.util.List;
 
 /**
  * @author HangYu Li
@@ -128,6 +129,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public boolean isUserExit(String userId){
         User user = baseMapper.selectById(userId);
         return user != null;
+    }
+
+    @Override
+    public List<User> getAllUsersInformation() {
+        List<User> users = baseMapper.selectList(null);
+        return users;
     }
 
 
