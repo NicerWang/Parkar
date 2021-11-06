@@ -2,7 +2,6 @@ package nk.parkar.user.controller;
 
 
 import nk.parkar.user.entity.Vehicle;
-import nk.parkar.user.entity.vo.VehicleVo;
 import nk.parkar.user.service.VehicleService;
 import nk.parkar.user.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,7 @@ public class VehicleController {
 
     @GetMapping("/getAllVehicleId/{userId}")
     public R getAllVehicleIdByUserId(@PathVariable String userId){
-        List<VehicleVo> allVehicleIds = vehicleService.getAllVehicleIdByUserId(userId);
+        List<String> allVehicleIds = vehicleService.getAllVehicleIdByUserId(userId);
         return R.ok().message("Query successful!").data("allVehicleIds",allVehicleIds);
     }
 }

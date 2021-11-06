@@ -17,5 +17,5 @@ public interface VehicleService extends IService<Vehicle> {
 
     public boolean deleteVehicle(Vehicle vehicle);
 
-    public List<VehicleVo> getAllVehicleIdByUserId(String userId);
+    public List<String> getAllVehicleIdByUserId(String userId);
 }

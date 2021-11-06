@@ -39,15 +39,13 @@ public class VehicleServiceImpl extends ServiceImpl<VehicleMapper, Vehicle> impl
     }
 
     @Override
-    public List<VehicleVo> getAllVehicleIdByUserId(String userId) {
+    public List<String> getAllVehicleIdByUserId(String userId) {
         QueryWrapper<Vehicle> wrapper = new QueryWrapper<>();
         wrapper.select("vehicle_id").eq("user_id",userId);
         List<Vehicle> vehicles = baseMapper.selectList(wrapper);
-        ArrayList<VehicleVo> vehicleVos = new ArrayList<>();
+        ArrayList<String> vehicleVos = new ArrayList<>();
         for (Vehicle vehicle : vehicles) {
-            VehicleVo vehicleVo = new VehicleVo();
-            vehicleVo.setVehicleId(vehicle.getVehicleId());
-            vehicleVos.add(vehicleVo);
+            vehicleVos.add(vehicle.getVehicleId());
         }
         return vehicleVos;
     }
