@@ -65,14 +65,23 @@ import { useRouter } from "vue-router";
 export default {
   name: "index",
   setup(){
-    const now = new Date();
-    let today = now.getFullYear() + "-" + (now.getMonth() + 1 < 10 ? "0" + (now.getMonth() + 1) : now.getMonth() + 1) + "-" + (now.getDay() + 1 < 10 ? "0" + (now.getDay()) : now.getDay());
-    let time = now.getHours() + 1 + ":" + now.getMinutes();
-    let timeAfter1 = now.getHours() + 1 + ":" + now.getMinutes();
+    const date = new Date();
+    let Y = date.getFullYear();
+    let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1);
+    let D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
+    let h = (date.getHours() < 10 ? '0'+ date.getHours() : date.getHours());
+    let hp1 = ((date.getHours() + 1) < 10 ? '0'+(date.getHours() + 1) : date.getHours() + 1);
+    let m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes());
+    let hp2 = ((date.getHours() + 2) < 10 ? '0'+(date.getHours() + 2) : date.getHours() + 2);
+
+    let today = Y + "-" + M + "-" + D;
+    let time = h + ":" + m;
+    let time1 = hp1 + ":" + m;
+    let time2 = hp2 + ":" + m;
     let startDate = ref(today);
     let endDate = ref(today);
-    let startTime = ref(time);
-    let endTime = ref(timeAfter1);
+    let startTime = ref(time1);
+    let endTime = ref(time2);
     let wrongInput = ref(false);
     let wrongSys = ref(false);
     let avails = [];
@@ -85,7 +94,7 @@ export default {
     const submit = ()=>{
       startTimestamp = Date.parse(startDate.value + " " + startTime.value + ":00");
       endTimestamp = Date.parse(endDate.value + " " + endTime.value + ":00");
-      if(startTimestamp == null || endTimestamp == null || startTimestamp >= endTimestamp || startTimestamp < Date.parse(now.getTime()) || license.value === ""){
+      if(startTimestamp == null || endTimestamp == null || startTimestamp >= endTimestamp || startTimestamp < Date.parse(date.getTime()) || license.value === ""){
         wrongInput.value = true;
         return;
       }

@@ -108,16 +108,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String phone = newUserInfo.getPhone();
         String address = newUserInfo.getAddress();
 
-        if(username != null){
+        if(username != null && username.length() != 0){
             user.setUsername(username);
         }
-        if(password != null){
+        if(password != null && password.length() != 0){
             user.setPassword(MD5.encrypt(password));
         }
-        if(phone != null){
+        if(phone != null && phone.length() != 0){
             user.setPhone(phone);
         }
-        if(address != null){
+        if(address != null && address.length() != 0){
             user.setAddress(address);
         }
 
