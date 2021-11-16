@@ -21,4 +21,10 @@ public interface ParkingSpaceMapper {
     List<Integer> selectByAvailableTime(Map<String,Object> paramList);
 
     List<ParkingSpace> selectAll();
+
+
+    //for parkar builder
+    int insertNone();
+
+    int selectMaxSpaceId();
 }

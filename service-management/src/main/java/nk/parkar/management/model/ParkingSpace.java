@@ -1,5 +1,7 @@
 package nk.parkar.management.model;
 
+import io.swagger.models.auth.In;
+
 public class ParkingSpace {
     private Integer spaceId;
 
@@ -8,6 +10,46 @@ public class ParkingSpace {
     private Integer mode;
 
     private Byte ban;
+
+    private Byte booked;
+
+    private Integer floor;
+
+    private Integer xCoordinate;
+
+    private Integer yCoordinate;
+
+    public Byte getBooked() {
+        return booked;
+    }
+
+    public void setBooked(Byte booked) {
+        this.booked = booked;
+    }
+
+    public Integer getFloor() {
+        return floor;
+    }
+
+    public void setFloor(Integer floor) {
+        this.floor = floor;
+    }
+
+    public Integer getxCoordinate() {
+        return xCoordinate;
+    }
+
+    public void setxCoordinate(Integer xCoordinate) {
+        this.xCoordinate = xCoordinate;
+    }
+
+    public Integer getyCoordinate() {
+        return yCoordinate;
+    }
+
+    public void setyCoordinate(Integer yCoordinate) {
+        this.yCoordinate = yCoordinate;
+    }
 
     public Integer getSpaceId() {
         return spaceId;

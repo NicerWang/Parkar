@@ -63,6 +63,14 @@ public class CheckUtil {
         return true;
     }
 
+    public static boolean checkNumberFormat(String numberStr){
+        String pattern = "^\\d+$";
+        if(!Pattern.matches(pattern,numberStr)){
+            return false;
+        }
+        return true;
+    }
+
     public static boolean checkOccupied(IllegalArgumentException illegalArgumentException,String occupiedStr){
         if(occupiedStr.equals("0")||occupiedStr.equals("1")){
             return true;

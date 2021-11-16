@@ -3,6 +3,10 @@ CREATE TABLE `parking_space` (
                                  `occupied` tinyint NOT NULL DEFAULT '0',
                                  `mode` int DEFAULT '0',
                                  `ban` tinyint DEFAULT '0',
+                                 `booked` tinyint DEFAULT '0',
+                                 `floor` int DEFAULT '0',
+                                 `x_coordinate` int DEFAULT '0',
+                                 `y_coordinate` int DEFAULT '0',
                                  PRIMARY KEY (`space_id`)
 ) ;
 CREATE TABLE `parking_time` (

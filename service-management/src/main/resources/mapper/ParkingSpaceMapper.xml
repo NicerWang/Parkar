@@ -6,11 +6,19 @@
     <result column="occupied" jdbcType="TINYINT" property="occupied" />
     <result column="mode" jdbcType="INTEGER" property="mode" />
     <result column="ban" jdbcType="TINYINT" property="ban" />
+    <result column="booked" jdbcType="TINYINT" property="booked"/>
+    <result column="floor" jdbcType="INTEGER" property="floor"/>
+    <result column="x_coordinate" jdbcType="INTEGER" property="xCoordinate"/>
+    <result column="y_coordinate" jdbcType="INTEGER" property="yCoordinate"/>
   </resultMap>
   <sql id="Base_Column_List">
-    space_id, occupied, mode, ban
+    space_id, occupied, mode, ban, booked, floor, x_coordinate, y_coordinate
   </sql>
 
+
+  <select id="selectMaxSpaceId" resultType="Integer">
+    select max(space_id) from parking_space
+  </select>
 
   <select id="selectByAvailableTime" resultType="Integer">
     select space_id from parking_space
@@ -37,11 +45,15 @@
     where space_id = #{spaceId,jdbcType=INTEGER}
   </delete>
 
+  <insert id="insertNone">
+    insert into parking_space values()
+  </insert>
+
   <insert id="insert" parameterType="nk.parkar.management.model.ParkingSpace">
     insert into parking_space (space_id, occupied, mode,
-      ban)
+      ban, booked, floor, x_coordinate, y_coordinate)
     values (#{spaceId,jdbcType=INTEGER}, #{occupied,jdbcType=TINYINT}, #{mode,jdbcType=INTEGER},
-      #{ban,jdbcType=TINYINT})
+      #{ban,jdbcType=TINYINT}, #{booked,jdbcType=TINYINT}, #{floor,jdbcType=INTEGER}, #{xCoordinate,jdbcType=INTEGER}, #{yCoordinate,jdbcType=INTEGER})
   </insert>
 
   <insert id="insertSelective" parameterType="nk.parkar.management.model.ParkingSpace">
@@ -59,6 +71,18 @@
       <if test="ban != null">
         ban,
       </if>
+      <if test="booked != null">
+        booked,
+      </if>
+      <if test="floor != null">
+        floor,
+      </if>
+      <if test="xCoordinate != null">
+        x_coordinate,
+      </if>
+      <if test="yCoordinate != null">
+        y_coordinate,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="spaceId != null">
@@ -72,6 +96,18 @@
       </if>
       <if test="ban != null">
         #{ban,jdbcType=TINYINT},
+      </if>
+      <if test="booked != null">
+        #{booked,jdbcType=TINYINT},
+      </if>
+      <if test="floor != null">
+        #{floor,jdbcType=INTEGER},
+      </if>
+      <if test="xCoordinate != null">
+        #{xCoordinate,jdbcType=INTEGER},
+      </if>
+      <if test="yCoordinate != null">
+        #{yCoordinate,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -88,6 +124,18 @@
       <if test="ban != null">
         ban = #{ban,jdbcType=TINYINT},
       </if>
+      <if test="booked != null">
+         booked = #{booked,jdbcType=TINYINT},
+      </if>
+      <if test="floor != null">
+        floor = #{floor,jdbcType=INTEGER},
+      </if>
+      <if test="xCoordinate != null">
+        x_coordinate = #{xCoordinate,jdbcType=INTEGER},
+      </if>
+      <if test="yCoordinate != null">
+        y_coordinate = #{yCoordinate,jdbcType=INTEGER},
+      </if>
     </set>
     where space_id = #{spaceId,jdbcType=INTEGER}
   </update>
@@ -96,8 +144,12 @@
     update parking_space
     set occupied = #{occupied,jdbcType=TINYINT},
       mode = #{mode,jdbcType=INTEGER},
-      ban = #{ban,jdbcType=TINYINT}
-    where space_id = #{spaceId,jdbcType=INTEGER}
+      ban = #{ban,jdbcType=TINYINT},
+      booked = #{booked,jdbcType=TINYINT},
+      floor = #{floor,jdbcType=INTEGER},
+      x_coordinate = #{xCoordinate,jdbcType=INTEGER},
+      y_coordinate = #{yCoordinate,jdbcType=INTEGER}
+      where space_id = #{spaceId,jdbcType=INTEGER}
   </update>
 
   <select id="selectAll" resultMap="BaseResultMap">

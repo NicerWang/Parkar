@@ -4,6 +4,7 @@ import nk.parkar.management.error.ControllerException.IllegalArgumentException;
 import nk.parkar.management.model.ParkingOrder;
 import nk.parkar.management.model.ParkingSpace;
 import nk.parkar.management.model.ParkingTime;
+import nk.parkar.management.service.ParkingBuilderService;
 import nk.parkar.management.service.ParkingOrderService;
 import nk.parkar.management.service.ParkingSpaceService;
 import nk.parkar.management.service.ParkingTimeService;
@@ -23,6 +24,7 @@ public class AdminParkingController {
     private ParkingSpaceService parkingSpaceService;
     private ParkingTimeService parkingTimeService;
     private ParkingOrderService parkingOrderService;
+    private ParkingBuilderService parkingBuilderService;
     @Autowired
     public void setParkingOrderService(ParkingOrderService parkingOrderService) {
         this.parkingOrderService = parkingOrderService;
@@ -34,6 +36,10 @@ public class AdminParkingController {
     @Autowired
     public void setParkingTimeService(ParkingTimeService parkingTimeService) {
         this.parkingTimeService = parkingTimeService;
+    }
+    @Autowired
+    public void setParkingBuilderService(ParkingBuilderService parkingBuilderService) {
+        this.parkingBuilderService = parkingBuilderService;
     }
 
 
@@ -148,7 +154,11 @@ public class AdminParkingController {
                                                        @RequestHeader("token") String token,
                                                        String occupied,
                                                        String mode,
-                                                       String ban){
+                                                       String ban,
+                                                       String booked,
+                                                       String floor,
+                                                       String xCoordinate,
+                                                       String yCoordinate){
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/administrator/parking/order/list/{paidStat}");
 
         if(!JWTUtil.checkAdmin(token)){
@@ -199,11 +209,8 @@ public class AdminParkingController {
         }
         if(ban!=null){
             Byte isBan;
-            if(ban.equals("0")){
-                isBan=Byte.parseByte("0");
-            }
-            else if(ban.equals("1")){
-                isBan=Byte.parseByte("1");
+            if(ban.equals("0")||ban.equals("1")){
+                isBan=Byte.parseByte(ban);
             }
             else{
                 illegalArgumentException.addArgumentInfo("ban");
@@ -211,6 +218,46 @@ public class AdminParkingController {
                 throw illegalArgumentException;
             }
             parkingSpace.setBan(isBan);
+        }
+        if(booked!=null){
+            Byte isBooked;
+            if(booked.equals("0")||booked.equals("1")){
+                isBooked=Byte.parseByte(booked);
+            }
+            else{
+                illegalArgumentException.addArgumentInfo("booked");
+                illegalArgumentException.addDescription("illegal booked: "+booked);
+                throw illegalArgumentException;
+            }
+            parkingSpace.setBooked(isBooked);
+        }
+        if(floor!=null){
+            Integer floorNum;
+            if(floor.equals("1")||floor.equals("2")||floor.equals("3")){
+                floorNum=Integer.parseInt(floor);
+            }
+            else{
+                illegalArgumentException.addArgumentInfo("floor");
+                illegalArgumentException.addDescription("illegal floor: "+floor);
+                throw illegalArgumentException;
+            }
+            parkingSpace.setFloor(floorNum);
+        }
+        if(xCoordinate!=null){
+            if(!CheckUtil.checkNumberFormat(xCoordinate)){
+                illegalArgumentException.addArgumentInfo("xCoordinate");
+                illegalArgumentException.addDescription("illegal xCoordinate: "+xCoordinate);
+                throw illegalArgumentException;
+            }
+            parkingSpace.setxCoordinate(Integer.parseInt(xCoordinate));
+        }
+        if(yCoordinate!=null){
+            if(!CheckUtil.checkNumberFormat(yCoordinate)){
+                illegalArgumentException.addArgumentInfo("yCoordinate");
+                illegalArgumentException.addDescription("illegal yCoordinate: "+yCoordinate);
+                throw illegalArgumentException;
+            }
+            parkingSpace.setyCoordinate(Integer.parseInt(yCoordinate));
         }
         ParkingSpace retSpace = parkingSpaceService.updateSelective(parkingSpace);
         Map<String,Object> retMap = new HashMap<>();
@@ -242,6 +289,45 @@ public class AdminParkingController {
         List<ParkingSpace> parkingSpaceList = parkingSpaceService.getAllSpaces();
         Map<String,Object> retMap = new HashMap<>();
         retMap.put("spaceList",parkingSpaceList);
+        return retMap;
+    }
+
+    @PostMapping("/administrator/build/space")
+    public Map<String,Object> buildSpaces(@RequestHeader("token") String token){
+        if(!JWTUtil.checkAdmin(token)){
+            IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/administrator/parking/space/list");
+            illegalArgumentException.addArgumentInfo("token");
+            illegalArgumentException.addDescription("powerless token: "+token);
+            throw illegalArgumentException;
+        }
+        //拿到已有最大ID
+        Integer maxSpaceId = parkingBuilderService.getMaxSpaceId();
+        //添加缺失的车位
+        while(maxSpaceId<108){
+            parkingBuilderService.insertNoneSpace();
+            maxSpaceId++;
+        }
+        //分层
+
+
+        //构建坐标
+        for(int i=0;i<3;++i){
+            for(int j=1;j<21;++j){
+                Integer spaceId=36*i+j;
+                Integer xCoordinate = 5+(j-1)*30;
+                Integer yCoordinate = 5;
+                parkingBuilderService.updateCoordinate(spaceId,xCoordinate,yCoordinate);
+            }
+            for(int j=21;j<37;++j){
+                Integer spaceId = 36*i+j;
+                Integer xCoordinate = 65+(j-21)*30;
+                Integer yCoordinate = 95;
+                parkingBuilderService.updateCoordinate(spaceId,xCoordinate,yCoordinate);
+            }
+        }
+
+        Map<String,Object> retMap = new HashMap<>();
+        retMap.put("finished",true);
         return retMap;
     }
 }
