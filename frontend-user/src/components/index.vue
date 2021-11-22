@@ -15,6 +15,19 @@
     <br>
     <div class="card container card-form align-items-center">
       <div class="card-body">
+        <ul class="nav justify-content-center">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page"><h2>Step 1</h2></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled"><h4>Step 2</h4></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled"><h4>Step 3</h4></a>
+          </li>
+        </ul>
+        <br>
+        <h1>{{ steps[0] }}</h1>
         <div class="row">
           <div class="col-12">
             <label for="car-number" class="form-label">Car Number</label>
@@ -41,14 +54,15 @@
             <div><input type="time" id="end-time" v-model="endTime" :min="time"></div>
           </div>
         </div>
-        <div class="form-check col-12">
-          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" disabled checked>
-          <label class="form-check-label" for="flexCheckChecked">
-            [ONLY] Random select a position
-          </label>
-        </div>
+<!--        <div class="form-check col-12">-->
+<!--          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" disabled checked>-->
+<!--          <label class="form-check-label" for="flexCheckChecked">-->
+<!--            [ONLY] Random select a position-->
+<!--          </label>-->
+<!--        </div>-->
+        <br>
         <div class="col-12">
-          <button type="submit" class="btn btn-primary" @click="submit">Confirm</button>
+          <button type="submit" class="btn btn-primary" @click="submit">Next</button>
         </div>
       </div>
     </div>
@@ -65,6 +79,11 @@ import { useRouter } from "vue-router";
 export default {
   name: "index",
   setup(){
+    const steps = [
+      "Select your Car Number and Parking Time.",
+      "Select your favorable place.",
+      "Confirm all info."
+    ]
     const date = new Date();
     let Y = date.getFullYear();
     let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1);
@@ -136,6 +155,7 @@ export default {
       license,
       wrongInput,
       wrongSys,
+      steps,
       submit
     }
   },
