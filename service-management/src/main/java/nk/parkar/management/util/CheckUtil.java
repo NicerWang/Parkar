@@ -16,12 +16,6 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class CheckUtil {
-    private static ParkingSpaceService parkingSpaceService;
-
-    @Autowired
-    public void setParkingSpaceService(ParkingSpaceService parkingSpaceService) {
-        this.parkingSpaceService = parkingSpaceService;
-    }
 
     public static boolean checkUserId(String userId){
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -120,7 +114,4 @@ public class CheckUtil {
         return true;
     }
 
-    public static boolean checkSpaceIdValue(Integer spaceId){
-        return (parkingSpaceService.querySpaceById(spaceId)==null);
-    }
 }
