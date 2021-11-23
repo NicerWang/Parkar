@@ -26,7 +26,7 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
 
     @Override
     @Transactional
-    public Map<String,Object> insertOrderFromUser(String userId, String licenseNumber, Integer spaceId, String mode, Long startTime, Long endTime) {
+    public Map<String,Object> insertOrder(String userId, String licenseNumber, Integer spaceId, String mode, Long startTime, Long endTime) {
 
         TransactionException transactionException = new TransactionException("insertOrderFromUser");
         List<ParkingTime> parkingTimeList = parkingTimeMapper.selectBySpaceId(spaceId);

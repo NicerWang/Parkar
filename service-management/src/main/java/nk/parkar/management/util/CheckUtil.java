@@ -2,6 +2,7 @@ package nk.parkar.management.util;
 
 import nk.parkar.management.error.ControllerException.IllegalArgumentException;
 import nk.parkar.management.error.ControllerException.TransactionException;
+import nk.parkar.management.service.ParkingSpaceService;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -9,13 +10,20 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class CheckUtil {
+    private static ParkingSpaceService parkingSpaceService;
 
-     public static boolean checkUserId(String userId){
+    @Autowired
+    public void setParkingSpaceService(ParkingSpaceService parkingSpaceService) {
+        this.parkingSpaceService = parkingSpaceService;
+    }
+
+    public static boolean checkUserId(String userId){
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpGet httpGet = new HttpGet("http://39.106.179.185:8080/userExit/"+userId);
         httpGet.setHeader("token", "checkUserId");
@@ -110,5 +118,9 @@ public class CheckUtil {
             return false;
         }
         return true;
+    }
+
+    public static boolean checkSpaceIdValue(Integer spaceId){
+        return (parkingSpaceService.querySpaceById(spaceId)==null);
     }
 }

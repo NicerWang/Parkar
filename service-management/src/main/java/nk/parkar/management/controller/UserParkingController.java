@@ -248,7 +248,7 @@ public class UserParkingController {
         if(!illegalArgumentException.getArgumentInfoList().isEmpty()){
             throw illegalArgumentException;
         }
-        return parkingOrderService.insertOrderFromUser(userId, licenseNumber,spaceId, mode, startTime, endTime);
+        return parkingOrderService.insertOrder(userId, licenseNumber,spaceId, mode, startTime, endTime);
     }
 
 
