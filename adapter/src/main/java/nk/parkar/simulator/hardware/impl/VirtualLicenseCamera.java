@@ -24,6 +24,7 @@ public class VirtualLicenseCamera implements LicenseCamera {
     public static String checkLicense(String license){
         String info = new HttpUtil().sendLicenseInfo(license);
         ReserveInfo reserveInfo = objectMapper.readValue(info, ReserveInfo.class);
+        VirtualElevator.targetFloor = reserveInfo.getFloor();
         if(reserveInfo.getHasOrder()){
             return info;
         }
