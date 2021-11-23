@@ -54,12 +54,6 @@
             <div><input type="time" id="end-time" v-model="endTime" :min="time"></div>
           </div>
         </div>
-<!--        <div class="form-check col-12">-->
-<!--          <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" disabled checked>-->
-<!--          <label class="form-check-label" for="flexCheckChecked">-->
-<!--            [ONLY] Random select a position-->
-<!--          </label>-->
-<!--        </div>-->
         <br>
         <div class="col-12">
           <button type="submit" class="btn btn-primary" @click="submit">Next</button>
@@ -67,12 +61,17 @@
       </div>
     </div>
   </div>
+  <router-view v-slot="{ Component }" v-show="!isLoading">
+    <transition name="fade" mode="out-in">
+      <component :is="Component"/>
+    </transition>
+  </router-view>
 
 </template>
 
 <script>
 import { useStore } from "vuex";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 
@@ -85,6 +84,7 @@ export default {
       "Confirm all info."
     ]
     const date = new Date();
+
     let Y = date.getFullYear();
     let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1);
     let D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate());
@@ -92,7 +92,9 @@ export default {
     let hp1 = ((date.getHours() + 1) < 10 ? '0'+(date.getHours() + 1) : date.getHours() + 1);
     let m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes());
     let hp2 = ((date.getHours() + 2) < 10 ? '0'+(date.getHours() + 2) : date.getHours() + 2);
-
+    let isLoading = computed(() => {
+      return store.state.isLoading;
+    })
     let today = Y + "-" + M + "-" + D;
     let time = h + ":" + m;
     let time1 = hp1 + ":" + m;
@@ -156,6 +158,7 @@ export default {
       wrongInput,
       wrongSys,
       steps,
+      isLoading,
       submit
     }
   },
@@ -175,5 +178,18 @@ label{
 .row{
   margin: 20px;
 }
-
+input {
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  padding: .375rem .75rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  color: #212529;
+}
+input:focus{
+  color: #212529;
+  background-color: #fff;
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 .25rem rgba(13,110,253,.25);
+}
 </style>

@@ -6,13 +6,15 @@ import org.springframework.stereotype.Service;
 
 @Component
 public class VirtualControlPanel implements ControlPanel {
-    @Override
-    public void InputUserTel(String tel) {
 
+    @Override
+    public String inputLicense(String license) {
+        return VirtualLicenseCamera.checkLicense(license);
     }
 
     @Override
-    public void Notify() {
-
+    public String inputInfo(String tel, Long end, String QR) {
+        return null;
     }
+
 }
