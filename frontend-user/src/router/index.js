@@ -4,6 +4,7 @@ const UpdateInfo = ()=>import("../components/updateInfo.vue")
 const Register = ()=>import("../components/register.vue")
 const Index = ()=>import("../components/index.vue")
 const Mine = ()=>import("../components/mine.vue")
+const Cars = ()=>import("../components/cars.vue")
 const Step1 = ()=>import("../components/steps/step1.vue")
 const Step2 = ()=>import("../components/steps/step2.vue")
 const Step3 = ()=>import("../components/steps/step3.vue")
@@ -58,6 +59,11 @@ const routes = [
     path: "/mine",
     name: 'Mine',
     component: Mine
+  },
+  {
+    path: "/cars",
+    name: 'Cars',
+    component: Cars
   }
 ]
 
@@ -70,7 +76,7 @@ router.beforeEach((to,from,next)=>{
     router.push("/index");
     return;
   }
-  if(to.fullPath.search("index|mine|logout|update") !== -1){
+  if(to.fullPath.search("index|mine|cars|logout|update") !== -1){
     if(store.state.isSignedIn){
       store.dispatch("Load");
       next();

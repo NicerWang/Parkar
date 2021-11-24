@@ -138,6 +138,10 @@ export default {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-radius: 0;
+}
 
 .form-signin input[type="password"] {
   margin-bottom: 10px;

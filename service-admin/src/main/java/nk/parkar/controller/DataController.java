@@ -4,10 +4,7 @@ import nk.parkar.pojo.DataItem;
 import nk.parkar.service.DataService;
 import nk.parkar.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -29,12 +26,12 @@ public class DataController {
     // cancel order 3 - userID - Car Number - Price
     // updateInfo 4 - userID
     // reserve 5 - start - end - Car Number - spaceID
-    @RequestMapping("/data/{type}/{userID}")
+    @PostMapping("/data/{type}/{userID}")
     boolean insertData(@PathVariable("type") Integer type, @PathVariable("userID") String userID, String sa1, String sa2, String sa3, String sa4){
         return dataService.insert(new DataItem(type,userID,sa1,sa2,sa3,sa4));
     }
 
-    @RequestMapping("/get")
+    @GetMapping("/get")
     @ResponseBody
     ArrayList<DataItem> getData(HttpServletRequest httpServletRequest){
         if(!JWTUtil.checkAdmin(httpServletRequest.getHeader("token"))) return null;

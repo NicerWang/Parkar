@@ -38,7 +38,8 @@ export default {
     if(status.value === true){
       items_before = ref([
         reactive({to:"/index",msg:"Home",cls:activated}),
-        reactive({to:"/mine",msg:"Mine",cls: common}),
+        reactive({to:"/mine",msg:"Order",cls: common}),
+        reactive({to:"/cars",msg:"Cars",cls: common}),
         reactive({to:"/update",msg:"UpdateInfo",cls: common}),
       ])
     }
