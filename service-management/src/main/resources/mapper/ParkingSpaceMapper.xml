@@ -30,7 +30,9 @@
             where
                     (start_time between #{startTime} and #{endTime})
                    or
-                    (end_time between #{startTime} and #{endTime}))
+                    (end_time between #{startTime} and #{endTime})
+                   or
+                    (start_time <![CDATA[ <= ]]>#{startTime} and end_time <![CDATA[ >= ]]> #{endTime}))
   </select>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
