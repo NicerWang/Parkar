@@ -20,6 +20,7 @@ const routes = [
     path: "/index",
     name: 'Index',
     component: Index,
+    redirect: "/index/step1",
     children: [
       {
         path: "/index/step1",
