@@ -16,10 +16,6 @@ public class ParkingTimeServiceImpl implements ParkingTimeService {
 
     @Override
     public List<ParkingTime> queryTimeBySpaceId(Integer spaceId) {
-        List<ParkingTime> parkingTimeList = parkingTimeMapper.selectBySpaceId(spaceId);
-        for (ParkingTime parkingTime : parkingTimeList) {
-            System.out.println(parkingTime.toString());
-        }
-        return  parkingTimeList;
+        return parkingTimeMapper.selectBySpaceId(spaceId);
     }
 }

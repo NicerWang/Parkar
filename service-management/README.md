@@ -59,3 +59,15 @@ run and visit:
 11.6新增api(Get): /machine/elevator/space/{licenseNumber} 传车牌号查最近的已预约车位及时间
     变更api(Post):/order/{mode}/{spaceId}/{startTime}/{endTime}  ==> /order/{mode}/{spaceId}/{startTime}/{endTime}/{licenseNumber}
                 eg:/order/day/13/1636244716/1636266316/AE86
+
+11.24修复api(Get): /machine/elevator/space/{licenseNumber}
+    返回值变更:
+        删除:`startTime`、`endTime`;
+        新增:`currentOrder`、`laterOrder`、`hasExpired`;
+        变更:`space`;
+    描述:
+        `currentOrder`:最早的 结束时间晚于当前时间的订单，可能已经超期30分钟;
+        `hasExpired`:currentOrder超期30分钟时 hasExpired为true，否则为false;
+        `laterOrder`:currentOrder超期30分钟并且有后续订单时值为 最早的后续订单， 其他情况为null;
+        `space`:最早可用(已经生效且未超期30分钟、尚未生效的)预约订单的车位;
+        原本`startTime`、`endTime`的信息现包含在`currentOrder`、`laterOrder`中。

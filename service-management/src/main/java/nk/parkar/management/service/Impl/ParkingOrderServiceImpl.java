@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ParkingOrderServiceImpl implements ParkingOrderService {
@@ -28,7 +25,7 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
     @Transactional
     public Map<String,Object> insertOrder(String userId, String licenseNumber, Integer spaceId, String mode, Long startTime, Long endTime) {
 
-        TransactionException transactionException = new TransactionException("insertOrderFromUser");
+        TransactionException transactionException = new TransactionException("insertOrder");
         List<ParkingTime> parkingTimeList = parkingTimeMapper.selectBySpaceId(spaceId);
         if(!parkingTimeList.isEmpty()){
             for(ParkingTime parkingTime:parkingTimeList){
@@ -145,14 +142,21 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
     }
 
     @Override
-    public ParkingOrder querySpaceIdByLicenseNumber(String licenseNumber) {
+    public Map<String,Object> querySpaceIdByLicenseNumber(String licenseNumber) {
         List<ParkingOrder> parkingOrderList = parkingOrderMapper.selectByLicenseNumber(licenseNumber);
+        Map<String,Object> retMap = new HashMap<>();
         if(parkingOrderList.isEmpty())
             return null;
         int retIndex=0;
+        boolean hasExpired = false;
         while(retIndex<parkingOrderList.size()){
             if((new Date().getTime())-parkingOrderList.get(retIndex).getStartTime().getTime()>1800000){
-                retIndex--;
+                if((new Date().getTime())>=parkingOrderList.get(retIndex).getEndTime().getTime()){
+                    retIndex--;
+                }
+                else{
+                    hasExpired = true;
+                }
                 break;
             }
             retIndex++;
@@ -163,7 +167,15 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
         else{
             if(retIndex>=parkingOrderList.size())
                 retIndex=parkingOrderList.size()-1;
-            return parkingOrderList.get(retIndex);
+            retMap.put("firstOrder",parkingOrderList.get(retIndex));
+            retMap.put("hasExpired",hasExpired);
+            if(hasExpired&&retIndex>0){
+                retMap.put("secondOrder",parkingOrderList.get(retIndex-1));
+            }
+            else{
+                retMap.put("secondOrder",null);
+            }
+            return retMap;
         }
     }
 

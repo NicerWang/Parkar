@@ -32,21 +32,33 @@ public class MachineParkingController {
     @GetMapping("/machine/elevator/space/{licenseNumber}")
     public Map<String,Object> getSpaceInfoByLicenseNumber(@PathVariable("licenseNumber")String licenseNumber){
         Map<String,Object> retMap = new HashMap<>();
-        ParkingOrder parkingOrder = parkingOrderService.querySpaceIdByLicenseNumber(licenseNumber);
-        Boolean hasOrder= parkingOrder != null;
+        Map<String,Object> orderMap = parkingOrderService.querySpaceIdByLicenseNumber(licenseNumber);
+        Boolean hasOrder = orderMap != null;
         if(hasOrder){
-            ParkingSpace parkingSpace = parkingSpaceService.querySpaceById(parkingOrder.getSpaceId());
+            Boolean hasExpired = (Boolean) orderMap.get("hasExpired");
+            ParkingOrder currentOrder = (ParkingOrder) orderMap.get("firstOrder");
+            ParkingOrder laterOrder = (ParkingOrder) orderMap.get("secondOrder");
+            retMap.put("hasExpired",hasExpired);
+            ParkingSpace parkingSpace = null;
+            //当前未过期
+            if(!hasExpired) {
+                parkingSpace = parkingSpaceService.querySpaceById(currentOrder.getSpaceId());
+            }
+            //当前已过期，返回后续订单车位
+            else if(laterOrder != null){
+                parkingSpace = parkingSpaceService.querySpaceById(laterOrder.getSpaceId());
+            }
             retMap.put("space",parkingSpace);
-            retMap.put("startTime",parkingOrder.getStartTime());
-            retMap.put("endTime",parkingOrder.getEndTime());
+            retMap.put("currentOrder",currentOrder);
+            retMap.put("laterOrder",laterOrder);
         }
         else{
+            retMap.put("hasExpired",false);
             retMap.put("space",null);
-            retMap.put("startTime",null);
-            retMap.put("endTime",null);
+            retMap.put("currentOrder",null);
+            retMap.put("laterOrder",null);
         }
         retMap.put("hasOrder",hasOrder);
-
         return retMap;
     }
 

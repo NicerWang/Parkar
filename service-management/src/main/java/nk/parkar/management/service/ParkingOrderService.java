@@ -20,5 +20,5 @@ public interface ParkingOrderService {
 
     void cancelOrder(Integer orderId, ParkingTime parkingTime);
 
-    ParkingOrder querySpaceIdByLicenseNumber(String licenseNumber);
+    Map<String,Object> querySpaceIdByLicenseNumber(String licenseNumber);
 }
