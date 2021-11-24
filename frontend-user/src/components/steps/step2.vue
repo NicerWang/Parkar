@@ -78,7 +78,7 @@ export default {
     });
 
     const next = function () {
-      if (autoSelect) {
+      if (autoSelect.value) {
         selectedPosition.value = avails[Math.ceil(Math.random() * avails.length)];
         if (selectedPosition.value <= 36) selectedFloor.value = 1;
         else if (selectedPosition.value > 72) selectedFloor.value = 3;
