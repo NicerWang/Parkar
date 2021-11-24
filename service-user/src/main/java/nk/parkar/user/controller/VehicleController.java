@@ -40,12 +40,12 @@ public class VehicleController {
         return R.ok().message("Delete vehicle successful!");
     }
 
-    @GetMapping("/getAllVehicleId/{userId}")
-    public R getAllVehicleIdByUserId(@PathVariable String userId, HttpServletRequest request){
+    @GetMapping("/getAllVehicleId")
+    public R getAllVehicleIdByUserId(HttpServletRequest request){
         String tokenResult = JWTUtil.check(request.getHeader("token"));
         if(tokenResult == null || tokenResult.length() == 0)
             return R.error().message("Invalid token");
-        List<String> allVehicleIds = vehicleService.getAllVehicleIdByUserId(userId);
+        List<String> allVehicleIds = vehicleService.getAllVehicleIdByUserId(tokenResult);
         return R.ok().message("Query successful!").data("allVehicleIds",allVehicleIds);
     }
 }
