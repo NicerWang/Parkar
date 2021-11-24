@@ -72,7 +72,6 @@ export default {
           password: pwd.value,
         }
       }).then((res) => {
-        console.log(res);
         if (res.data["success"] === false) {
           pwd.value = "";
           wrong.value = true;

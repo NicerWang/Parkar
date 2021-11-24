@@ -70,8 +70,7 @@ export default {
         url:"management/order",
         headers: {'token': localStorage.getItem("token")},
     }).then((res)=>{
-      orders.value =  res.data["orderList"].reverse();
-      console.log(orders)
+      orders.value =  res.data["orderList"].reverse();``
       store.dispatch("Finished");
     })
     const cancel = function (id) {

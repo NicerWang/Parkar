@@ -3,9 +3,7 @@
   <div class="alert alert-danger" role="alert" v-show="wrongInput">
     [ERROR] Please Input right time interval and Car Number !
   </div>
-  <div class="alert alert-danger" role="alert" v-show="wrongSys">
-    [ERROR] No place for parking here !
-  </div>
+
   <div class="row">
     <div class="col-12">
       <label for="car-number" class="form-label">Car Number</label>
@@ -50,12 +48,15 @@ import axios from "axios";
 export default {
   name: "step1",
   props: {
-    avails:Array
+    nowStep:Array,
+    avails:Array,
+    info:Array
   },
   setup(props){
     const store = useStore();
     const router = useRouter();
-
+    props.nowStep[0] = 0;
+    props.info.length = 0;
     let date = new Date();
     date = new  Date(date.getTime() + 1000 * 60 * 60);
     let nowStamp = date.getTime();
@@ -86,6 +87,9 @@ export default {
         return;
       }
       store.dispatch("Load");
+      props.info.push(startTimestamp);
+      props.info.push(endTimestamp);
+      props.info.push(license.value);
       axios({
         method: "GET",
         url: "/management/order/" + mode + "/space/" + startTimestamp + "/" + endTimestamp,
@@ -100,20 +104,6 @@ export default {
         }
         else router.push("/index/step2");
       })
-      //     .then(()=>{
-      //   axios({
-      //     method:"POST",
-      //     url:"/management/order/" + mode + "/" + avails[0] + "/" + startTimestamp + "/" + endTimestamp + "/" + license.value,
-      //     headers: {'token': localStorage.getItem("token")},
-      //   }).then((res)=>{
-      //     router.push("/mine");
-      //     store.dispatch("Finished");
-      //   }).catch((err)=>{
-      //     wrongSys.value = true;
-      //     store.dispatch("Finished");
-      //   })
-      // });
-
     }
     store.dispatch("Finished")
     return{

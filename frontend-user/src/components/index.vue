@@ -12,20 +12,22 @@
       <div class="card-body">
         <ul class="nav justify-content-center">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page"><h2>Step 1</h2></a>
+            <a :class="{'nav-link':true,'active':nowStep[0] === 0}"><h2>Step 1</h2></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link disabled"><h4>Step 2</h4></a>
+            <a :class="{'nav-link':true,'active':nowStep[0] === 1}"><h2>Step 2</h2></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link disabled"><h4>Step 3</h4></a>
+            <a :class="{'nav-link':true,'active':nowStep[0] === 2}"><h2>Step 3</h2></a>
           </li>
         </ul>
         <br>
-        <h1>{{ steps[nowStep] }}</h1>
+        <h1>{{ steps[nowStep[0]] }}</h1>
+        <br>
+        <br>
         <router-view v-slot="{ Component }" >
           <transition name="fade" mode="out-in" >
-            <component :is="Component" :avails="avails" />
+            <component :is="Component" :avails="avails" :now-step="nowStep" :info="info" />
           </transition>
         </router-view>
       </div>
@@ -39,7 +41,7 @@
 import { useStore } from "vuex";
 
 import { useRouter } from "vue-router";
-import {computed, ref} from "vue";
+import { ref } from "vue";
 
 export default {
   name: "index",
@@ -49,8 +51,10 @@ export default {
       "Select your favorable place.",
       "Confirm all info."
     ]
-    let avails = ref([999]);
-    let nowStep = 1;
+    let avails = ref([]);
+    let nowStep = ref([0]);
+    let info = ref([]);
+
     const store = useStore();
     const router = useRouter();
 
@@ -58,6 +62,7 @@ export default {
       steps,
       avails,
       nowStep,
+      info
     }
   },
 }
@@ -75,6 +80,9 @@ label{
 }
 .row{
   margin: 20px;
+}
+a.active h2{
+  font-size: 45px !important;
 }
 input {
   border: 1px solid #ced4da;
