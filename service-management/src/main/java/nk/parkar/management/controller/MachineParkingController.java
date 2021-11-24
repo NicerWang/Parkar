@@ -32,21 +32,18 @@ public class MachineParkingController {
     @GetMapping("/machine/elevator/space/{licenseNumber}")
     public Map<String,Object> getSpaceInfoByLicenseNumber(@PathVariable("licenseNumber")String licenseNumber){
         Map<String,Object> retMap = new HashMap<>();
-        ParkingOrder parkingOrder = parkingOrderService.querySpaceIdByLicenseNumber(licenseNumber);
-        Boolean hasOrder= parkingOrder != null;
+        ParkingOrder currentOrder = parkingOrderService.querySpaceIdByLicenseNumber(licenseNumber);
+        Boolean hasOrder = currentOrder != null;
         if(hasOrder){
-            ParkingSpace parkingSpace = parkingSpaceService.querySpaceById(parkingOrder.getSpaceId());
+            ParkingSpace parkingSpace = parkingSpaceService.querySpaceById(currentOrder.getSpaceId());
             retMap.put("space",parkingSpace);
-            retMap.put("startTime",parkingOrder.getStartTime());
-            retMap.put("endTime",parkingOrder.getEndTime());
+            retMap.put("currentOrder",currentOrder);
         }
         else{
             retMap.put("space",null);
-            retMap.put("startTime",null);
-            retMap.put("endTime",null);
+            retMap.put("currentOrder",null);
         }
         retMap.put("hasOrder",hasOrder);
-
         return retMap;
     }
 

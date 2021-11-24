@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ParkingOrderServiceImpl implements ParkingOrderService {
@@ -28,7 +25,7 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
     @Transactional
     public Map<String,Object> insertOrder(String userId, String licenseNumber, Integer spaceId, String mode, Long startTime, Long endTime) {
 
-        TransactionException transactionException = new TransactionException("insertOrderFromUser");
+        TransactionException transactionException = new TransactionException("insertOrder");
         List<ParkingTime> parkingTimeList = parkingTimeMapper.selectBySpaceId(spaceId);
         if(!parkingTimeList.isEmpty()){
             for(ParkingTime parkingTime:parkingTimeList){
@@ -151,7 +148,7 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
             return null;
         int retIndex=0;
         while(retIndex<parkingOrderList.size()){
-            if((new Date().getTime())-parkingOrderList.get(retIndex).getStartTime().getTime()>1800000){
+            if((new Date().getTime())>=parkingOrderList.get(retIndex).getEndTime().getTime()){
                 retIndex--;
                 break;
             }
