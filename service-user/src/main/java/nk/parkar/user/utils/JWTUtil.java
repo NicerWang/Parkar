@@ -8,8 +8,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Date;
 
 public class JWTUtil {
-    private static String key = "sMHjoacWs9XFq4MEKsyiPzxzduJUPzJDqkL0cInHEso";
-    private static int ExpireTime = 1000 * 60 * 60;
+    private static final String key = "sMHjoacWs9XFq4MEKsyiPzxzduJUPzJDqkL0cInHEso";
+    private static final long ExpireTime = 1000L * 60 * 60 * 24 * 30;
 
     public static String Sign(String userID){
         return Sign(userID, false, new Date(new Date().getTime() + ExpireTime));
