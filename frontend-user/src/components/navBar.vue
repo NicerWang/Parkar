@@ -70,8 +70,9 @@ export default {
       if(newVal === oldVal){}
       else if(newVal){
         this.items_before = ref([
-          reactive({to:"/index",msg:"Home",cls:this.activated}),
-          reactive({to:"/mine",msg:"Mine",cls: this.common}),
+          reactive({to:"/index",msg:"Home",cls: this.activated}),
+          reactive({to:"/mine",msg:"Order",cls: this.common}),
+          reactive({to:"/cars",msg:"Cars",cls: this.common}),
           reactive({to:"/update",msg:"UpdateInfo",cls: this.common}),
         ])
       }else{
