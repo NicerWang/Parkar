@@ -32,31 +32,16 @@ public class MachineParkingController {
     @GetMapping("/machine/elevator/space/{licenseNumber}")
     public Map<String,Object> getSpaceInfoByLicenseNumber(@PathVariable("licenseNumber")String licenseNumber){
         Map<String,Object> retMap = new HashMap<>();
-        Map<String,Object> orderMap = parkingOrderService.querySpaceIdByLicenseNumber(licenseNumber);
-        Boolean hasOrder = orderMap != null;
+        ParkingOrder currentOrder = parkingOrderService.querySpaceIdByLicenseNumber(licenseNumber);
+        Boolean hasOrder = currentOrder != null;
         if(hasOrder){
-            Boolean hasExpired = (Boolean) orderMap.get("hasExpired");
-            ParkingOrder currentOrder = (ParkingOrder) orderMap.get("firstOrder");
-            ParkingOrder laterOrder = (ParkingOrder) orderMap.get("secondOrder");
-            retMap.put("hasExpired",hasExpired);
-            ParkingSpace parkingSpace = null;
-            //当前未过期
-            if(!hasExpired) {
-                parkingSpace = parkingSpaceService.querySpaceById(currentOrder.getSpaceId());
-            }
-            //当前已过期，返回后续订单车位
-            else if(laterOrder != null){
-                parkingSpace = parkingSpaceService.querySpaceById(laterOrder.getSpaceId());
-            }
+            ParkingSpace parkingSpace = parkingSpaceService.querySpaceById(currentOrder.getSpaceId());
             retMap.put("space",parkingSpace);
             retMap.put("currentOrder",currentOrder);
-            retMap.put("laterOrder",laterOrder);
         }
         else{
-            retMap.put("hasExpired",false);
             retMap.put("space",null);
             retMap.put("currentOrder",null);
-            retMap.put("laterOrder",null);
         }
         retMap.put("hasOrder",hasOrder);
         return retMap;

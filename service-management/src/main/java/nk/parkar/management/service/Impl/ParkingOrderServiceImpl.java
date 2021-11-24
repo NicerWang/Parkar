@@ -142,21 +142,14 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
     }
 
     @Override
-    public Map<String,Object> querySpaceIdByLicenseNumber(String licenseNumber) {
+    public ParkingOrder querySpaceIdByLicenseNumber(String licenseNumber) {
         List<ParkingOrder> parkingOrderList = parkingOrderMapper.selectByLicenseNumber(licenseNumber);
-        Map<String,Object> retMap = new HashMap<>();
         if(parkingOrderList.isEmpty())
             return null;
         int retIndex=0;
-        boolean hasExpired = false;
         while(retIndex<parkingOrderList.size()){
-            if((new Date().getTime())-parkingOrderList.get(retIndex).getStartTime().getTime()>1800000){
-                if((new Date().getTime())>=parkingOrderList.get(retIndex).getEndTime().getTime()){
-                    retIndex--;
-                }
-                else{
-                    hasExpired = true;
-                }
+            if((new Date().getTime())>=parkingOrderList.get(retIndex).getEndTime().getTime()){
+                retIndex--;
                 break;
             }
             retIndex++;
@@ -167,15 +160,7 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
         else{
             if(retIndex>=parkingOrderList.size())
                 retIndex=parkingOrderList.size()-1;
-            retMap.put("firstOrder",parkingOrderList.get(retIndex));
-            retMap.put("hasExpired",hasExpired);
-            if(hasExpired&&retIndex>0){
-                retMap.put("secondOrder",parkingOrderList.get(retIndex-1));
-            }
-            else{
-                retMap.put("secondOrder",null);
-            }
-            return retMap;
+            return parkingOrderList.get(retIndex);
         }
     }
 

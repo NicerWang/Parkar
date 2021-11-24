@@ -60,14 +60,14 @@ run and visit:
     变更api(Post):/order/{mode}/{spaceId}/{startTime}/{endTime}  ==> /order/{mode}/{spaceId}/{startTime}/{endTime}/{licenseNumber}
                 eg:/order/day/13/1636244716/1636266316/AE86
 
-11.24修复api(Get): /machine/elevator/space/{licenseNumber}
+11.25修复api(Get): /machine/elevator/space/{licenseNumber}
+    移除生效半小时后未进入停车场视为放弃预约车位的路灯挂件特性
     返回值变更:
         删除:`startTime`、`endTime`;
-        新增:`currentOrder`、`laterOrder`、`hasExpired`;
+        新增:`currentOrder`
         变更:`space`;
     描述:
-        `currentOrder`:最早的 结束时间晚于当前时间的订单，可能已经超期30分钟;
-        `hasExpired`:currentOrder超期30分钟时 hasExpired为true，否则为false;
-        `laterOrder`:currentOrder超期30分钟并且有后续订单时值为 最早的后续订单， 其他情况为null;
-        `space`:最早可用(已经生效且未超期30分钟、尚未生效的)预约订单的车位;
-        原本`startTime`、`endTime`的信息现包含在`currentOrder`、`laterOrder`中。
+        `currentOrder`:尚未过期的最早预约(过期指预约结束时间早于当前时间);
+        `space`:尚未过期的最早预约中的相关车位;
+        原本`startTime`、`endTime`的信息现包含在`currentOrder`中。
+
