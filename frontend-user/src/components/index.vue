@@ -96,24 +96,11 @@ export default {
 label{
   font-size: 18px;
 }
-.row{
+.row {
   margin: 20px;
 }
 a.active h2{
   font-size: 45px !important;
 }
-input {
-  border: 1px solid #ced4da;
-  border-radius: .25rem;
-  padding: .375rem .75rem;
-  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-  color: #212529;
-}
-input:focus{
-  color: #212529;
-  background-color: #fff;
-  border-color: #86b7fe;
-  outline: 0;
-  box-shadow: 0 0 0 .25rem rgba(13,110,253,.25);
-}
+
 </style>
