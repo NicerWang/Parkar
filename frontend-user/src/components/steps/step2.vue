@@ -12,7 +12,7 @@
     <br>
     <div class="col-12">
       <div v-show="!autoSelect" class="form-floating">
-        <select id="floorSelector" v-model="selectedFloor" class="form-select">
+        <select id="floorSelector" v-model="selectedInfo[0]" class="form-select">
           <option value="1">The First Floor</option>
           <option value="2">The Second Floor</option>
           <option value="3">The Third Floor</option>
@@ -21,12 +21,10 @@
       </div>
       <br>
       <br>
-      <div v-show="selectedFloor !== 0 && !autoSelect" class="form-floating">
-        <select id="floorSelector" v-model="selectedPosition" class="form-select">
-          <option v-for="i in floorPositions" :value="i">{{ i }}</option>
-        </select>
-        <label for="floorSelector">Select your favorable place</label>
+      <div v-if="selectedInfo[0] !== 0 && !autoSelect" class="form-floating">
+        <selector :key="selectedInfo[0]" :position="positions" :select="selectedInfo" :avails="avails"></selector>
       </div>
+
       <br>
       <br>
       <div class="col-12">
@@ -40,9 +38,12 @@
 import {useStore} from "vuex";
 import {ref, watch} from "vue";
 import {useRouter} from "vue-router";
+import Selector from "../selector.vue";
+import axios from "axios";
 
 export default {
   name: "step2",
+  components: {Selector},
   props: {
     avails: Array,
     nowStep: Array,
@@ -52,61 +53,69 @@ export default {
   setup(props) {
     const store = useStore();
     const router = useRouter();
-    store.dispatch("Finished");
     props.nowStep[0] = 1;
     props.message[0] = false
     if (props.info.length < 3)
       router.push("/index/step1");
     props.info.length = 3;
-    let selectedFloor = ref(0);
-    let floorPositions = ref([]);
-    let selectedPosition = ref(0);
+    let selectedInfo = ref([0,0]);
     let autoSelect = ref(false);
-    watch(selectedFloor, (newValue, oldValue) => {
-      console.log(oldValue, newValue)
-      floorPositions.value.length = 0;
-      for (let i = 0; i < avails.length; i++) {
-        if (avails[i] < 36 * (newValue - 1))
-          continue;
-        else if (avails[i] > 36 * newValue)
-          break;
-        else {
-          floorPositions.value.push(avails[i]);
-        }
-      }
-      console.log(floorPositions.value);
-    });
+    let positions = ref([])
 
     const next = function () {
       if (autoSelect.value) {
-        selectedPosition.value = avails[Math.ceil(Math.random() * avails.length)];
-        if (selectedPosition.value <= 36) selectedFloor.value = 1;
-        else if (selectedPosition.value > 72) selectedFloor.value = 3;
-        else selectedFloor.value = 2;
+        selectedInfo.value[1] = avails[Math.ceil(Math.random() * avails.length)];
+        for(let i = 0; i < positions.value.length; i++){
+          if(positions.value[i]['spaceId'] == selectedInfo.value[1])
+            selectedInfo.value[0] = positions.value[i]['floor']
+        }
       }
-      if (selectedFloor.value === 0) {
+      if (selectedInfo.value[0] === 0) {
         console.log(props.message)
         props.message[1] = "[ERROR] Empty Floor Selection"
         props.message[0] = true
         return
-      } else if (selectedPosition.value === 0) {
+      } else if (selectedInfo.value[1] === 0) {
         console.log(props.message)
         props.message[1] = "[ERROR] Empty Position Selection"
         props.message[0] = true
         return
       }
-      props.info.push(selectedFloor.value)
-      props.info.push(selectedPosition.value)
+      props.info.push(selectedInfo.value[0])
+      props.info.push(selectedInfo.value[1])
       router.push("/index/step3")
     }
+
+    axios({
+      method: "GET",
+      url: "/management/space/list",
+      headers: {'token': localStorage.getItem("token")},
+      async:false
+    }).then((res) => {
+      positions.value = res.data['spaceList'];
+      let ptr = 0;
+      for(let i = 0; i < positions.value.length; i++){
+        positions.value[i].isSelected = false;
+        positions.value[i].isOccupied = true;
+        if(props.avails[ptr] === positions.value[i]['spaceId']){
+          positions.value[i].isOccupied = false;
+          ptr++;
+        }
+      }
+      console.log(positions)
+      store.dispatch("Finished");
+    }).catch((err) => {
+      props.message[1] = "[ERROR]" + err.response.data.message[0];
+      props.message[0] = true
+      store.dispatch("Finished");
+    })
 
     let avails = props.avails;
     return {
       avails,
-      selectedFloor,
-      floorPositions,
-      selectedPosition,
+      selectedInfo,
       autoSelect,
+      positions,
       next
     }
   }

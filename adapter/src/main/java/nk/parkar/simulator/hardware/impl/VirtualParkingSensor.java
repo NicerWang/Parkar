@@ -5,8 +5,9 @@ import nk.parkar.simulator.utils.HttpUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Component
+@RestController
 public class VirtualParkingSensor implements ParkingSensor {
 
     @RequestMapping("/device/occupy/{id}")

@@ -8,6 +8,7 @@ const Cars = ()=>import("../components/cars.vue")
 const Step1 = ()=>import("../components/steps/step1.vue")
 const Step2 = ()=>import("../components/steps/step2.vue")
 const Step3 = ()=>import("../components/steps/step3.vue")
+const Selector = ()=>import("../components/selector.vue")
 
 import store from "../store";
 

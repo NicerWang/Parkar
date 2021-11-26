@@ -4,11 +4,13 @@ import lombok.SneakyThrows;
 import nk.parkar.simulator.hardware.ControlPanel;
 import nk.parkar.simulator.utils.HttpUtil;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 
-@Component
+@RestController
 public class VirtualControlPanel implements ControlPanel {
     private String license;
     @Override

@@ -12,13 +12,13 @@
       <div class="card-body container justify-content-center">
         <ul class="nav justify-content-center">
           <li class="nav-item">
-            <a :class="{'nav-link':true,'active':nowStep[0] === 0}" href="/index/step1"><h2>Step 1</h2></a>
+            <a :class="{'nav-link':true,'active':nowStep[0] === 0}" @click="jmp(1)"><h2>Step 1</h2></a>
           </li>
           <li class="nav-item">
-            <a :class="{'nav-link':true,'active':nowStep[0] === 1}" href="/index/step2"><h2>Step 2</h2></a>
+            <a :class="{'nav-link':true,'active':nowStep[0] === 1}" @click="jmp(2)"><h2>Step 2</h2></a>
           </li>
           <li class="nav-item">
-            <a :class="{'nav-link':true,'active':nowStep[0] === 2}" href="/index/step3"><h2>Step 3</h2></a>
+            <a :class="{'nav-link':true,'active':nowStep[0] === 2}" @click="jmp(3)"><h2>Step 3</h2></a>
           </li>
         </ul>
         <br>
@@ -75,12 +75,19 @@ export default {
     const store = useStore();
     const router = useRouter();
 
+    const jmp = function (id) {
+      if(id === 1) router.push("/index/step1")
+      else if(id === 2) router.push("/index/step2")
+      else if(id === 3) router.push("/index/step3")
+    }
+
     return{
       steps,
       avails,
       nowStep,
       info,
-      message
+      message,
+      jmp
     }
   },
 }

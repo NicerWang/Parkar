@@ -21,12 +21,15 @@
         <span class="input-group-text">Position ID</span>
         <input v-model="info[4]" class="form-control" disabled type="text">
       </div>
+      <br>
+      <br>
       <div class="col-12">
         <button class="btn btn-primary" type="submit" @click="confirm">Confirm</button>
       </div>
     </div>
     <div v-show="ok" class="checked">
       <img alt="" class="mb-4" height="200" src="../../assets/check.svg" width="200">
+      <br>
       <br>
       <br>
       <div class="col-12">

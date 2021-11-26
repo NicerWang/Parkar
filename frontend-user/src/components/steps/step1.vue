@@ -34,6 +34,7 @@
       </div>
     </div>
     <br>
+    <br>
     <div class="col-12">
       <button class="btn btn-primary" type="submit" @click="submit">Next</button>
     </div>
