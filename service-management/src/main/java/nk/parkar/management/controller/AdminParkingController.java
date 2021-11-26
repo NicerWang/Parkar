@@ -276,7 +276,7 @@ public class AdminParkingController {
     }
 
     /**
-     * 查询所有位置 仅管理员可用
+     * 查询所有位置
      * */
     @GetMapping("/administrator/parking/space/list")
     public Map<String,Object> getAllSpaces(@RequestHeader("token") String token){

@@ -2,6 +2,7 @@ package nk.parkar.management.controller;
 
 import nk.parkar.management.error.ControllerException.IllegalArgumentException;
 import nk.parkar.management.model.ParkingOrder;
+import nk.parkar.management.model.ParkingSpace;
 import nk.parkar.management.model.ParkingTime;
 import nk.parkar.management.service.ParkingOrderService;
 import nk.parkar.management.service.ParkingSpaceService;
@@ -280,6 +281,24 @@ public class UserParkingController {
             illegalArgumentException.addDescription("illegal userId: "+userId);
             throw illegalArgumentException;
         }
+    }
+
+
+    /**
+     * 查询所有车位信息
+     * */
+    @GetMapping("/space/list")
+    public Map<String,Object> getAllSpaces(@RequestHeader("token") String token){
+        if(JWTUtil.check(token)==null){
+            IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/space/list");
+            illegalArgumentException.addArgumentInfo("token");
+            illegalArgumentException.addDescription("illegal token: "+token);
+            throw illegalArgumentException;
+        }
+        List<ParkingSpace> parkingSpaceList = parkingSpaceService.getAllSpaces();
+        Map<String,Object> retMap = new HashMap<>();
+        retMap.put("spaceList",parkingSpaceList);
+        return retMap;
     }
 
 
