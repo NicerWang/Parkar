@@ -49,16 +49,10 @@ public class MachineParkingController {
 
     @PutMapping("/machine/sensor/space/{spaceId}")
     public Map<String,Object> updateSpaceInfoBySpaceId(@PathVariable("spaceId")String spaceIdStr,
-                                                       @RequestHeader("token") String token,
                                                        String occupied,
                                                        String ban){
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/machine/sensor/space/{spaceId}");
 
-        if(!JWTUtil.checkAdmin(token)){
-            illegalArgumentException.addArgumentInfo("token");
-            illegalArgumentException.addDescription("powerless token: "+token);
-            throw illegalArgumentException;
-        }
 
         CheckUtil.checkSpaceIdFormat(illegalArgumentException,spaceIdStr);
         if(!illegalArgumentException.getArgumentInfoList().isEmpty()){

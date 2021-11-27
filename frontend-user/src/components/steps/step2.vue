@@ -21,7 +21,7 @@
       </div>
       <br>
       <br>
-      <div v-if="selectedInfo[0] !== 0 && !autoSelect" class="form-floating">
+      <div v-if="selectedInfo[0] !== 0 && !autoSelect" class="form-floating selector">
         <selector :key="selectedInfo[0]" :position="positions" :select="selectedInfo" :avails="avails"></selector>
       </div>
 
@@ -126,5 +126,8 @@ export default {
 button {
   width: 50%;
 }
-
+.selector{
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+}
 </style>

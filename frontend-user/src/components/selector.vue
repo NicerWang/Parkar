@@ -28,7 +28,7 @@ export default {
   },
   setup(props){
     let positions = []
-    console.log(props.select[0])
+    props.select[1] = 0;
     for(let i = 0; i < props.position.length; i++){
       console.log(props.select[0],props.position[i]['floor'])
       if(props.select[0] == props.position[i]['floor']){
@@ -56,8 +56,8 @@ export default {
 
 <style scoped>
 .board{
-  padding: 100px;
-  width: 650px;
+  padding: 80px;
+  width: 620px;
   margin: 0 auto;
   position: relative;
 }
