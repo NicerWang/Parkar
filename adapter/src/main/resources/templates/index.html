@@ -233,7 +233,7 @@
                         alert("Need more info.");
                         return;
                     }
-                    let end = Date.parse(this.endDate + " " + this.endTime + ":00");
+                    let end = Date.parse(this.endDate.replaceAll("-","/") + " " + this.endTime + ":00");
                     this.logs += "[Control Panel]Send Reserve Info\n"
                     axios({
                         method: "POST",

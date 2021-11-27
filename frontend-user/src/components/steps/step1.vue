@@ -82,8 +82,8 @@ export default {
     let license = ref("");
     let all_cars = ref([])
     const submit = () => {
-      startTimestamp = Date.parse(startDate.value + " " + startTime.value + ":00");
-      endTimestamp = Date.parse(endDate.value + " " + endTime.value + ":00");
+      startTimestamp = Date.parse(startDate.value.replaceAll("-","/") + " " + startTime.value + ":00");
+      endTimestamp = Date.parse(endDate.value.replaceAll("-","/") + " " + endTime.value + ":00");
       if (startTimestamp == null || endTimestamp == null || startTimestamp >= endTimestamp || license.value === "") {
         props.message[1] = "[ERROR]Need Car Number"
         props.message[0] = true

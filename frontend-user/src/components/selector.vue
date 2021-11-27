@@ -30,14 +30,10 @@ export default {
     let positions = []
     props.select[1] = 0;
     for(let i = 0; i < props.position.length; i++){
-      console.log(props.select[0],props.position[i]['floor'])
       if(props.select[0] == props.position[i]['floor']){
-        console.log("check")
         positions.push(props.position[i])
       }
     }
-    console.log(props.position)
-    console.log(positions)
     const selectPosition = function (idx) {
       if(positions[idx].isOccupied) return;
       else for(let i = 0; i < positions.length; i++){

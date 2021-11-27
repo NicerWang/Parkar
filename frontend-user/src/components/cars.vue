@@ -65,7 +65,6 @@ export default {
       url:"user/getAllVehicleId",
       headers: {'token': localStorage.getItem("token")},
     }).then((res)=>{
-      console.log(res);
       all_car.value = res.data.data["allVehicleIds"]
       store.dispatch("Finished")
     })

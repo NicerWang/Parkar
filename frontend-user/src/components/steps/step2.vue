@@ -22,6 +22,9 @@
       <br>
       <br>
       <div v-if="selectedInfo[0] !== 0 && !autoSelect" class="form-floating selector">
+        <label>Select your Position</label>
+        <br>
+        <br>
         <selector :key="selectedInfo[0]" :position="positions" :select="selectedInfo" :avails="avails"></selector>
       </div>
 
@@ -71,12 +74,10 @@ export default {
         }
       }
       if (selectedInfo.value[0] === 0) {
-        console.log(props.message)
         props.message[1] = "[ERROR] Empty Floor Selection"
         props.message[0] = true
         return
       } else if (selectedInfo.value[1] === 0) {
-        console.log(props.message)
         props.message[1] = "[ERROR] Empty Position Selection"
         props.message[0] = true
         return
@@ -102,7 +103,6 @@ export default {
           ptr++;
         }
       }
-      console.log(positions)
       store.dispatch("Finished");
     }).catch((err) => {
       props.message[1] = "[ERROR]" + err.response.data.message[0];
