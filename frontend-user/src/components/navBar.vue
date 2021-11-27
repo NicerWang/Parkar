@@ -1,4 +1,5 @@
 <template>
+  <div class="header">
     <header class="d-flex flex-wrap justify-content-center py-3  border-bottom">
       <a href="/" class="d-flex align-items-center mb-0  me-auto text-dark text-decoration-none">
         &nbsp;&nbsp;&nbsp;
@@ -11,7 +12,11 @@
         <li class="nav-item"><button type="button" class="btn btn-danger" @click="logout" v-show="status">Logout</button></li>
         &nbsp;
       </ul>
+      <br>
     </header>
+    <loadingBar :status="100" v-show="isLoading" v-bind:align="isLoading"></loadingBar>
+  </div>
+
 </template>
 
 <script>
@@ -19,10 +24,13 @@
 import {ref, reactive, computed} from 'vue'
 import {useStore} from 'vuex'
 import {useRouter} from "vue-router";
-import axios from "axios";
+import loadingBar from "./loadingBar.vue"
 
 export default {
   name: "navbar",
+  components:{
+    loadingBar
+  },
   setup(){
     const store = useStore();
     const router = useRouter();
@@ -30,6 +38,9 @@ export default {
     const common = ["nav-link"]
     let status = computed(()=>{
       return store.state.isSignedIn;
+    })
+    let isLoading = computed(() => {
+      return store.state.isLoading;
     })
     let items_before = ref([
       reactive({to:"/login",msg:"Sign in",cls:activated}),
@@ -54,6 +65,7 @@ export default {
       activated,
       common,
       status,
+      isLoading,
       logout
     }
   },
@@ -93,6 +105,15 @@ li{
 }
 button{
   height: 40px;
+}
+.header{
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+}
+header{
+  background-color:rgba(255,255,255,0.6);
+  backdrop-filter:blur(10px)
 }
 
 </style>

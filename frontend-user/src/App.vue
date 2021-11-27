@@ -1,38 +1,38 @@
 <template>
-  <navbar v-show="$route.fullPath.search('login') === -1"></navbar>
-  <loading :status="status" v-show="isLoading" v-bind:align="isLoading"></loading>
+  <navbar></navbar>
+  <br>
+  <br>
+  <br>
+  <br>
   <router-view v-slot="{ Component }" v-show="!isLoading">
     <transition name="fade" mode="out-in">
       <component :is="Component"/>
     </transition>
   </router-view>
   <br>
+  <br>
 </template>
 
 <script>
 import navbar from "./components/navBar.vue";
-import loading from "./components/loadingBar.vue";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted} from "vue";
 import {useStore} from "vuex";
 
 export default {
   components: {
     navbar,
-    loading,
   },
   setup() {
-    let status = ref(100);
     const store = useStore();
-    let isLoading = computed(() => {
-      return store.state.isLoading;
-    })
     const saveState = () => {
       sessionStorage.setItem('state', JSON.stringify(store.state))
     }
+    let isLoading = computed(() => {
+      return store.state.isLoading;
+    })
     onMounted(() => window.addEventListener('unload', saveState))
-    return {
-      status,
-      isLoading
+    return{
+      isLoading,
     }
   },
 }
@@ -69,4 +69,6 @@ body {
 header {
   background-color: #ffffff;
 }
+
+
 </style>
