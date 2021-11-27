@@ -13,12 +13,12 @@ public class VirtualParkingSensor implements ParkingSensor {
     @RequestMapping("/device/occupy/{id}")
     @Override
     public void occupy(@PathVariable("id") Integer id) {
-        new HttpUtil().updateParkingSensor(true);
+        new HttpUtil().updateParkingSensor(true,id);
     }
 
     @Override
-    @RequestMapping("/device/occupy/{id}")
+    @RequestMapping("/device/release/{id}")
     public void release(@PathVariable("id") Integer id) {
-        new HttpUtil().updateParkingSensor(false);
+        new HttpUtil().updateParkingSensor(false,id);
     }
 }

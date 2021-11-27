@@ -10,8 +10,16 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReserveInfo {
-    Boolean hasOrder;
-    ParkingSpace space;
-    ParkingOrder currentOrder;
+public class ParkingOrder {
+    Integer orderId;
+    String userId;
+    String licenseNumber;
+    Integer spaceId;
+    Date startTime;
+    Date endTime;
+    BigDecimal price;
+    Integer mode;
+    Byte paid;
+
+
 }

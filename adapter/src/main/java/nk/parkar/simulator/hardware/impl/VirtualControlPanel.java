@@ -6,23 +6,24 @@ import nk.parkar.simulator.utils.HttpUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
 @RestController
 public class VirtualControlPanel implements ControlPanel {
-    private String license;
+
     @Override
-    public String inputLicense(String license) {
-        this.license = license;
+    @RequestMapping("/device/panel/license/{license}")
+    public String inputLicense(@PathVariable("license") String license) {
         return VirtualLicenseCamera.checkLicense(license);
     }
 
     @Override
     @SneakyThrows
-    public String inputInfo(String tel, Long end, String credential) {
-        return new HttpUtil().makeOrder(tel,credential,new Date(end),this.license);
+    @PostMapping("/device/panel/reserve")
+    public String inputInfo(String tel,Long end,String credential, String license) {
+        return new HttpUtil().makeOrder(tel,credential,new Date(end),license);
     }
 
 }

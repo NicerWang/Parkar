@@ -1,3 +1,9 @@
 spring:
   profiles:
     active: production
+  thymeleaf:
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    mode: HTML
+    cache: false

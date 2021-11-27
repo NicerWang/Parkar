@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class VirtualElevator implements Elevator {
     static int targetFloor;
 
-    @RequestMapping("device/elevator")
+    @RequestMapping("/device/elevator")
     int getTargetFloor(){
         return VirtualElevator.targetFloor;
     }

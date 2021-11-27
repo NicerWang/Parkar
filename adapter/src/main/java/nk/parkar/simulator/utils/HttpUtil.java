@@ -68,11 +68,11 @@ public class HttpUtil {
         return genericRequest("management/machine/elevator/space/" + license,"get");
     }
 
-    public String updateParkingSensor(boolean isOccupy){
+    public String updateParkingSensor(boolean isOccupy, Integer id){
         if(isOccupy){
-            return genericRequest("management/machine/elevator", "put");
+            return genericRequest("management/machine/sensor/space/" + id + "?occupied=1", "put");
         }
-        else return genericRequest("management/machine/elevator", "put");
+        else return genericRequest("management/machine/sensor/space/" + id + "?occupied=0", "put");
     }
 
     public String makeOrder(String tel, String pwd, Date end, String license) throws JsonProcessingException {
