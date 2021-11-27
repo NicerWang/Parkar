@@ -247,10 +247,15 @@
                     }).then((res) => {
                         this.logs += "[Control Panel][Success]Info Reserved\n";
                         this.logs += "[Control Panel]Successfully fetched\n";
-                        this.logs += "[Control Panel]Has Reservation:" + res.data["hasOrder"] + "\n";
-                        this.logs += "[Control Panel]Floor:" + res.data["space"]["floor"] + "\n";
-                        this.spaceId = res.data["space"]["spaceId"];
-                        this.logs += "[Control Panel]Space Id:" + res.data["space"]["spaceId"] + "\n";
+                        if(res.data === ""){
+                            this.logs += "[Control Panel]Wrong Telephone or Password or Time\n";
+                        }
+                        else{
+                            this.logs += "[Control Panel]Has Reservation:" + res.data["hasOrder"] + "\n";
+                            this.logs += "[Control Panel]Floor:" + res.data["space"]["floor"] + "\n";
+                            this.spaceId = res.data["space"]["spaceId"];
+                            this.logs += "[Control Panel]Space Id:" + res.data["space"]["spaceId"] + "\n";
+                        }
                         setTimeout(()=>{
                             let textarea = document.querySelector("textarea");
                             textarea.scrollTop = textarea.scrollHeight;

@@ -78,6 +78,7 @@ public class HttpUtil {
     public String makeOrder(String tel, String pwd, Date end, String license) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         Long now = (new Date()).getTime();
+        if(now > end.getTime()) return null;
         String response = genericRequest("user/login","post","","{\n" +
                 "  \"password\": \"" + pwd + "\",\n" +
                 "  \"phone\": \"" + tel + "\"\n" +
