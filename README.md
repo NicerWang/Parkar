@@ -13,9 +13,7 @@
   * 建议使用alter改动表，并在base.sql更新相应操作
   * conf文件夹内对应mysql的配置文件
   * 所有的3306端口均已打开，用户名密码和application.yml中一致
-
-
-
+  
 * JWTUtil已全部配置完成，可以直接使用：
 
 ```java
