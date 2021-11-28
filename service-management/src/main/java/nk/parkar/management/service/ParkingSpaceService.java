@@ -12,4 +12,7 @@ public interface ParkingSpaceService {
     ParkingSpace updateSelective(ParkingSpace parkingSpace);
 
     List<ParkingSpace> getAllSpaces();
+
+    List<ParkingSpace> getAllUnbannedSpaces();
+
 }

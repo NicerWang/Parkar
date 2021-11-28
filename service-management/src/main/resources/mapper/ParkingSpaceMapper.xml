@@ -159,4 +159,11 @@
     <include refid="Base_Column_List" />
     from parking_space
   </select>
+
+  <select id="selectUnbanned" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from parking_space
+    where ban = 0;
+  </select>
 </mapper>

@@ -22,9 +22,11 @@ public interface ParkingSpaceMapper {
 
     List<ParkingSpace> selectAll();
 
+    List<ParkingSpace> selectUnbanned();
 
     //for parkar builder
     int insertNone();
 
     int selectMaxSpaceId();
+
 }

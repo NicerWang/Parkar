@@ -61,9 +61,7 @@ public class MachineParkingController {
 
         Integer spaceId = Integer.parseInt(spaceIdStr);
         ParkingSpace parkingSpace = new ParkingSpace();
-        if(!checkSpaceIdValue(illegalArgumentException,spaceId)){
-            illegalArgumentException.addDescription("spaceId "+spaceId+" not found");
-            illegalArgumentException.addArgumentInfo("spaceId");
+        if(checkSpaceIdValue(illegalArgumentException,spaceId)==null){
             throw illegalArgumentException;
         }
         else{
@@ -127,8 +125,12 @@ public class MachineParkingController {
 
         //判断spaceId数值是否合法
         Integer spaceId = Integer.parseInt(spaceIdStr);
+        /*ParkingSpace checkSpace = */
         checkSpaceIdValue(illegalArgumentException,spaceId);
-
+/*        if(checkSpace!=null&&checkSpace.getBan()==1){
+            illegalArgumentException.addDescription("spaceId "+spaceId+" has been banned!");
+            illegalArgumentException.addDescription("spaceId");
+        }*/
         //判断time数值是否合法
         Long startTime = startTimeStr.length()==13?Long.parseLong(startTimeStr.substring(0,10)):Long.parseLong(startTimeStr);
         Long endTime = endTimeStr.length()==13?Long.parseLong(endTimeStr.substring(0,10)):Long.parseLong(endTimeStr);
@@ -145,13 +147,14 @@ public class MachineParkingController {
 
 
 
-    private boolean checkSpaceIdValue(IllegalArgumentException illegalArgumentException,Integer spaceId){
-        if (parkingSpaceService.querySpaceById(spaceId)==null){
+    private ParkingSpace checkSpaceIdValue(IllegalArgumentException illegalArgumentException,Integer spaceId){
+        ParkingSpace parkingSpace = parkingSpaceService.querySpaceById(spaceId);
+        if (parkingSpace==null){
             illegalArgumentException.addDescription("spaceId "+spaceId+" not found");
             illegalArgumentException.addArgumentInfo("spaceId");
-            return false;
+            return null;
         }
-        return true;
+        return parkingSpace;
     }
 
 }

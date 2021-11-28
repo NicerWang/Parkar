@@ -77,6 +77,13 @@ public class UserParkingController {
         }
 
         List<Integer> spaceIdList = parkingSpaceService.querySpaceByTime(startTime, endTime);
+        for (int i=0;i<spaceIdList.size();++i) {
+            if(!checkSpaceIdValue(illegalArgumentException,spaceIdList.get(i))){
+                spaceIdList.remove(i);
+                --i;
+            }
+
+        }
         Map<String,Object> retMap = new HashMap<>();
         retMap.put("startTime",startTime);
         retMap.put("endTime",endTime);
@@ -295,7 +302,7 @@ public class UserParkingController {
             illegalArgumentException.addDescription("illegal token: "+token);
             throw illegalArgumentException;
         }
-        List<ParkingSpace> parkingSpaceList = parkingSpaceService.getAllSpaces();
+        List<ParkingSpace> parkingSpaceList = parkingSpaceService.getAllUnbannedSpaces();
         Map<String,Object> retMap = new HashMap<>();
         retMap.put("spaceList",parkingSpaceList);
         return retMap;
@@ -333,9 +340,15 @@ public class UserParkingController {
     }
 
     private boolean checkSpaceIdValue(IllegalArgumentException illegalArgumentException,Integer spaceId){
-        if (parkingSpaceService.querySpaceById(spaceId)==null){
+        ParkingSpace parkingSpace = parkingSpaceService.querySpaceById(spaceId);
+        if (parkingSpace == null){
             illegalArgumentException.addDescription("spaceId "+spaceId+" not found");
             illegalArgumentException.addArgumentInfo("spaceId");
+            return false;
+        }
+        else if(parkingSpace.getBan()==1){
+            illegalArgumentException.addDescription("spaceId"+spaceId+" has been banned");
+            illegalArgumentException.addArgumentInfo("sapceId");
             return false;
         }
         return true;

@@ -45,4 +45,9 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
     public List<ParkingSpace> getAllSpaces() {
         return parkingSpaceMapper.selectAll();
     }
+
+    @Override
+    public List<ParkingSpace> getAllUnbannedSpaces() {
+        return parkingSpaceMapper.selectUnbanned();
+    }
 }
