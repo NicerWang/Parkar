@@ -5,6 +5,8 @@ const Index = ()=>import("../components/index.vue")
 const Users = ()=>import("../components/info/users.vue")
 const Orders = ()=>import("../components/info/orders.vue")
 const Spaces = ()=>import("../components/info/spaces.vue")
+const Detail = () =>import("../components/info/spaceDetail.vue")
+const Data = ()=>import("../components/info/data.vue")
 
 import store from "../store";
 
@@ -29,12 +31,20 @@ const routes = [
     component: UpdateInfo
   },
   {
-    path: '/info/users',
+    path: "/info/users",
+    redirect: "/info/users/all"
+  },
+  {
+    path: '/info/users/:id',
     name: 'Users',
     component: Users
   },
   {
-    path: '/info/orders',
+    path: "/info/orders",
+    redirect: "/info/orders/all"
+  },
+  {
+    path: '/info/orders/:id',
     name: 'Orders',
     component: Orders
   },
@@ -42,6 +52,16 @@ const routes = [
     path: '/info/spaces',
     name: 'Spaces',
     component: Spaces
+  },
+  {
+    path: '/info/spaces/:id',
+    name: 'Details',
+    component: Detail
+  },
+  {
+    path: '/info/data',
+    name: 'Data',
+    component: Data
   },
 ]
 

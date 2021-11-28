@@ -9,24 +9,16 @@
     <br>
     <div class="card container">
       <div class="card-body ">
-        <table class="table">
-          <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Occupied</th>
-            <th scope="col">Mode</th>
-            <th scope="col">Ban</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="i in spaces">
-            <th scope="row">{{ i.spaceId }}</th>
-            <td>{{ i.occupied === 0 ? "False" : "True" }}</td>
-            <td>{{ formatMode(i.mode) }}</td>
-            <td>{{ i.ban === 0 ? "False" : "True" }}</td>
-          </tr>
-          </tbody>
-        </table>
+        <div class="form-floating">
+          <select id="floorSelector" v-model="selectInfo[0]" class="form-select">
+            <option value="1">The First Floor</option>
+            <option value="2">The Second Floor</option>
+            <option value="3">The Third Floor</option>
+          </select>
+          <label for="floorSelector">Select the floor</label>
+        </div>
+        <br>
+          <selector v-show="selectInfo[0] !== 0" :key="selectInfo[0]" :select="selectInfo" :position="spaces"></selector>
       </div>
     </div>
   </div>
@@ -36,12 +28,15 @@
 import { useStore } from "vuex";
 import axios from "axios";
 import {ref} from "vue";
+import Selector from "../selector.vue";
 
 export default {
   name: "spaces",
+  components: {Selector},
   setup(){
     const store = useStore();
     let spaces = ref([]);
+    let selectInfo = ref([0,0])
 
     const formatMode = (id)=>{
       if(id === 0) return "day"
@@ -60,6 +55,7 @@ export default {
 
     return{
       spaces,
+      selectInfo,
       formatMode,
     }
   }

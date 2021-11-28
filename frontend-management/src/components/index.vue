@@ -1,26 +1,38 @@
 <template>
   <div class="container">
-      <div class="card col-5" style="float: left">
+    <div class="row justify-content-evenly">
+      <div class="card col-5">
         <br>
-        <h2 class="card-title">Users</h2>
+        <h2 class="card-title">User Infos</h2>
         <div class="card-body">
           <button class="btn btn-primary" @click="jmp(1)">Check</button>
         </div>
       </div>
-      <div class="card col-5" style="float: right">
+      <div class="card col-5">
         <br>
-        <h2 class="card-title">Orders</h2>
+        <h2 class="card-title">Order Infos</h2>
         <div class="card-body">
           <button class="btn btn-primary" @click="jmp(2)">Check</button>
         </div>
       </div>
-    <div class="card col-5" style="float: left">
-      <br>
-      <h2 class="card-title">Spaces</h2>
-      <div class="card-body">
-        <button class="btn btn-primary" @click="jmp(3)">Check</button>
+    </div>
+    <div class="row justify-content-evenly">
+      <div class="card col-5">
+        <br>
+        <h2 class="card-title">Space Infos</h2>
+        <div class="card-body">
+          <button class="btn btn-primary" @click="jmp(3)">Check</button>
+        </div>
+      </div>
+      <div class="card col-5">
+        <br>
+        <h2 class="card-title">Data Analysis</h2>
+        <div class="card-body">
+          <button class="btn btn-primary" @click="jmp(4)">Check</button>
+        </div>
       </div>
     </div>
+
   </div>
 
 </template>
@@ -38,13 +50,16 @@ export default {
     const jmp = function (id){
       store.dispatch("Load");
       if(id === 1){
-        router.push("/info/users");
+        router.push("/info/users/all");
       }
       if(id === 2){
-        router.push("/info/orders");
+        router.push("/info/orders/all");
       }
       if(id === 3){
         router.push("/info/spaces");
+      }
+      if(id === 4){
+        router.push("/info/data");
       }
     }
     store.dispatch("Finished")

@@ -3,7 +3,8 @@
     <br>
     <div class="card container align-items-baseline">
       <br>
-      <h1>&nbsp; All Orders</h1>
+      <h1 v-if="$route.params.id !== 'all'">&nbsp; Specific User's Orders</h1>
+      <h1 v-else>&nbsp; Orders</h1>
       <br>
     </div>
     <br>
@@ -25,7 +26,7 @@
           <tbody>
           <tr v-for="i in orders">
             <th scope="row">{{ i.orderId }}</th>
-            <th scope="row">{{ i.userId }}</th>
+            <th scope="row" @click="$router.push('/info/users/' + i.userId)" style="cursor: pointer">{{ i.userId }}</th>
             <td>{{ i.licenseNumber }}</td>
             <td>{{ i.spaceId }}</td>
             <td>{{ formatDate(i.startTime) }}</td>
@@ -44,12 +45,15 @@
 import { useStore } from "vuex";
 import axios from "axios";
 import {ref} from "vue";
+import {useRoute} from "vue-router";
 
 export default {
   name: "orders",
   setup(){
     const store = useStore();
-    let users = ref([]);
+    const route = useRoute();
+    let orders = ref([]);
+    let id = route.params.id;
 
     const formatDate = function (timestamp) {
       let date = new Date(timestamp);
@@ -65,11 +69,15 @@ export default {
       url:"management/administrator/parking/order/list",
       headers: {'token': localStorage.getItem("token")},
     }).then((res)=>{
-      users.value =  res.data["orderList"].reverse();
+      orders.value =  res.data["orderList"].reverse();
+      if(id !== "all")
+        orders.value = orders.value.filter((order)=>{
+          return order["userId"] === id;
+        })
       store.dispatch("Finished");
     })
     return{
-      orders: users,
+      orders,
       formatDate
     }
   }

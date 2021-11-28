@@ -3,7 +3,8 @@
     <br>
     <div class="card container align-items-baseline">
       <br>
-      <h1>&nbsp; All Users</h1>
+      <h1 v-if="$route.params.id !== 'all'">&nbsp; Specific User</h1>
+      <h1 v-else>&nbsp; Users</h1>
       <br>
     </div>
     <br>
@@ -20,7 +21,7 @@
           </thead>
           <tbody>
           <tr v-for="i in users">
-            <th scope="row">{{ i.id }}</th>
+            <th scope="row" @click="$router.push('/info/orders/' + i.id)" style="cursor: pointer">{{ i.id }}</th>
             <td>{{ i.username }}</td>
             <td>{{ i.phone }}</td>
             <td>{{ formatDate(i.registerTime) }}</td>
@@ -36,12 +37,16 @@
 import { useStore } from "vuex";
 import axios from "axios";
 import {ref} from "vue";
+import {useRoute} from "vue-router";
 
 export default {
   name: "users",
   setup(){
     const store = useStore();
+    const route = useRoute();
     let users = ref([]);
+    let id = route.params.id;
+
 
     const formatDate = function (timestamp) {
       let date = new Date(timestamp);
@@ -52,14 +57,29 @@ export default {
       let m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes())
       return Y+M+D+h+m;
     }
+
+    const sortFunc = function (user1,user2){
+      if (user1['phone'] < user2['phone'])
+        return -1;
+      if (user1['phone'] > user2['phone']) {
+        return 1;
+      }
+      return 0;
+    }
     axios({
       method:"GET",
       url:"user/getAllUsersInformation",
       headers: {'token': localStorage.getItem("token")},
     }).then((res)=>{
-      users.value =  res.data.data["allUsers"].reverse();
+      users.value =  res.data.data["allUsers"].sort(sortFunc);
+      if(id !== "all"){
+        users.value = users.value.filter((user)=>{
+          return user['id'] === id;
+        })
+      }
       store.dispatch("Finished");
     })
+
     return{
       users,
       formatDate,
@@ -77,4 +97,5 @@ th{
   vertical-align: middle;
   line-height: 20px;
 }
+
 </style>
