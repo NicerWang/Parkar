@@ -56,20 +56,20 @@ public class UserController {
         return R.error().message("Update Failed");
     }
 
-    @GetMapping("/userExit/{userId}")
+    @GetMapping("/userExist/{userId}")
     public R isUserExit(@PathVariable String userId){
         boolean userExit = userService.isUserExit(userId);
         if(userExit) {
-            return R.ok().message("User exit");
+            return R.ok().message("User exist");
         }
-        return R.error().message("User not exit");
+        return R.error().message("User not exist");
     }
 
     @GetMapping("/getAllUsersInformation")
     public R getAllUsersInformation(HttpServletRequest request){
         boolean isAdmin = JWTUtil.checkAdmin(request.getHeader("token"));
         if(!isAdmin){
-            return R.error().message("You are not a admin!");
+            return R.error().message("You are not an admin!");
         }
         List<User> allUsers = userService.getAllUsersInformation();
         return R.ok().message("Query successful!").data("allUsers",allUsers);
