@@ -68,14 +68,22 @@
                     <br>
                     <form class="row row-cols-lg-auto g-3 align-items-center" v-if="needReserve">
                         <br>
-                        <label class="form-label"  for="tel-in">Telephone</label>
-                        <input type="text" class="form-control" id="tel-in" placeholder="input telephone" v-model="uname">
-                        <label class="form-label"  for="pwd-in">Password</label>
+                        <label class="form-label" for="tel-in">Telephone</label>
+                        <input type="text" class="form-control" id="tel-in" placeholder="input telephone"
+                               v-model="uname">
+                        <label class="form-label" for="pwd-in">Password</label>
                         <input type="text" class="form-control" id="pwd-in" placeholder="input password" v-model="pwd">
                         <label class="form-label" for="end-date">End Date</label>
                         <input class="form-control" id="end-date" v-model="endDate" type="date">
-                        <label class="form-label" for="end-time">End Time</label>
-                        <input class="form-control" id="end-time" v-model="endTime" type="time">
+                        <label class="form-label">Start Time</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" min="0" max="23" v-model="endHour">
+                            <span class="input-group-text colon">:</span>
+                            <select class="form-control" v-model="endMinute">
+                                <option value="0">00</option>
+                                <option value="30">30</option>
+                            </select>
+                        </div>
                         <div class="col-12 justify-content-center">
                             <button type="button" class="btn btn-primary" @click="reserveNow">Submit</button>
                         </div>
@@ -94,9 +102,11 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <button type="button" class="btn btn-primary" @click="changeOccupyStatus(true)">Occupy</button>
+                            <button type="button" class="btn btn-primary" @click="changeOccupyStatus(true)">Occupy
+                            </button>
                             &nbsp;
-                            <button type="button" class="btn btn-primary" @click="changeOccupyStatus(false)">Release</button>
+                            <button type="button" class="btn btn-primary" @click="changeOccupyStatus(false)">Release
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -131,69 +141,68 @@
                     licenseInput: "AE86",
                     logs: "",
                     spaceId: 1,
-                    needReserve:false,
-                    scanError:false,
-                    uname:"",
-                    pwd:"",
+                    needReserve: false,
+                    scanError: false,
+                    uname: "",
+                    pwd: "",
                     endDate: date.getFullYear() + "-" + addPreZero(date.getMonth() + 1) + "-" + addPreZero(date.getDate()),
-                    endTime: addPreZero(date.getHours()) + ":" + addPreZero(date.getMinutes()),
-                    reserveLicense:""
+                    endHour: addPreZero(date.getHours()),
+                    endMinute: 0,
+                    reserveLicense: ""
                 }
             },
             methods: {
                 sendLicense() {
-                    if(this.license.trim() === ""){
+                    if (this.license.trim() === "") {
                         alert("Need more info.");
                         return;
                     }
-                    this.logs += "[License Camera]Detected License #" + this.license +" ,fetching reservation infos.\n"
+                    this.logs += "[License Camera]Detected License #" + this.license + " ,fetching reservation infos.\n"
                     axios({
                         method: "POST",
                         url: "/device/" + this.license,
                     }).then((res) => {
                         this.logs += "[License Camera]Successfully fetched\n";
                         this.logs += "[License Camera]Has Reservation:" + res.data["hasOrder"] + "\n";
-                        if(res.data["hasOrder"]){
+                        if (res.data["hasOrder"]) {
                             this.logs += "[License Camera]Floor:" + res.data["space"]["floor"] + "\n";
                             this.spaceId = res.data["space"]["spaceId"];
                             this.logs += "[License Camera]Space Id:" + res.data["space"]["spaceId"] + "\n";
-                        }
-                        else{
+                        } else {
                             this.needReserve = true;
                             this.reserveLicense = this.license
                         }
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             let textarea = document.querySelector("textarea");
                             textarea.scrollTop = textarea.scrollHeight;
-                        },200)
+                        }, 200)
 
                     });
                 },
-                inputLicense(){
-                    if(this.licenseInput.trim() === ""){
+                inputLicense() {
+                    if (this.licenseInput.trim() === "") {
                         alert("Need more info.");
                         return;
                     }
-                    this.logs += "[Control Panel]Input License #" + this.licenseInput +" ,fetching reservation infos.\n"
+                    this.logs += "[Control Panel]Input License #" + this.licenseInput + " ,fetching reservation infos.\n"
                     axios({
                         method: "POST",
                         url: "/device/panel/license/" + this.licenseInput,
                     }).then((res) => {
                         this.logs += "[Control Panel]Successfully fetched\n";
                         this.logs += "[Control Panel]Has Reservation:" + res.data["hasOrder"] + "\n";
-                        if(res.data["hasOrder"]){
+                        if (res.data["hasOrder"]) {
                             this.logs += "[Control Panel]Floor:" + res.data["space"]["floor"] + "\n";
                             this.spaceId = res.data["space"]["spaceId"];
                             this.logs += "[Control Panel]Space Id:" + res.data["space"]["spaceId"] + "\n";
-                        }
-                        else{
+                        } else {
                             this.needReserve = true;
                             this.reserveLicense = this.licenseInput
                         }
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             let textarea = document.querySelector("textarea");
                             textarea.scrollTop = textarea.scrollHeight;
-                        },200)
+                        }, 200)
 
                     });
                 },
@@ -205,16 +214,16 @@
                     }).then((res) => {
                         this.logs += "[Elevator][Successfully] info fetched\n";
                         this.logs += "[Elevator]Target Floor:" + res.data + "\n";
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             let textarea = document.querySelector("textarea");
                             textarea.scrollTop = textarea.scrollHeight;
-                        },200)
+                        }, 200)
                     });
                 },
-                changeOccupyStatus(next){
+                changeOccupyStatus(next) {
                     this.logs += "[Parking Sensor]Send Status Change\n"
                     let url = "/device/occupy/" + this.spaceId
-                    if(!next){
+                    if (!next) {
                         url = "/device/release/" + this.spaceId
                     }
                     axios({
@@ -222,44 +231,43 @@
                         url: url
                     }).then((res) => {
                         this.logs += "[Parking Sensor][Successfully]Info Updated\n";
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             let textarea = document.querySelector("textarea");
                             textarea.scrollTop = textarea.scrollHeight;
-                        },200)
+                        }, 200)
                     });
                 },
-                reserveNow(){
-                    if(this.uname.trim() === "" || this.pwd.trim() === ""){
+                reserveNow() {
+                    if (this.uname.trim() === "" || this.pwd.trim() === "") {
                         alert("Need more info.");
                         return;
                     }
-                    let end = Date.parse(this.endDate.replaceAll("-","/") + " " + this.endTime + ":00");
+                    let end = Date.parse(this.endDate.replaceAll("-", "/") + " " + this.endHour + ":" + this.endMinute + ":00");
                     this.logs += "[Control Panel]Send Reserve Info\n"
                     axios({
                         method: "POST",
                         url: "/device/panel/reserve",
                         params: {
-                            tel:this.uname,
-                            end:end,
-                            credential:this.pwd,
-                            license:this.reserveLicense
+                            tel: this.uname,
+                            end: end,
+                            credential: this.pwd,
+                            license: this.reserveLicense
                         }
                     }).then((res) => {
                         this.logs += "[Control Panel][Success]Info Reserved\n";
                         this.logs += "[Control Panel]Successfully fetched\n";
-                        if(res.data === ""){
+                        if (res.data === "") {
                             this.logs += "[Control Panel]Wrong Telephone or Password or Time\n";
-                        }
-                        else{
+                        } else {
                             this.logs += "[Control Panel]Has Reservation:" + res.data["hasOrder"] + "\n";
                             this.logs += "[Control Panel]Floor:" + res.data["space"]["floor"] + "\n";
                             this.spaceId = res.data["space"]["spaceId"];
                             this.logs += "[Control Panel]Space Id:" + res.data["space"]["spaceId"] + "\n";
                         }
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             let textarea = document.querySelector("textarea");
                             textarea.scrollTop = textarea.scrollHeight;
-                        },200)
+                        }, 200)
                     });
                 }
             }

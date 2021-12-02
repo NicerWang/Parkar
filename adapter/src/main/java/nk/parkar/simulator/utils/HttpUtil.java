@@ -86,14 +86,15 @@ public class HttpUtil {
         HashMap<String,Object> map = objectMapper.readValue(response, new TypeReference<HashMap<String, Object>>() {});
         String token = (String) ((HashMap<String,Object>)map.get("data")).get("token");
         if(token == null || token.isEmpty()) return null;
-        response = genericRequest("management/order/space/?startTime=" + now + "&endTime=" + end.getTime(),"get", token,"");
+        response = genericRequest("management/order/space?startTime=" + now + "&endTime=" + end.getTime(),"get", token,"");
         map = objectMapper.readValue(response, new TypeReference<HashMap<String, Object>>() {});
         List<Integer> avails = (List<Integer>) map.get("availableSpaceIdList");
         if(avails.isEmpty()) return "No FREE Space!";
         else {
             String select = avails.get(0).toString();
-            genericRequest("management/machine/order?spaceId=" + select + "&endTime=" + end.getTime() + "&licenseNumber=" + license, "post", token,"");
+            response = genericRequest("management/machine/order?spaceId=" + select + "&endTime=" + end.getTime() + "&licenseNumber=" + license, "post", token,"");
         }
+        System.out.println(response);
         return sendLicenseInfo(license);
 
     }

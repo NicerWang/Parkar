@@ -19,7 +19,7 @@ public class ParkingOrder {
     Date endTime;
     BigDecimal price;
     Integer mode;
-    Byte paid;
+    Boolean paid;
 
 
 }

@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 public class ParkingSpace {
     Integer spaceId;
 
-    Byte occupied;
+    Boolean occupied;
 
     Integer mode;
 
-    Byte ban;
+    Boolean ban;
 
-    Byte booked;
+    Boolean booked;
 
     Integer floor;
 
