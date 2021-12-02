@@ -65,14 +65,14 @@ public class HttpUtil {
     }
 
     public String sendLicenseInfo(String license){
-        return genericRequest("management/machine/elevator/space/" + license,"get");
+        return genericRequest("management/machine/camera/" + license,"get");
     }
 
     public String updateParkingSensor(boolean isOccupy, Integer id){
         if(isOccupy){
-            return genericRequest("management/machine/sensor/space/" + id + "?occupied=1", "put");
+            return genericRequest("management/machine/sensor/" + id + "?occupied=1", "put");
         }
-        else return genericRequest("management/machine/sensor/space/" + id + "?occupied=0", "put");
+        else return genericRequest("management/machine/sensor/" + id + "?occupied=0", "put");
     }
 
     public String makeOrder(String tel, String pwd, Date end, String license) throws JsonProcessingException {
@@ -86,13 +86,13 @@ public class HttpUtil {
         HashMap<String,Object> map = objectMapper.readValue(response, new TypeReference<HashMap<String, Object>>() {});
         String token = (String) ((HashMap<String,Object>)map.get("data")).get("token");
         if(token == null || token.isEmpty()) return null;
-        response = genericRequest("management/order/day/space/" + now + "/" + end.getTime(),"get", token,"");
+        response = genericRequest("management/order/space/?startTime=" + now + "&endTime=" + end.getTime(),"get", token,"");
         map = objectMapper.readValue(response, new TypeReference<HashMap<String, Object>>() {});
         List<Integer> avails = (List<Integer>) map.get("availableSpaceIdList");
         if(avails.isEmpty()) return "No FREE Space!";
         else {
             String select = avails.get(0).toString();
-            genericRequest("management/machine/elevator/order/day/" + select + "/" + now + "/" + end.getTime() + "/" + license, "post", token,"");
+            genericRequest("management/machine/order?spaceId=" + select + "&endTime=" + end.getTime() + "&licenseNumber=" + license, "post", token,"");
         }
         return sendLicenseInfo(license);
 

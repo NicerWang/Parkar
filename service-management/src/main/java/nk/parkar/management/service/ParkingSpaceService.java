@@ -9,10 +9,11 @@ public interface ParkingSpaceService {
 
     List<Integer> querySpaceByTime(Long startTime, Long endTime);
 
-    ParkingSpace updateSelective(ParkingSpace parkingSpace);
-
     List<ParkingSpace> getAllSpaces();
 
-    List<ParkingSpace> getAllUnbannedSpaces();
+    Integer update(ParkingSpace parkingSpace);
 
+    Integer updateSelective(ParkingSpace parkingSpace);
+
+    public boolean checkExist(Integer spaceId);
 }

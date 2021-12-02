@@ -11,9 +11,13 @@ import java.util.List;
 @Service
 public class ParkingTimeServiceImpl implements ParkingTimeService {
 
-    @Autowired(required = false)
     private ParkingTimeMapper parkingTimeMapper;
 
+    @Autowired
+    public void setParkingTimeMapper(ParkingTimeMapper parkingTimeMapper) {
+        this.parkingTimeMapper = parkingTimeMapper;
+    }
+    
     @Override
     public List<ParkingTime> queryTimeBySpaceId(Integer spaceId) {
         return parkingTimeMapper.selectBySpaceId(spaceId);

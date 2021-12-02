@@ -76,7 +76,7 @@ export default {
     let endTime = ref(addPreZero(newDate.getHours()) + ":" + addPreZero(newDate.getMinutes()));
 
     let avails = props.avails;
-    let mode = "day";
+    let mode = 0;
     let startTimestamp = "";
     let endTimestamp = "";
     let license = ref("");
@@ -95,7 +95,12 @@ export default {
       props.info.push(license.value);
       axios({
         method: "GET",
-        url: "/management/order/" + mode + "/space/" + startTimestamp + "/" + endTimestamp,
+        url: "/management/order/space",
+        params:{
+          mode: mode,
+          startTime: startTimestamp,
+          endTime: endTimestamp
+        },
         headers: {'token': localStorage.getItem("token")},
       }).then((res) => {
         for (let i = 0; i < res.data['availableSpaceIdList'].length; i++) {

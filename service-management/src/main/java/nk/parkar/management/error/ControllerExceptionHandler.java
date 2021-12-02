@@ -18,9 +18,8 @@ public class ControllerExceptionHandler {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public Map<String,Object> handleIllegalArgumentException(IllegalArgumentException exception){
         Map<String,Object> retMap = new HashMap<>();
-        retMap.put("requestPath",exception.getRequestPath());
-        retMap.put("message",exception.getDescription());
-        retMap.put("illegalArguments",exception.getArgumentInfoList());
+        retMap.put("RequestPath",exception.getRequestPath());
+        retMap.put("Message",exception.getDescription());
         return retMap;
     }
 
@@ -29,8 +28,8 @@ public class ControllerExceptionHandler {
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String,Object> handleTransactionException(TransactionException exception){
         Map<String,Object> retMap = new HashMap<>();
-        retMap.put("transactionName",exception.getProcessName());
-        retMap.put("message",exception.getDescription());
+        retMap.put("TransactionName",exception.getProcessName());
+        retMap.put("Message",exception.getDescription());
         return retMap;
     }
 

@@ -6,108 +6,82 @@ import nk.parkar.management.mapper.ParkingTimeMapper;
 import nk.parkar.management.model.ParkingOrder;
 import nk.parkar.management.model.ParkingTime;
 import nk.parkar.management.service.ParkingOrderService;
+import nk.parkar.management.util.PriceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class ParkingOrderServiceImpl implements ParkingOrderService {
 
-    @Autowired(required = false)
     ParkingOrderMapper parkingOrderMapper;
-    @Autowired(required = false)
+
     ParkingTimeMapper parkingTimeMapper;
+
+    @Autowired
+    public void setParkingOrderMapper(ParkingOrderMapper parkingOrderMapper) {
+        this.parkingOrderMapper = parkingOrderMapper;
+    }
+
+    @Autowired
+    public void setParkingTimeMapper(ParkingTimeMapper parkingTimeMapper) {
+        this.parkingTimeMapper = parkingTimeMapper;
+    }
+
 
     @Override
     @Transactional
-    public Map<String,Object> insertOrder(String userId, String licenseNumber, Integer spaceId, String mode, Long startTime, Long endTime) {
-
+    public Boolean insertOrder(String userId, String licenseNumber, Integer spaceId, Integer mode, Long startTime, Long endTime) {
         TransactionException transactionException = new TransactionException("insertOrder");
-        List<ParkingTime> parkingTimeList = parkingTimeMapper.selectBySpaceId(spaceId);
-        if(!parkingTimeList.isEmpty()){
-            for(ParkingTime parkingTime:parkingTimeList){
-                Long tempStartTime = parkingTime.getStartTime().getTime()/1000;
-                Long tempEndTime = parkingTime.getEndTime().getTime()/1000;
 
-//                if((tempStartTime.compareTo(endTime)<0&&tempStartTime.compareTo(startTime)>0)||
-//                        (tempEndTime.compareTo(endTime)<0&&tempEndTime.compareTo(startTime)>0)||
-//                        (tempEndTime.compareTo(endTime)==0&&tempStartTime.compareTo(startTime)==0)){
-                if((startTime.compareTo(tempStartTime)<0&&endTime.compareTo(tempStartTime)>0)||
-                        (startTime.compareTo(tempStartTime)>=0&&startTime.compareTo(tempEndTime)<0)){
-                    transactionException.addDescription("the time period in the space has been occupied");
+        // 保证订单对应车位和时间是空闲的
+        List<ParkingTime> parkingTimeList = parkingTimeMapper.selectBySpaceId(spaceId);
+        if (!parkingTimeList.isEmpty()) {
+            for (ParkingTime parkingTime : parkingTimeList) {
+                Long tempStartTime = parkingTime.getStartTime().getTime();
+                Long tempEndTime = parkingTime.getEndTime().getTime();
+                if ((startTime.compareTo(tempStartTime) < 0 && endTime.compareTo(tempStartTime) > 0) ||
+                        (startTime.compareTo(tempStartTime) >= 0 && startTime.compareTo(tempEndTime) < 0)) {
+                    transactionException.addDescription("Sorry, The time period in the space has been occupied.");
                     throw transactionException;
                 }
             }
         }
 
+        // 保证当前车辆在当前时间内只有一个车位的预约
         List<ParkingOrder> parkingOrderListByLicense = parkingOrderMapper.selectByLicenseNumber(licenseNumber);
-        int licenseIndex = parkingOrderListByLicense.size()-1;
-        while(licenseIndex>=0){
-            Long tempStartTime = parkingOrderListByLicense.get(licenseIndex).getStartTime().getTime()/1000;
-            Long tempEndTime = parkingOrderListByLicense.get(licenseIndex).getEndTime().getTime()/1000;
-            if((startTime.compareTo(tempStartTime)<0&&endTime.compareTo(tempStartTime)>0)||
-                    (startTime.compareTo(tempStartTime)>=0&&startTime.compareTo(tempEndTime)<0)){
-                transactionException.addDescription("Multiple parking spaces cannot be reserved at the same time with the same license plate number!");
+        int licenseIndex = parkingOrderListByLicense.size() - 1;
+        while (licenseIndex >= 0) {
+            Long tempStartTime = parkingOrderListByLicense.get(licenseIndex).getStartTime().getTime();
+            Long tempEndTime = parkingOrderListByLicense.get(licenseIndex).getEndTime().getTime();
+            if ((startTime.compareTo(tempStartTime) < 0 && endTime.compareTo(tempStartTime) > 0) ||
+                    (startTime.compareTo(tempStartTime) >= 0 && startTime.compareTo(tempEndTime) < 0)) {
+                transactionException.addDescription("This License Number (" + licenseNumber + ") already has a reservation of overlap time!");
                 throw transactionException;
             }
-
             licenseIndex--;
         }
 
-        BigDecimal unitPrice = new BigDecimal("0");
-        int modeCode = 0;
-        BigDecimal totalPrice;
-        long tempTimeUnits = 0L;
-        long dis = endTime-startTime;
-        switch (mode) {
-            case "day":
-                unitPrice = new BigDecimal("4.0");
-                tempTimeUnits = dis - 3600 * (dis / 3600) > 60 ? dis / 3600 + 1 : dis / 3600;
-                break;
-            case "month":
-                unitPrice = new BigDecimal("1.5");
-                modeCode = 1;
-                tempTimeUnits = dis / 3600;
-                break;
-            case "year":
-                unitPrice = new BigDecimal("1.2");
-                modeCode = 2;
-                tempTimeUnits = dis / 3600;
-                break;
-        }
-        BigDecimal timeUnits = new BigDecimal(tempTimeUnits);
-        totalPrice = timeUnits.multiply(unitPrice);
-
         ParkingOrder parkingOrder = new ParkingOrder();
-        parkingOrder.setMode(modeCode);
-        parkingOrder.setPaid((byte) 0);
-        parkingOrder.setEndTime(new Date(endTime*1000));
-        parkingOrder.setStartTime(new Date(startTime*1000));
+        parkingOrder.setMode(mode);
+        parkingOrder.setPaid(false);
+        parkingOrder.setEndTime(new Date(endTime - 1000));
+        parkingOrder.setStartTime(new Date(startTime));
         parkingOrder.setUserId(userId);
-        parkingOrder.setPrice(totalPrice);
+        parkingOrder.setPrice(PriceUtil.getPrice(mode,startTime,endTime));
         parkingOrder.setSpaceId(spaceId);
         parkingOrder.setLicenseNumber(licenseNumber);
-        parkingOrderMapper.insertSelective(parkingOrder);
+        parkingOrderMapper.insert(parkingOrder);
 
         ParkingTime parkingTime = new ParkingTime();
-        parkingTime.setEndTime(new Date(endTime*1000));
-        parkingTime.setStartTime(new Date(startTime*1000));
+        parkingTime.setEndTime(new Date(endTime - 1000));
+        parkingTime.setStartTime(new Date(startTime));
         parkingTime.setSpaceId(spaceId);
-        parkingTimeMapper.insertSelective(parkingTime);
-
-        Integer orderResult = parkingOrder.getOrderId();
-        Integer timeResult = parkingTime.getTimeId();
-
-        ParkingOrder newOrder = parkingOrderMapper.selectByPrimaryKey(orderResult);
-        ParkingTime newTime = parkingTimeMapper.selectByPrimaryKey(timeResult);
-
-        Map<String,Object> retMap = new HashMap<>();
-        retMap.put("newTime",newTime);
-        retMap.put("newOrder",newOrder);
-        return retMap;
+        parkingTimeMapper.insert(parkingTime);
+        return true;
     }
 
     @Override
@@ -121,47 +95,38 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
     }
 
     @Override
-    public List<ParkingOrder> queryByPaidStat(Byte paid) {
+    public List<ParkingOrder> queryByPaidStat(Boolean paid) {
         return parkingOrderMapper.selectByPaidStat(paid);
     }
 
     @Override
     public ParkingOrder queryByOrderId(Integer orderId) {
-        return parkingOrderMapper.selectByPrimaryKey(orderId);
+        return parkingOrderMapper.selectById(orderId);
     }
 
     @Override
     @Transactional
     public void cancelOrder(Integer orderId, ParkingTime parkingTime) {
         TransactionException transactionException = new TransactionException("cancelOrder");
-        if(parkingTimeMapper.deleteByNoPrimaryKey(parkingTime)<1){
-            transactionException.addDescription("no such period in table parking_time");
+        if (parkingTimeMapper.deleteWithoutId(parkingTime) < 1) {
+            transactionException.addDescription("[Internal Error] Time interval remove failed.");
             throw transactionException;
-       }
-       parkingOrderMapper.deleteByPrimaryKey(orderId);
+        }
+        parkingOrderMapper.deleteById(orderId);
     }
 
     @Override
     public ParkingOrder querySpaceIdByLicenseNumber(String licenseNumber) {
         List<ParkingOrder> parkingOrderList = parkingOrderMapper.selectByLicenseNumber(licenseNumber);
-        if(parkingOrderList.isEmpty())
+        if (parkingOrderList.isEmpty())
             return null;
-        int retIndex=0;
-        while(retIndex<parkingOrderList.size()){
-            if((new Date().getTime())>=parkingOrderList.get(retIndex).getEndTime().getTime()){
-                retIndex--;
-                break;
+        long now = new Date().getTime();
+        for(int i = 0; i < parkingOrderList.size(); i++){
+            if(now >= parkingOrderList.get(i).getStartTime().getTime() && now <= parkingOrderList.get(i).getEndTime().getTime()){
+                return parkingOrderList.get(i);
             }
-            retIndex++;
         }
-        if(retIndex<0) {
-            return null;
-        }
-        else{
-            if(retIndex>=parkingOrderList.size())
-                retIndex=parkingOrderList.size()-1;
-            return parkingOrderList.get(retIndex);
-        }
+        return null;
     }
 
 

@@ -81,13 +81,10 @@ export default {
     let space = ref({})
     axios({
       method:"GET",
-      url:"/management/administrator/parking/space/" + route.params.id,
+      url:"/management/admin/space/" + route.params.id,
       headers: {'token': localStorage.getItem("token")},
     }).then((res)=>{
       space.value = res.data['spaceInfo'];
-      space.value['booked'] = Boolean(space.value['booked']);
-      space.value['ban'] = Boolean(space.value['ban']);
-      space.value['occupied'] = Boolean(space.value['occupied']);
       store.dispatch("Finished")
     })
 
@@ -95,20 +92,16 @@ export default {
     
     const updateInfo = function () {
       let mode;
-      if(space.value['mode'] === 0) mode = "day";
-      if(space.value['mode'] === 1) mode = "month";
-      if(space.value['mode'] === 2) mode = "year";
       axios({
         method:"PUT",
-        url:"/management/administrator/parking/space/" + space.value['spaceId'],
-        params:{
+        url:"/management/admin/space/" + space.value['spaceId'],
+        data:{
           floor:space.value['floor'],
-          ban:Number(space.value['ban']),
-          booked:Number(space.value['booked']),
-          occupied:Number(space.value['occupied']),
+          ban:space.value['ban'],
+          occupied:space.value['occupied'],
           xCoordinate:space.value['xCoordinate'],
           yCoordinate:space.value['yCoordinate'],
-          mode:mode,
+          mode:space.value['mode'],
         },
         headers: {'token': localStorage.getItem("token")},
       }).then((res)=>{

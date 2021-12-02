@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Map;
 
 public interface ParkingOrderService {
-    Map<String,Object> insertOrder(String userId, String licenseNumber, Integer spaceId, String mode, Long startTime, Long endTime);
+    Boolean insertOrder(String userId, String licenseNumber, Integer spaceId, Integer mode, Long startTime, Long endTime);
 
     List<ParkingOrder> queryByUserId(String userId);
 
     List<ParkingOrder> queryAll();
 
-    List<ParkingOrder> queryByPaidStat(Byte paid);
+    List<ParkingOrder> queryByPaidStat(Boolean paid);
 
     ParkingOrder queryByOrderId(Integer orderId);
 

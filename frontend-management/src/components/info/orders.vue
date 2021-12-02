@@ -66,7 +66,7 @@ export default {
     }
     axios({
       method:"GET",
-      url:"management/administrator/parking/order/list",
+      url:"management/admin/order",
       headers: {'token': localStorage.getItem("token")},
     }).then((res)=>{
       orders.value =  res.data["orderList"].reverse();

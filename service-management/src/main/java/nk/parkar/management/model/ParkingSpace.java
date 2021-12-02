@@ -5,13 +5,13 @@ import io.swagger.models.auth.In;
 public class ParkingSpace {
     private Integer spaceId;
 
-    private Byte occupied;
+    private Boolean occupied;
 
     private Integer mode;
 
-    private Byte ban;
+    private Boolean ban;
 
-    private Byte booked;
+    private Boolean booked;
 
     private Integer floor;
 
@@ -19,11 +19,11 @@ public class ParkingSpace {
 
     private Integer yCoordinate;
 
-    public Byte getBooked() {
+    public Boolean getBooked() {
         return booked;
     }
 
-    public void setBooked(Byte booked) {
+    public void setBooked(Boolean booked) {
         this.booked = booked;
     }
 
@@ -59,11 +59,11 @@ public class ParkingSpace {
         this.spaceId = spaceId;
     }
 
-    public Byte getOccupied() {
+    public Boolean getOccupied() {
         return occupied;
     }
 
-    public void setOccupied(Byte occupied) {
+    public void setOccupied(Boolean occupied) {
         this.occupied = occupied;
     }
 
@@ -75,11 +75,11 @@ public class ParkingSpace {
         this.mode = mode;
     }
 
-    public Byte getBan() {
+    public Boolean getBan() {
         return ban;
     }
 
-    public void setBan(Byte ban) {
+    public void setBan(Boolean ban) {
         this.ban = ban;
     }
 }

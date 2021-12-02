@@ -2,15 +2,25 @@ package nk.parkar.management.controller;
 
 
 import nk.parkar.management.error.ControllerException.IllegalArgumentException;
+import nk.parkar.management.error.ControllerException.TransactionException;
 import nk.parkar.management.model.ParkingOrder;
 import nk.parkar.management.model.ParkingSpace;
 import nk.parkar.management.service.ParkingOrderService;
 import nk.parkar.management.service.ParkingSpaceService;
 import nk.parkar.management.util.CheckUtil;
 import nk.parkar.management.util.JWTUtil;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,132 +39,78 @@ public class MachineParkingController {
         this.parkingOrderService = parkingOrderService;
     }
 
-    @GetMapping("/machine/elevator/space/{licenseNumber}")
-    public Map<String,Object> getSpaceInfoByLicenseNumber(@PathVariable("licenseNumber")String licenseNumber){
-        Map<String,Object> retMap = new HashMap<>();
+    /**
+     * 入场时查询有无订单
+     */
+    @GetMapping("/machine/camera/{licenseNumber}")
+    public Map<String, Object> getSpaceInfoByLicenseNumber(@PathVariable("licenseNumber") String licenseNumber) {
+        Map<String, Object> retMap = new HashMap<>();
         ParkingOrder currentOrder = parkingOrderService.querySpaceIdByLicenseNumber(licenseNumber);
         Boolean hasOrder = currentOrder != null;
-        if(hasOrder){
+        if (hasOrder) {
             ParkingSpace parkingSpace = parkingSpaceService.querySpaceById(currentOrder.getSpaceId());
-            retMap.put("space",parkingSpace);
-            retMap.put("currentOrder",currentOrder);
+            retMap.put("space", parkingSpace);
+            retMap.put("currentOrder", currentOrder);
+        } else {
+            retMap.put("space", null);
+            retMap.put("currentOrder", null);
         }
-        else{
-            retMap.put("space",null);
-            retMap.put("currentOrder",null);
-        }
-        retMap.put("hasOrder",hasOrder);
+        retMap.put("hasOrder", hasOrder);
         return retMap;
     }
 
-    @PutMapping("/machine/sensor/space/{spaceId}")
-    public Map<String,Object> updateSpaceInfoBySpaceId(@PathVariable("spaceId")String spaceIdStr,
-                                                       String occupied,
-                                                       String ban){
-        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/machine/sensor/space/{spaceId}");
+    /**
+     * 修改传感器状态
+     */
+    @PutMapping("/machine/sensor/{spaceId}")
+    public Boolean updateSpaceInfoBySpaceId(@PathVariable("spaceId") Integer spaceId,
+                                                        @RequestParam Boolean occupied) {
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/machine/sensor/{spaceId}");
 
-
-        CheckUtil.checkSpaceIdFormat(illegalArgumentException,spaceIdStr);
-        if(!illegalArgumentException.getArgumentInfoList().isEmpty()){
-            throw illegalArgumentException;
-        }
-
-        Integer spaceId = Integer.parseInt(spaceIdStr);
         ParkingSpace parkingSpace = new ParkingSpace();
-        if(checkSpaceIdValue(illegalArgumentException,spaceId)==null){
+        if (!parkingSpaceService.checkExist(spaceId)) {
             throw illegalArgumentException;
-        }
-        else{
+        } else {
             parkingSpace.setSpaceId(spaceId);
         }
-
-        if(occupied!=null){
-            if(!CheckUtil.checkOccupied(illegalArgumentException,occupied)){
-                throw illegalArgumentException;
-            }
-            Byte isOccupied=Byte.parseByte(occupied);
-            parkingSpace.setOccupied(isOccupied);
-        }
-        if(ban!=null){
-            Byte isBan;
-            if(ban.equals("0")||ban.equals("1")){
-                isBan=Byte.parseByte(ban);
-            }
-            else{
-                illegalArgumentException.addArgumentInfo("ban");
-                illegalArgumentException.addDescription("illegal ban: "+ban);
-                throw illegalArgumentException;
-            }
-            parkingSpace.setBan(isBan);
-        }
-        ParkingSpace retSpace = parkingSpaceService.updateSelective(parkingSpace);
-        Map<String,Object> retMap = new HashMap<>();
-        retMap.put("updated space",retSpace);
-        return retMap;
+        parkingSpace.setOccupied(occupied);
+        return parkingSpaceService.updateSelective(parkingSpace) == 1;
     }
 
-    @PostMapping("/machine/elevator/order/{mode}/{spaceId}/{startTime}/{endTime}/{licenseNumber}")
-    public Object addOrderFromElevator(@PathVariable("mode") String mode,
-                                   @PathVariable("spaceId") String spaceIdStr,
-                                   @PathVariable("startTime") String startTimeStr,
-                                   @PathVariable("endTime") String endTimeStr,
-                                   @PathVariable("licenseNumber") String licenseNumber,
-                                   @RequestHeader("token") String token){
-        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/machine/elevator/order/{mode}/{spaceId}/{startTime}/{endTime}/{licenseNumber}");
-        String userId=JWTUtil.check(token);
-        if(userId==null){
-            illegalArgumentException.addDescription("invalid token: "+token);
-            illegalArgumentException.addArgumentInfo("token");
-            throw illegalArgumentException;
-        }
+    /**
+     * 根据支付状态查询订单
+     * 所有用于传递的时间戳，必须都是13位的
+     */
+    @PostMapping("/machine/order")
+    public Object addOrderFromElevator(@RequestParam String licenseNumber,
+                                       @RequestParam Integer spaceId,
+                                       @RequestParam Long endTime,
+                                       @RequestHeader("token") String token) {
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/machine/order");
+        String userId = JWTUtil.check(token);
+        Long startTime = new Date().getTime();
 
-        //判断mode是否合法
-        CheckUtil.checkMode(illegalArgumentException,mode);
-        //判断userId形式是否合法
-        if(!CheckUtil.checkUserId(userId)){
-            illegalArgumentException.addDescription("illegal userId");
-            illegalArgumentException.addArgumentInfo("userId");
-        }
-        //判断spaceId形式是否合法
-        CheckUtil.checkSpaceIdFormat(illegalArgumentException,spaceIdStr);
-        //判断time形式是否合法
-        CheckUtil.checkTimeFormat(illegalArgumentException,startTimeStr,endTimeStr);
-        if(!illegalArgumentException.getArgumentInfoList().isEmpty()){
+        String timeCheck = CheckUtil.checkTime(startTime,endTime);
+        if(timeCheck != null){
+            illegalArgumentException.addDescription(timeCheck);
             throw illegalArgumentException;
         }
-
-        //判断spaceId数值是否合法
-        Integer spaceId = Integer.parseInt(spaceIdStr);
-        /*ParkingSpace checkSpace = */
-        checkSpaceIdValue(illegalArgumentException,spaceId);
-/*        if(checkSpace!=null&&checkSpace.getBan()==1){
-            illegalArgumentException.addDescription("spaceId "+spaceId+" has been banned!");
-            illegalArgumentException.addDescription("spaceId");
-        }*/
-        //判断time数值是否合法
-        Long startTime = startTimeStr.length()==13?Long.parseLong(startTimeStr.substring(0,10)):Long.parseLong(startTimeStr);
-        Long endTime = endTimeStr.length()==13?Long.parseLong(endTimeStr.substring(0,10)):Long.parseLong(endTimeStr);
-        if(startTime.compareTo(endTime)>=0){
-            illegalArgumentException.addDescription("illegal time:"+startTimeStr+"|"+endTimeStr+" ==> numerical problem");
-            illegalArgumentException.addArgumentInfo("startTime|endTime");
-        }
-        if(!illegalArgumentException.getArgumentInfoList().isEmpty()){
+        if (!CheckUtil.checkUserId(userId)) {
+            illegalArgumentException.addDescription("Illegal userId");
             throw illegalArgumentException;
         }
-        return parkingOrderService.insertOrder(userId, licenseNumber,spaceId, mode, startTime, endTime);
+        if (!parkingSpaceService.checkExist(spaceId)) {
+            illegalArgumentException.addDescription("SpaceId " + spaceId + " not found.");
+            throw illegalArgumentException;
+        }
+        if (endTime % 1800000 != 0) {
+            illegalArgumentException.addDescription("End time must at one or half hour.");
+            throw illegalArgumentException;
+        }
+        if (endTime - startTime < 1800000) {
+            illegalArgumentException.addDescription("Reservation at least 30 minutes.");
+            throw illegalArgumentException;
+        }
+        return parkingOrderService.insertOrder(userId, licenseNumber, spaceId, 0, startTime, endTime);
     }
-
-
-
-
-    private ParkingSpace checkSpaceIdValue(IllegalArgumentException illegalArgumentException,Integer spaceId){
-        ParkingSpace parkingSpace = parkingSpaceService.querySpaceById(spaceId);
-        if (parkingSpace==null){
-            illegalArgumentException.addDescription("spaceId "+spaceId+" not found");
-            illegalArgumentException.addArgumentInfo("spaceId");
-            return null;
-        }
-        return parkingSpace;
-    }
-
 }

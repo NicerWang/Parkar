@@ -69,7 +69,14 @@ export default {
     const confirm = () => {
       axios({
         method: "POST",
-        url: "/management/order/day/" + info[4] + "/" + info[0] + "/" + info[1] + "/" + info[2],
+        url: "/management/order/submit/",
+        params:{
+          mode: 0,
+          spaceId: info[4],
+          startTime: info[0],
+          endTime: info[1],
+          licenseNumber: info[2],
+        },
         headers: {'token': localStorage.getItem("token")},
       }).then((res) => {
         ok.value = true;

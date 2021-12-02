@@ -16,29 +16,36 @@ import java.util.Map;
 @Service
 public class ParkingSpaceServiceImpl implements ParkingSpaceService {
 
-    @Autowired(required = false)
     private ParkingSpaceMapper parkingSpaceMapper;
+
+    @Autowired
+    public void setParkingSpaceMapper(ParkingSpaceMapper parkingSpaceMapper) {
+        this.parkingSpaceMapper = parkingSpaceMapper;
+    }
 
     @Override
     public ParkingSpace querySpaceById(Integer spaceId) {
-        return parkingSpaceMapper.selectByPrimaryKey(spaceId);
+        return parkingSpaceMapper.selectById(spaceId);
     }
 
     @Override
     public List<Integer> querySpaceByTime(Long startTime, Long endTime) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("startTime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(startTime*1000)));
-        map.put("endTime",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(endTime*1000)));
+        Map<String, Object> map = new HashMap<>();
+        map.put("startTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(startTime)));
+        map.put("endTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(endTime)));
         return parkingSpaceMapper.selectByAvailableTime(map);
     }
 
     @Override
     @Transactional
-    public ParkingSpace updateSelective(ParkingSpace parkingSpace) {
+    public Integer update(ParkingSpace parkingSpace) {
+        return parkingSpaceMapper.updateById(parkingSpace);
+    }
 
-        parkingSpaceMapper.updateByPrimaryKeySelective(parkingSpace);
-
-        return parkingSpaceMapper.selectByPrimaryKey(parkingSpace.getSpaceId());
+    @Override
+    @Transactional
+    public Integer updateSelective(ParkingSpace parkingSpace) {
+        return parkingSpaceMapper.updateByIdSelective(parkingSpace);
     }
 
     @Override
@@ -47,7 +54,7 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
     }
 
     @Override
-    public List<ParkingSpace> getAllUnbannedSpaces() {
-        return parkingSpaceMapper.selectUnbanned();
+    public boolean checkExist(Integer spaceId) {
+        return this.querySpaceById(spaceId) != null;
     }
 }

@@ -25,7 +25,7 @@ public class SwaggerConfiguration {
     List<Parameter> pars = new ArrayList<>();
     @Bean
     public Docket docket(){
-        ticketPar.name("token").description("user token")
+        ticketPar.name("token").description("User token")
                 .modelRef(new ModelRef("string")).parameterType("header")
                 .required(false).build();
         pars.add(ticketPar.build());

@@ -1,40 +1,32 @@
 package nk.parkar.management.util.entity;
 
 public class UnavailableTime {
-    private String startTime;
-    private String endTime;
+    private long startTime;
+    private long endTime;
 
     public UnavailableTime() {
-        startTime = "undefined startTime";
-        endTime = "undefined endTime";
+        startTime = -1;
+        endTime = -1;
     }
 
-    public UnavailableTime(String startTime, String endTime) {
+    public UnavailableTime(long startTime, long endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-    @Override
-    public String toString() {
-        return "AvailableTime{" +
-                "startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                '}';
-    }
-
-    public String getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
 }

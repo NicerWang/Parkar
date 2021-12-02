@@ -10,6 +10,18 @@ public class ParkingOrder {
 
     private String licenseNumber;
 
+    private Integer spaceId;
+
+    private Date startTime;
+
+    private Date endTime;
+
+    private Double price;
+
+    private Integer mode;
+
+    private Boolean paid;
+
     public String getLicenseNumber() {
         return licenseNumber;
     }
@@ -17,18 +29,6 @@ public class ParkingOrder {
     public void setLicenseNumber(String licenseNumber) {
         this.licenseNumber = licenseNumber;
     }
-
-    private Integer spaceId;
-
-    private Date startTime;
-
-    private Date endTime;
-
-    private BigDecimal price;
-
-    private Integer mode;
-
-    private Byte paid;
 
     public Integer getOrderId() {
         return orderId;
@@ -70,11 +70,11 @@ public class ParkingOrder {
         this.endTime = endTime;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -86,11 +86,11 @@ public class ParkingOrder {
         this.mode = mode;
     }
 
-    public Byte getPaid() {
+    public Boolean getPaid() {
         return paid;
     }
 
-    public void setPaid(Byte paid) {
+    public void setPaid(Boolean paid) {
         this.paid = paid;
     }
 

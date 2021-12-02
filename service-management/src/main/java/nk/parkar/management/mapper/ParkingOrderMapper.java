@@ -1,28 +1,25 @@
 package nk.parkar.management.mapper;
 
 import nk.parkar.management.model.ParkingOrder;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-
+@Mapper
 public interface ParkingOrderMapper {
-    int deleteByPrimaryKey(Integer orderId);
-
-    int insert(ParkingOrder record);
-
-    int insertSelective(ParkingOrder record);
-
-    ParkingOrder selectByPrimaryKey(Integer orderId);
+    ParkingOrder selectById(Integer orderId);
 
     List<ParkingOrder> selectByUserId(String userId);
 
+    List<ParkingOrder> selectByPaidStat(Boolean paid);
+
     List<ParkingOrder> selectAll();
 
-    int updateByPrimaryKeySelective(ParkingOrder record);
-
-    int updateByPrimaryKey(ParkingOrder record);
-
-    List<ParkingOrder> selectByPaidStat(Byte paid);
-
     List<ParkingOrder> selectByLicenseNumber(String licenseNumber);
+
+    int deleteById(Integer orderId);
+
+    int insert(ParkingOrder record);
+
+    int updateById(ParkingOrder record);
 }
