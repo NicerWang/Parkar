@@ -17,9 +17,9 @@
         <div class="col-md-12">
           <label for="inputState" class="form-label">Type</label>
           <select id="inputState" class="form-select" v-model="space['mode']">
-            <option value="0">day</option>
-            <option value="1">month</option>
-            <option value="2">year</option>
+            <option value="0">Temporary</option>
+            <option value="1">Month</option>
+            <option value="2">Year</option>
           </select>
         </div>
         <div class="col-md-6">
@@ -34,7 +34,7 @@
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="ban" v-model="space['ban']">
             <label class="form-check-label" for="ban">
-              Ban
+              Banned
             </label>
           </div>
         </div>
@@ -42,15 +42,15 @@
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="occupy" v-model="space['occupied']">
             <label class="form-check-label" for="occupy">
-              Occupy
+              Occupied
             </label>
           </div>
         </div>
         <div class="col-4">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="book" v-model="space['booked']">
+            <input class="form-check-input" type="checkbox" id="book" v-model="space['booked']" disabled>
             <label class="form-check-label" for="book">
-              Book
+              Booked
             </label>
           </div>
         </div>

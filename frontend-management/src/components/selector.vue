@@ -1,13 +1,13 @@
 <template>
   <div class="board">
     <div class="park-position" v-for="(i,idx) in positions" :style="{left:i.xCoordinate + 'px',top:i.yCoordinate + 'px'}" @click="selectPosition(idx)">
-      <div v-show="(i.occupied || i.booked) && !i.ban">
+      <div v-show="i.occupied && !i.ban">
         <img class="symbol" src="../assets/check.svg" alt="">
       </div>
       <div v-show="i.ban">
         <img class="symbol" src="../assets/close.svg" alt="">
       </div>
-      <div v-show="!i.occupied && !i.ban && !i.booked">
+      <div v-show="!i.occupied && !i.ban">
         <img class="symbol" src="../assets/round.svg" alt="">
       </div>
       {{ i.spaceId }}
