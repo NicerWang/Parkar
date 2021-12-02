@@ -12,25 +12,39 @@
       </div>
     </div>
     <br>
-    <div class="row ">
-      <div class="col-6">
+    <div class="row justify-content-evenly">
+      <div class="col-3">
         <label class="form-label" for="start-date">Start Date</label>
         <div><input id="start-date" v-model="startDate" type="date"></div>
       </div>
-      <div class="col-6">
-        <label class="form-label" for="start-time">Start Time</label>
-        <div><input id="start-time" v-model="startTime" type="time"></div>
+      <div class="col-3">
+        <label class="form-label" for="start-date">Start Time</label>
+        <div class="input-group">
+          <input type="number" class="form-control" min="0" max="23" v-model="startHour">
+          <span class="input-group-text colon">:</span>
+          <select  class="form-control" v-model="startMinute">
+            <option value="0">00</option>
+            <option value="30">30</option>
+          </select>
+        </div>
       </div>
     </div>
     <br>
-    <div class="row">
-      <div class="col-6">
+    <div class="row justify-content-evenly">
+      <div class="col-3">
         <label class="form-label" for="end-date">End Date</label>
         <div><input id="end-date" v-model="endDate" type="date"></div>
       </div>
-      <div class="col-6">
-        <label class="form-label" for="end-time">End Time</label>
-        <div><input id="end-time" v-model="endTime" type="time"></div>
+      <div class="col-3">
+        <label class="form-label" for="start-date">End Time</label>
+        <div class="input-group mb-3">
+          <input type="number" class="form-control" min="0" max="23" v-model="endHour">
+          <span class="input-group-text colon">:</span>
+          <select  class="form-control" v-model="endMinute">
+            <option value="0">00</option>
+            <option value="30">30</option>
+          </select>
+        </div>
       </div>
     </div>
     <br>
@@ -72,18 +86,19 @@ export default {
     }
     let startDate = ref(date.getFullYear() + "-" + addPreZero(date.getMonth() + 1) + "-" + addPreZero(date.getDate()));
     let endDate = ref(newDate.getFullYear() + "-" + addPreZero(newDate.getMonth() + 1) + "-" + addPreZero(newDate.getDate()));
-    let startTime = ref(addPreZero(date.getHours()) + ":" + addPreZero(date.getMinutes()));
-    let endTime = ref(addPreZero(newDate.getHours()) + ":" + addPreZero(newDate.getMinutes()));
+    let startHour = ref(addPreZero(date.getHours()));
+    let endHour = ref(addPreZero(newDate.getHours()));
+    let startMinute = ref(0);
+    let endMinute = ref(0);
 
     let avails = props.avails;
-    let mode = 0;
     let startTimestamp = "";
     let endTimestamp = "";
     let license = ref("");
     let all_cars = ref([])
     const submit = () => {
-      startTimestamp = Date.parse(startDate.value.replaceAll("-","/") + " " + startTime.value + ":00");
-      endTimestamp = Date.parse(endDate.value.replaceAll("-","/") + " " + endTime.value + ":00");
+      startTimestamp = Date.parse(startDate.value.replaceAll("-","/") + " " + startHour.value + ":" + startMinute.value + ":00");
+      endTimestamp = Date.parse(endDate.value.replaceAll("-","/") + " " + endHour.value + ":" + endMinute.value + ":00");
       if (startTimestamp == null || endTimestamp == null || startTimestamp >= endTimestamp || license.value === "") {
         props.message[1] = "[ERROR]Need Car Number"
         props.message[0] = true
@@ -97,9 +112,8 @@ export default {
         method: "GET",
         url: "/management/order/space",
         params:{
-          mode: mode,
           startTime: startTimestamp,
-          endTime: endTimestamp
+          endTime: endTimestamp,
         },
         headers: {'token': localStorage.getItem("token")},
       }).then((res) => {
@@ -129,8 +143,10 @@ export default {
     return {
       startDate,
       endDate,
-      startTime,
-      endTime,
+      startHour,
+      endHour,
+      startMinute,
+      endMinute,
       license,
       all_cars,
       submit
@@ -156,5 +172,8 @@ input:focus{
   border-color: #86b7fe;
   outline: 0;
   box-shadow: 0 0 0 .25rem rgba(13,110,253,.25);
+}
+.colon{
+  font-weight: 900;
 }
 </style>

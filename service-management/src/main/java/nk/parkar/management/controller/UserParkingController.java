@@ -69,7 +69,7 @@ public class UserParkingController {
     @GetMapping("/order/space")
     public Object getSpaceByAvailableTime(@RequestParam Long startTime,
                                           @RequestParam Long endTime,
-                                          @RequestParam String token) {
+                                          @RequestHeader("token") String token) {
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/order/space");
         tokenCheck(illegalArgumentException, token);
         timeCheck(illegalArgumentException,startTime,endTime);

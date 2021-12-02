@@ -33,7 +33,7 @@
             <td>{{ formatDate(i.startTime) }}</td>
             <td>{{ formatDate(i.endTime)  }}</td>
             <td>{{ i.price }}</td>
-            <td><button :disabled="i.paid !== 0" class="btn btn-primary" @click="pay(i.orderId,i.price)">Pay</button> <button class="btn btn-danger" @click="cancel(i.orderId)">Cancel</button></td>
+            <td><button :disabled="i.paid" class="btn btn-primary" @click="pay(i.orderId,i.price)">Pay</button> <button class="btn btn-danger" @click="cancel(i.orderId)">Cancel</button></td>
           </tr>
           </tbody>
         </table>
@@ -64,7 +64,7 @@
           <td>{{ formatDate(i.startTime) }}</td>
           <td>{{ formatDate(i.endTime)  }}</td>
           <td>{{ i.price }}</td>
-          <td><button :disabled="i.paid !== 0" class="btn btn-primary" @click="pay(i.orderId,i.price)">Pay</button></td>
+          <td><button :disabled="i.paid" class="btn btn-primary" @click="pay(i.orderId,i.price)">Pay</button></td>
         </tr>
         </tbody>
       </table>

@@ -69,7 +69,7 @@ export default {
     const confirm = () => {
       axios({
         method: "POST",
-        url: "/management/order/submit/",
+        url: "/management/order/submit",
         params:{
           mode: 0,
           spaceId: info[4],

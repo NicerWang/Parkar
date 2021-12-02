@@ -89,7 +89,7 @@ export default {
 
     axios({
       method: "GET",
-      url: "/management/space/list",
+      url: "/management/order/space/list",
       headers: {'token': localStorage.getItem("token")},
       async:false
     }).then((res) => {
