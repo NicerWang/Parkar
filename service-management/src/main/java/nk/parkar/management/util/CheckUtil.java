@@ -14,7 +14,7 @@ import java.io.IOException;
 public class CheckUtil {
     public static boolean checkUserId(String userId) {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        HttpGet httpGet = new HttpGet("http://81.70.254.128/api/user/userExit/" + userId);
+        HttpGet httpGet = new HttpGet("http://81.70.254.128/api/user/userExist/" + userId);
         CloseableHttpResponse response = null;
         TransactionException transactionException = new TransactionException("[Transaction] Check userId");
         try {
