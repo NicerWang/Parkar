@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-12">
+    <div class="row justify-content-evenly">
+      <div class="col-12 col-lg-6">
         <label class="form-label" for="car-number">Car Number</label>
         <input id="car-number" v-model="license" class="form-control" list="datalistOptions"
                placeholder="Your Car Number Here. eg. AE86">
@@ -13,14 +13,31 @@
     </div>
     <br>
     <div class="row justify-content-evenly">
-      <div class="col-3">
+      <div class="col-12 col-sm-6 col-lg-4">
         <label class="form-label" for="start-date">Start Date</label>
         <div><input id="start-date" v-model="startDate" type="date"></div>
       </div>
-      <div class="col-3">
+      <div class="col-12 col-sm-6 col-lg-4">
         <label class="form-label" for="start-date">Start Time</label>
         <div class="input-group">
-          <input type="number" class="form-control" min="0" max="23" v-model="startHour">
+          <select  class="form-control" v-model="startOffset">
+            <option value="0">上午</option>
+            <option value="12">下午</option>
+          </select>
+          <select  class="form-control" v-model="startHour">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+          </select>
           <span class="input-group-text colon">:</span>
           <select  class="form-control" v-model="startMinute">
             <option value="0">00</option>
@@ -31,14 +48,31 @@
     </div>
     <br>
     <div class="row justify-content-evenly">
-      <div class="col-3">
+      <div class="col-12 col-sm-6 col-lg-4">
         <label class="form-label" for="end-date">End Date</label>
         <div><input id="end-date" v-model="endDate" type="date"></div>
       </div>
-      <div class="col-3">
+      <div class="col-12 col-sm-6 col-lg-4">
         <label class="form-label" for="start-date">End Time</label>
-        <div class="input-group mb-3">
-          <input type="number" class="form-control" min="0" max="23" v-model="endHour">
+        <div class="input-group">
+          <select  class="form-control" v-model="endOffset">
+            <option value="0">上午</option>
+            <option value="12">下午</option>
+          </select>
+          <select  class="form-control" v-model="endHour">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+          </select>
           <span class="input-group-text colon">:</span>
           <select  class="form-control" v-model="endMinute">
             <option value="0">00</option>
@@ -76,7 +110,8 @@ export default {
     props.info.length = 0;
     props.message[0] = false
     let date = new Date();
-    date = new Date(date.getTime() + 1000 * 60 * 60);
+
+    date = new Date(Math.ceil((date.getTime() + 1000 * 30 * 60) / 1800000) * 1800000);
     let nowStamp = date.getTime();
     nowStamp += 1000 * 60 * 60;
     let newDate = new Date(nowStamp);
@@ -84,12 +119,23 @@ export default {
       if (time.toString().length === 1) return "0" + time;
       else return time;
     }
+
     let startDate = ref(date.getFullYear() + "-" + addPreZero(date.getMonth() + 1) + "-" + addPreZero(date.getDate()));
     let endDate = ref(newDate.getFullYear() + "-" + addPreZero(newDate.getMonth() + 1) + "-" + addPreZero(newDate.getDate()));
+    let startOffset = ref(0)
     let startHour = ref(addPreZero(date.getHours()));
+    let endOffset = ref(0)
     let endHour = ref(addPreZero(newDate.getHours()));
-    let startMinute = ref(0);
-    let endMinute = ref(0);
+    if(startHour.value > 12){
+      startHour.value -= 12;
+      startOffset.value = 12;
+    }
+    if(endHour.value > 12){
+      endHour.value -= 12;
+      endOffset.value = 12;
+    }
+    let startMinute = ref(addPreZero(date.getMinutes()));
+    let endMinute = ref(addPreZero(newDate.getMinutes()));
 
     let avails = props.avails;
     let startTimestamp = "";
@@ -97,13 +143,25 @@ export default {
     let license = ref("");
     let all_cars = ref([])
     const submit = () => {
-      startTimestamp = Date.parse(startDate.value.replaceAll("-","/") + " " + startHour.value + ":" + startMinute.value + ":00");
-      endTimestamp = Date.parse(endDate.value.replaceAll("-","/") + " " + endHour.value + ":" + endMinute.value + ":00");
-      if (startTimestamp == null || endTimestamp == null || startTimestamp >= endTimestamp || license.value === "") {
-        props.message[1] = "[ERROR]Need Car Number"
+      console.log(startDate.value.replaceAll("-","/") + " " + (Number(startOffset.value) + Number(startHour.value)) + ":" + startMinute.value + ":00")
+      startTimestamp = Date.parse(startDate.value.replaceAll("-","/") + " " + (Number(startOffset.value) + Number(startHour.value)) + ":" + startMinute.value + ":00");
+      endTimestamp = Date.parse(endDate.value.replaceAll("-","/") + " " + (endOffset.value + endHour.value) + ":" + endMinute.value + ":00");
+      if (startTimestamp == null || endTimestamp == null || license.value === "") {
+        props.message[1] = "[ERROR]Need Car Number and Time"
         props.message[0] = true
         return;
       }
+      if ( startTimestamp < new Date((new Date).getTime() + 1800000)) {
+        props.message[1] = "[ERROR]Reserve time must start at least 30 minutes later"
+        props.message[0] = true
+        return;
+      }
+      if (startTimestamp >= endTimestamp) {
+        props.message[1] = "[ERROR]Start Time should not be earlier than end time"
+        props.message[0] = true
+        return;
+      }
+
       store.dispatch("Load");
       props.info.push(startTimestamp);
       props.info.push(endTimestamp);
@@ -144,7 +202,9 @@ export default {
       startDate,
       endDate,
       startHour,
+      startOffset,
       endHour,
+      endOffset,
       startMinute,
       endMinute,
       license,
@@ -165,6 +225,7 @@ input {
   padding: .375rem .75rem;
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
   color: #212529;
+  width: 100%;
 }
 input:focus{
   color: #212529;

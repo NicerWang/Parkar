@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="col-12">
-      <div class="form-check">
-        <input id="autoSelect" v-model="autoSelect" class="form-check-input" type="checkbox">
+      <div class="form-check form-switch">
+        <input id="autoSelect" v-model="autoSelect" class="form-check-input" type="checkbox" role="switch">
         <label class="form-check-label" for="autoSelect" style="font-size: 20px">
           [Recommend] Select the optimized place for me
         </label>

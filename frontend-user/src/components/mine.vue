@@ -3,7 +3,6 @@
     <div :class="{'alert':true, 'alert-danger':message[0] === 'danger', 'alert-success':message[0] === 'success',}" v-show="message[0].length !== 0">
       {{ message[1] }}
     </div>
-    <br>
   <div class="card container align-items-baseline">
     <br>
     <h1>&nbsp; My Orders</h1>
@@ -17,23 +16,21 @@
           <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Car Number</th>
-            <th scope="col">Space ID</th>
-            <th scope="col">Start Time</th>
-            <th scope="col">End Time</th>
-            <th scope="col">Price</th>
-            <th scope="col">Manipulate</th>
+            <th scope="col">Car</th>
+            <th scope="col">Space</th>
+            <th scope="col">Start</th>
+            <th scope="col">End</th>
+            <th scope="col"></th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="i in nowOrders">
-            <th scope="row">{{ i.orderId }}</th>
+            <th scope="row">{{ i.orderId }}11</th>
             <td>{{ i.licenseNumber }}</td>
             <td>{{ i.spaceId }}</td>
             <td>{{ formatDate(i.startTime) }}</td>
             <td>{{ formatDate(i.endTime)  }}</td>
-            <td>{{ i.price }}</td>
-            <td><button :disabled="i.paid" class="btn btn-primary" @click="pay(i.orderId,i.price)">Pay</button> <button class="btn btn-danger" @click="cancel(i.orderId)">Cancel</button></td>
+            <td><button :disabled="i.paid" class="btn btn-primary" @click="pay(i.orderId,i.price)">Pay</button> &nbsp; <button class="btn btn-danger" @click="cancel(i.orderId)">Cancel</button></td>
           </tr>
           </tbody>
         </table>
@@ -48,12 +45,11 @@
         <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Car Number</th>
-          <th scope="col">Space ID</th>
-          <th scope="col">Start Time</th>
-          <th scope="col">End Time</th>
-          <th scope="col">Price</th>
-          <th scope="col">Manipulate</th>
+          <th scope="col">Car</th>
+          <th scope="col">Space</th>
+          <th scope="col">Start</th>
+          <th scope="col">End</th>
+          <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
@@ -63,7 +59,6 @@
           <td>{{ i.spaceId }}</td>
           <td>{{ formatDate(i.startTime) }}</td>
           <td>{{ formatDate(i.endTime)  }}</td>
-          <td>{{ i.price }}</td>
           <td><button :disabled="i.paid" class="btn btn-primary" @click="pay(i.orderId,i.price)">Pay</button></td>
         </tr>
         </tbody>
@@ -90,12 +85,12 @@ export default {
 
     const formatDate = function (timestamp) {
       let date = new Date(timestamp)
-      let Y = date.getFullYear() + '-'
+      let Y = date.getFullYear();
       let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'
-      let D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate()) + ' '
-      let h = (date.getHours() < 10 ? '0'+(date.getHours()) : date.getHours()) + ':'
+      let D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate()) + '\n'
+      let h = (date.getHours() < 10 ? '0'+(date.getHours()) : date.getHours()) +  ':'
       let m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes())
-      return Y+M+D+h+m;
+      return M+D+h+m;
     }
     axios({
         method:"GET",
@@ -158,6 +153,13 @@ th{
   line-height: 20px;
 }
 .card{
-  padding: 0px;
+  padding: 0;
+}
+.card-body{
+  /*padding: 0;*/
+  overflow: auto;
+}
+table{
+  width: 100%;
 }
 </style>

@@ -1,7 +1,5 @@
 <template>
   <div>
-
-    <br>
     <div class="card container align-items-baseline">
       <br>
       <h1>&nbsp; Reserve</h1>
@@ -22,9 +20,8 @@
           </li>
         </ul>
         <br>
-        <div class="row">
-          <div class="col-1"></div>
-          <div class="col-10">
+        <div class="row justify-content-evenly">
+          <div class="col-12">
             <h1>{{ steps[nowStep[0]] }}</h1>
             <br>
             <div class="alert alert-danger" role="alert" v-show="message[0]">
@@ -34,9 +31,8 @@
         </div>
 
         <br>
-        <div class="row">
-        <div class="col-2"></div>
-        <div class="col-8">
+        <div class="row justify-content-evenly">
+        <div class="col-xs-12 col-md-12 col-lg-12 col-xl-8 selector-frame">
           <router-view v-slot="{ Component }" >
             <transition name="fade" mode="out-in" >
               <component :is="Component" :avails="avails" :now-step="nowStep" :info="info" :message="message" />
@@ -95,7 +91,8 @@ export default {
 
 <style scoped>
 .card-form{
-  padding: 50px;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 .form-check{
   margin: 50px;
@@ -107,7 +104,10 @@ label{
   margin: 20px;
 }
 a.active h2{
-  font-size: 45px !important;
+  font-size: 40px !important;
+}
+.selector-frame{
+  padding:0;
 }
 
 </style>

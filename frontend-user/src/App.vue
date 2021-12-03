@@ -1,9 +1,6 @@
 <template>
-  <navbar></navbar>
-  <br>
-  <br>
-  <br>
-  <br>
+  <navbar ref="nav"></navbar>
+  <div :style="{width:'100%',height:blankHeight}"></div>
   <router-view v-slot="{ Component }" v-show="!isLoading">
     <transition name="fade" mode="out-in">
       <component :is="Component"/>
@@ -15,7 +12,7 @@
 
 <script>
 import navbar from "./components/navBar.vue";
-import {computed, onMounted} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useStore} from "vuex";
 
 export default {
@@ -24,15 +21,25 @@ export default {
   },
   setup() {
     const store = useStore();
+    const nav = ref(null);
+    let blankHeight = ref('137px');
+
     const saveState = () => {
       sessionStorage.setItem('state', JSON.stringify(store.state))
     }
     let isLoading = computed(() => {
       return store.state.isLoading;
     })
-    onMounted(() => window.addEventListener('unload', saveState))
+    onMounted(() => {
+      window.addEventListener('unload', saveState)
+      window.onresize = function () {
+        blankHeight.value = nav.value.$el.scrollHeight + 20 + 'px';
+      }
+    })
     return{
       isLoading,
+      nav,
+      blankHeight
     }
   },
 }
@@ -64,11 +71,12 @@ export default {
 
 body {
   background-color: #f8f9fa;
+  min-width: 425px;
 }
 
 header {
   background-color: #ffffff;
 }
-
+.header::after {content: "";display: block;clear: both;}
 
 </style>

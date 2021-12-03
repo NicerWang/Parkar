@@ -3,7 +3,6 @@
     <div :class="{'alert':true, 'alert-danger':message[0] === 'danger', 'alert-success':message[0] === 'success',}" v-show="message[0].length !== 0">
       {{ message[1] }}
     </div>
-    <br>
     <div class="card container align-items-baseline">
       <br>
       <h1>&nbsp; My Cars</h1>
@@ -12,15 +11,15 @@
     <br>
     <div class="card container">
     <form class="row  align-items-center">
-      <div class="col-6">
+      <div class="col-7">
         <div class="input-group">
-          <div class="input-group-text">Car Number</div>
+          <div class="input-group-text">CarNumber</div>
           <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="AE86" v-model="newNumber">
         </div>
       </div>
 
-      <div class="col-6">
-        <button type="submit" class="btn btn-primary" id="add-new-car" @click="add(newNumber)">Add New Car</button>
+      <div class="col-5">
+        <button type="submit" class="btn btn-primary" id="add-new-car" @click="add(newNumber)">Add</button>
       </div>
     </form>
     </div>
