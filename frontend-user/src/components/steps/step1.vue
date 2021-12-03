@@ -123,9 +123,9 @@ export default {
     let startDate = ref(date.getFullYear() + "-" + addPreZero(date.getMonth() + 1) + "-" + addPreZero(date.getDate()));
     let endDate = ref(newDate.getFullYear() + "-" + addPreZero(newDate.getMonth() + 1) + "-" + addPreZero(newDate.getDate()));
     let startOffset = ref(0)
-    let startHour = ref(addPreZero(date.getHours()));
+    let startHour = ref(date.getHours());
     let endOffset = ref(0)
-    let endHour = ref(addPreZero(newDate.getHours()));
+    let endHour = ref(newDate.getHours());
     if(startHour.value > 12){
       startHour.value -= 12;
       startOffset.value = 12;
@@ -144,9 +144,8 @@ export default {
     let license = ref("");
     let all_cars = ref([])
     const submit = () => {
-      console.log(startDate.value.replaceAll("-","/") + " " + (Number(startOffset.value) + Number(startHour.value)) + ":" + startMinute.value + ":00")
-      startTimestamp = Date.parse(startDate.value.replaceAll("-","/") + " " + (Number(startOffset.value) + Number(startHour.value)) + ":" + startMinute.value + ":00");
-      endTimestamp = Date.parse(endDate.value.replaceAll("-","/") + " " + (endOffset.value + endHour.value) + ":" + endMinute.value + ":00");
+      startTimestamp = Date.parse(startDate.value.replaceAll("-","/") + " " + addPreZero(Number(startOffset.value) + Number(startHour.value)) + ":" + startMinute.value + ":00");
+      endTimestamp = Date.parse(endDate.value.replaceAll("-","/") + " " + addPreZero(Number(endOffset.value) + Number(endHour.value)) + ":" + endMinute.value + ":00");
       if (startTimestamp == null || endTimestamp == null || license.value === "") {
         props.message[1] = "[ERROR]Need Car Number and Time"
         props.message[0] = true
