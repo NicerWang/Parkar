@@ -162,4 +162,7 @@ th{
 table{
   width: 100%;
 }
+button{
+  width: 78px;
+}
 </style>

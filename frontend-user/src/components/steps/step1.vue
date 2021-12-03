@@ -40,7 +40,7 @@
           </select>
           <span class="input-group-text colon">:</span>
           <select  class="form-control" v-model="startMinute">
-            <option value="0">00</option>
+            <option value="00">00</option>
             <option value="30">30</option>
           </select>
         </div>
@@ -75,7 +75,7 @@
           </select>
           <span class="input-group-text colon">:</span>
           <select  class="form-control" v-model="endMinute">
-            <option value="0">00</option>
+            <option value="00">00</option>
             <option value="30">30</option>
           </select>
         </div>
@@ -136,7 +136,8 @@ export default {
     }
     let startMinute = ref(addPreZero(date.getMinutes()));
     let endMinute = ref(addPreZero(newDate.getMinutes()));
-
+    console.log(startMinute.value)
+    console.log(endMinute.value)
     let avails = props.avails;
     let startTimestamp = "";
     let endTimestamp = "";
