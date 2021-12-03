@@ -25,7 +25,7 @@ export default {
     let blankHeight = ref('137px');
 
     const saveState = () => {
-      sessionStorage.setItem('state', JSON.stringify(store.state))
+      localStorage.setItem('state', JSON.stringify(store.state))
     }
     let isLoading = computed(() => {
       return store.state.isLoading;

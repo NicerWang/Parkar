@@ -1,6 +1,6 @@
 import {createStore} from 'vuex'
 
-const state = sessionStorage.getItem('state') ? JSON.parse(sessionStorage.getItem('state')) : {
+const state = localStorage.getItem('state') ? JSON.parse(localStorage.getItem('state')) : {
   isLoading:false,
   isSignedIn:false,
 }

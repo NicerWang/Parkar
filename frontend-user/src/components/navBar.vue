@@ -7,9 +7,13 @@
         <span class="fs-4">&nbsp;Parkar For User</span>
       </a>
       <ul class="nav nav-pills">
-        <li class="nav-item" v-for="(item,idx) in items_before"><router-link :to="item.to" :class="item.cls">{{ item.msg }}</router-link></li>
+        <li class="nav-item" v-for="(item,idx) in items_before">
+          <router-link :to="item.to" :class="item.cls">{{ item.msg }}</router-link>
+        </li>
 
-        <li class="nav-item"><button type="button" class="btn btn-danger" @click="logout" v-show="status">Logout</button></li>
+        <li class="nav-item">
+          <button type="button" class="btn btn-danger" @click="logout" v-show="status">Logout</button>
+        </li>
 
       </ul>
     </header>
@@ -20,46 +24,46 @@
 
 <script>
 
-import {ref, reactive, computed} from 'vue'
+import {computed, reactive, ref} from 'vue'
 import {useStore} from 'vuex'
 import {useRouter} from "vue-router";
 import loadingBar from "./loadingBar.vue"
 
 export default {
   name: "navbar",
-  components:{
+  components: {
     loadingBar
   },
-  setup(){
+  setup() {
     const store = useStore();
     const router = useRouter();
-    const activated = ["nav-link","active"]
+    const activated = ["nav-link", "active"]
     const common = ["nav-link"]
-    let status = computed(()=>{
+    let status = computed(() => {
       return store.state.isSignedIn;
     })
     let isLoading = computed(() => {
       return store.state.isLoading;
     })
     let items_before = ref([
-      reactive({to:"/login",msg:"Sign in",cls:activated}),
-      reactive({to:"/register",msg:"Register",cls: common}),
+      reactive({to: "/login", msg: "Sign in", cls: activated}),
+      reactive({to: "/register", msg: "Register", cls: common}),
     ])
-    if(status.value === true){
+    if (status.value === true) {
       items_before = ref([
-        reactive({to:"/index",msg:"Home",cls:activated}),
-        reactive({to:"/mine",msg:"Order",cls: common}),
-        reactive({to:"/cars",msg:"Cars",cls: common}),
-        reactive({to:"/update",msg:"UpdateInfo",cls: common}),
+        reactive({to: "/index", msg: "Home", cls: activated}),
+        reactive({to: "/mine", msg: "Order", cls: common}),
+        reactive({to: "/cars", msg: "Cars", cls: common}),
+        reactive({to: "/update", msg: "Update", cls: common}),
       ])
     }
-    const logout = ()=>{
+    const logout = () => {
       localStorage.removeItem("token")
       store.dispatch("LogOut");
       store.dispatch("Finished")
       router.push("/login");
     }
-    return{
+    return {
       items_before,
       activated,
       common,
@@ -68,28 +72,28 @@ export default {
       logout
     }
   },
-  watch:{
-    $route(to,from){
-      for(let i = 0; i < this.items_before.length; i++){
+  watch: {
+    $route(to, from) {
+      for (let i = 0; i < this.items_before.length; i++) {
         this.items_before[i].cls = this.common;
-        if(to.fullPath.search(this.items_before[i].to) !== -1){
+        if (to.fullPath.search(this.items_before[i].to) !== -1) {
           this.items_before[i].cls = this.activated;
         }
       }
     },
-    "$store.state.isSignedIn"(newVal,oldVal){
-      if(newVal === oldVal){}
-      else if(newVal){
+    "$store.state.isSignedIn"(newVal, oldVal) {
+      if (newVal === oldVal) {
+      } else if (newVal) {
         this.items_before = ref([
-          reactive({to:"/index",msg:"Home",cls: this.activated}),
-          reactive({to:"/mine",msg:"Order",cls: this.common}),
-          reactive({to:"/cars",msg:"Cars",cls: this.common}),
-          reactive({to:"/update",msg:"UpdateInfo",cls: this.common}),
+          reactive({to: "/index", msg: "Home", cls: this.activated}),
+          reactive({to: "/mine", msg: "Order", cls: this.common}),
+          reactive({to: "/cars", msg: "Cars", cls: this.common}),
+          reactive({to: "/update", msg: "Update", cls: this.common}),
         ])
-      }else{
+      } else {
         this.items_before = ref([
-          reactive({to:"/login",msg:"Sign in",cls:this.activated}),
-          reactive({to:"/register",msg:"Register",cls: this.common}),
+          reactive({to: "/login", msg: "Sign in", cls: this.activated}),
+          reactive({to: "/register", msg: "Register", cls: this.common}),
         ])
       }
     }
@@ -98,21 +102,35 @@ export default {
 }
 </script>
 <style scoped>
-li{
+@media (max-width: 425px) {
+  li {
+    font-size: 14px;
+  }
+
+  button {
+    font-size: 14px;
+  }
+}
+
+li {
   height: 40px;
   margin: 2px;
 }
-button{
+
+button {
   height: 40px;
 }
-.header{
+
+.header {
   position: fixed;
   width: 100%;
   z-index: 100;
+  min-width: 425px;
 }
-header{
-  background-color:rgba(255,255,255,0.6);
-  backdrop-filter:blur(10px)
+
+header {
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px)
 }
 
 </style>
