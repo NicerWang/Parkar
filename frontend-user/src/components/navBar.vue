@@ -118,7 +118,7 @@ li {
 }
 
 button {
-  height: 37px;
+  height: 40px;
 }
 
 .header {

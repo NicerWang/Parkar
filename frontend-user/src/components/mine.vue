@@ -28,8 +28,8 @@
             <th scope="row">{{ i.orderId }}</th>
             <td>{{ i.licenseNumber }}</td>
             <td>{{ i.spaceId }}</td>
-            <td>{{ formatDate(i.startTime) }}</td>
-            <td>{{ formatDate(i.endTime)  }}</td>
+            <td>{{ formatDate(i.startTime,0) }}<br>{{ formatDate(i.startTime,1) }} </td>
+            <td>{{ formatDate(i.endTime,0) }}<br>{{ formatDate(i.endTime,1) }}</td>
             <td><button :disabled="i.paid" class="btn btn-primary" @click="pay(i.orderId,i.price)">Pay</button><button class="btn btn-danger" @click="cancel(i.orderId)">Cancel</button></td>
           </tr>
           </tbody>
@@ -57,8 +57,8 @@
           <th scope="row">{{ i.orderId }}</th>
           <td>{{ i.licenseNumber }}</td>
           <td>{{ i.spaceId }}</td>
-          <td>{{ formatDate(i.startTime) }}</td>
-          <td>{{ formatDate(i.endTime)  }}</td>
+          <td>{{ formatDate(i.startTime,0) }} <br>{{ formatDate(i.startTime,1) }} </td>
+          <td>{{ formatDate(i.endTime,0)  }} <br> {{ formatDate(i.endTime,1) }}</td>
           <td><button :disabled="i.paid" class="btn btn-primary" @click="pay(i.orderId,i.price)">Pay</button></td>
         </tr>
         </tbody>
@@ -83,14 +83,18 @@ export default {
     let nowOrders = ref([])
     const date = new Date();
 
-    const formatDate = function (timestamp) {
+    const formatDate = function (timestamp,type) {
       let date = new Date(timestamp)
-      let Y = date.getFullYear();
-      let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'
-      let D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate()) + '\n'
-      let h = (date.getHours() < 10 ? '0'+(date.getHours()) : date.getHours()) +  ':'
-      let m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes())
-      return M+D+h+m;
+      if( type === 0 ){
+        let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'
+        let D = (date.getDate() < 10 ? '0'+(date.getDate()) : date.getDate())
+        return M + D
+      }
+      else{
+        let h = (date.getHours() < 10 ? '0'+(date.getHours()) : date.getHours()) +  ':'
+        let m = (date.getMinutes() < 10 ? '0'+(date.getMinutes()) : date.getMinutes())
+        return h + m
+      }
     }
     axios({
         method:"GET",
@@ -147,6 +151,7 @@ export default {
 td{
   vertical-align: middle;
   line-height: 20px;
+  white-space: nowrap;
 }
 th{
   vertical-align: middle;
@@ -156,7 +161,6 @@ th{
   padding: 0;
 }
 .card-body{
-  /*padding: 0;*/
   overflow: auto;
 }
 table{
