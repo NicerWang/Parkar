@@ -19,7 +19,7 @@
       </div>
 
       <div class="col-5">
-        <button type="submit" class="btn btn-primary" id="add-new-car" @click="add(newNumber)">Add</button>
+        <button type="button" class="btn btn-primary" id="add-new-car" @click="add(newNumber)">Add</button>
       </div>
     </form>
     </div>
