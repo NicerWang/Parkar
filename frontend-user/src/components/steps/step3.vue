@@ -21,6 +21,10 @@
         <span class="input-group-text">Position ID</span>
         <input v-model="info[4]" class="form-control" disabled type="text">
       </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text">Price</span>
+        <input v-model="price" class="form-control" disabled type="text">
+      </div>
       <br>
       <br>
       <div class="col-12">
@@ -65,6 +69,19 @@ export default {
     props.message[0] = false
     if (props.info.length < 5)
       router.push("/index/step2");
+    let price = ref(0)
+
+    axios({
+      method: "GET",
+      url: "/management/order/price",
+      params:{
+        mode:0,
+        startTime: info[0],
+        endTime: info[1],
+      }
+    }).then((res)=>{
+      price.value = res.data.toFixed(2);
+    })
 
     const confirm = () => {
       axios({
@@ -100,7 +117,8 @@ export default {
       gotoMine,
       startTime,
       endTime,
-      ok
+      ok,
+      price
     }
   }
 }

@@ -77,10 +77,27 @@
                         <input class="form-control" id="end-date" v-model="endDate" type="date">
                         <label class="form-label">Start Time</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" min="0" max="23" v-model="endHour">
+                            <select  class="form-control" v-model="endOffset">
+                                <option value="0">上午</option>
+                                <option value="12">下午</option>
+                            </select>
+                            <select  class="form-control" v-model="endHour">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                            </select>
                             <span class="input-group-text colon">:</span>
-                            <select class="form-control" v-model="endMinute">
-                                <option value="0">00</option>
+                            <select  class="form-control" v-model="endMinute">
+                                <option value="00">00</option>
                                 <option value="30">30</option>
                             </select>
                         </div>
@@ -130,11 +147,16 @@
         const app = {
             data() {
                 let date = new Date();
-                date = new Date(date.getTime() + 1000 * 60 * 60);
-                let nowStamp = date.getTime();
+                date = new Date(Math.ceil((date.getTime() + 1000 * 30 * 60) / 1800000) * 1800000 + 1000 * 60 * 60);
                 const addPreZero = function (time) {
                     if (time.toString().length === 1) return "0" + time;
                     else return time;
+                }
+                let endHour = date.getHours();
+                let endOffset = 0;
+                if(endHour > 12){
+                    endHour -= 12;
+                    endOffset = 12;
                 }
                 return {
                     license: "AE86",
@@ -146,12 +168,17 @@
                     uname: "",
                     pwd: "",
                     endDate: date.getFullYear() + "-" + addPreZero(date.getMonth() + 1) + "-" + addPreZero(date.getDate()),
-                    endHour: addPreZero(date.getHours()),
-                    endMinute: 0,
+                    endHour: endHour,
+                    endOffset: endOffset,
+                    endMinute: addPreZero(date.getMinutes()),
                     reserveLicense: ""
                 }
             },
             methods: {
+                addPreZero(time) {
+                    if (time.toString().length === 1) return "0" + time;
+                    else return time;
+                },
                 sendLicense() {
                     if (this.license.trim() === "") {
                         alert("Need more info.");
@@ -242,7 +269,7 @@
                         alert("Need more info.");
                         return;
                     }
-                    let end = Date.parse(this.endDate.replaceAll("-", "/") + " " + this.endHour + ":" + this.endMinute + ":00");
+                    let end = Date.parse(this.endDate.replaceAll("-","/") + " " + this.addPreZero(Number(this.endOffset) + Number(this.endHour)) + ":" + this.endMinute + ":00");
                     this.logs += "[Control Panel]Send Reserve Info\n"
                     axios({
                         method: "POST",

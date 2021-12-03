@@ -3,6 +3,8 @@ package nk.parkar.simulator.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
+import nk.parkar.simulator.hardware.LicenseCamera;
+import nk.parkar.simulator.hardware.impl.VirtualLicenseCamera;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -75,7 +77,7 @@ public class HttpUtil {
         else return genericRequest("management/machine/sensor/" + id + "?occupied=0", "put");
     }
 
-    public String makeOrder(String tel, String pwd, Date end, String license) throws JsonProcessingException {
+    public String makeOrder(String tel, String pwd, Date end, String license) throws JsonProcessingException, InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
         Long now = (new Date()).getTime();
         if(now > end.getTime()) return null;
@@ -94,8 +96,9 @@ public class HttpUtil {
             String select = avails.get(0).toString();
             response = genericRequest("management/machine/order?spaceId=" + select + "&endTime=" + end.getTime() + "&licenseNumber=" + license, "post", token,"");
         }
-        System.out.println(response);
-        return sendLicenseInfo(license);
+        Thread.sleep(1000);
+        LicenseCamera licenseCamera = new VirtualLicenseCamera();
+        return licenseCamera.scanLicense(license);
 
     }
 

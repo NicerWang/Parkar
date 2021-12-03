@@ -136,8 +136,6 @@ export default {
     }
     let startMinute = ref(addPreZero(date.getMinutes()));
     let endMinute = ref(addPreZero(newDate.getMinutes()));
-    console.log(startMinute.value)
-    console.log(endMinute.value)
     let avails = props.avails;
     let startTimestamp = "";
     let endTimestamp = "";
