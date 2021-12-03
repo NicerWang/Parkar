@@ -28,10 +28,10 @@ export default {
       localStorage.setItem('state', JSON.stringify(store.state))
     }
     let isLoading = computed(() => {
+      saveState()
       return store.state.isLoading;
     })
     onMounted(() => {
-      window.addEventListener('unload', saveState)
       window.onresize = function () {
         blankHeight.value = nav.value.$el.scrollHeight + 20 + 'px';
       }
@@ -77,6 +77,4 @@ body {
 header {
   background-color: #ffffff;
 }
-.header::after {content: "";display: block;clear: both;}
-
 </style>

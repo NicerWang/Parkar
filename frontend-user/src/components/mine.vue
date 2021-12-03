@@ -25,12 +25,12 @@
           </thead>
           <tbody>
           <tr v-for="i in nowOrders">
-            <th scope="row">{{ i.orderId }}11</th>
+            <th scope="row">{{ i.orderId }}</th>
             <td>{{ i.licenseNumber }}</td>
             <td>{{ i.spaceId }}</td>
             <td>{{ formatDate(i.startTime) }}</td>
             <td>{{ formatDate(i.endTime)  }}</td>
-            <td><button :disabled="i.paid" class="btn btn-primary" @click="pay(i.orderId,i.price)">Pay</button> &nbsp; <button class="btn btn-danger" @click="cancel(i.orderId)">Cancel</button></td>
+            <td><button :disabled="i.paid" class="btn btn-primary" @click="pay(i.orderId,i.price)">Pay</button><button class="btn btn-danger" @click="cancel(i.orderId)">Cancel</button></td>
           </tr>
           </tbody>
         </table>
@@ -163,6 +163,6 @@ table{
   width: 100%;
 }
 button{
-  width: 78px;
+  margin: 2px;
 }
 </style>
