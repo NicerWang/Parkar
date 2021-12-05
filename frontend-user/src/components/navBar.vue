@@ -111,7 +111,11 @@ export default {
     font-size: 14px;
   }
 }
-
+@media (max-width: 533px) {
+  ul{
+    margin-top: 15px;
+  }
+}
 li {
   height: 40px;
   margin: 2px;
@@ -130,7 +134,12 @@ button {
 
 header {
   background-color: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px)
+  backdrop-filter: blur(6px)
+}
+@supports (-webkit-backdrop-filter: none) {
+  header {
+    -webkit-backdrop-filter: blur(6px);
+  }
 }
 
 </style>

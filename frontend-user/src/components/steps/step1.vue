@@ -25,7 +25,7 @@
             <option value="12">下午</option>
           </select>
           <select  class="form-control" v-model="startHour">
-            <option value="0">0</option>
+            <option value="0">12</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -126,11 +126,11 @@ export default {
     let startHour = ref(date.getHours());
     let endOffset = ref(0)
     let endHour = ref(newDate.getHours());
-    if(startHour.value > 12){
+    if(startHour.value >= 12){
       startHour.value -= 12;
       startOffset.value = 12;
     }
-    if(endHour.value > 12){
+    if(endHour.value >= 12){
       endHour.value -= 12;
       endOffset.value = 12;
     }
@@ -142,6 +142,7 @@ export default {
     let license = ref("");
     let all_cars = ref([])
     const submit = () => {
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
       startTimestamp = Date.parse(startDate.value.replaceAll("-","/") + " " + addPreZero(Number(startOffset.value) + Number(startHour.value)) + ":" + startMinute.value + ":00");
       endTimestamp = Date.parse(endDate.value.replaceAll("-","/") + " " + addPreZero(Number(endOffset.value) + Number(endHour.value)) + ":" + endMinute.value + ":00");
       if (startTimestamp == null || endTimestamp == null || license.value === "") {

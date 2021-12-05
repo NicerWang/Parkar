@@ -66,6 +66,7 @@ export default {
     let positions = ref([])
 
     const next = function () {
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
       if (autoSelect.value) {
         selectedInfo.value[1] = avails[Math.ceil(Math.random() * avails.length)];
         for(let i = 0; i < positions.value.length; i++){

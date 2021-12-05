@@ -32,8 +32,9 @@ export default {
       return store.state.isLoading;
     })
     onMounted(() => {
+      blankHeight.value = nav.value.$el.scrollHeight + 'px';
       window.onresize = function () {
-        blankHeight.value = nav.value.$el.scrollHeight + 20 + 'px';
+        blankHeight.value = nav.value.$el.scrollHeight + 'px';
       }
     })
     return{

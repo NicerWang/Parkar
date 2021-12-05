@@ -84,6 +84,7 @@ export default {
     })
 
     const confirm = () => {
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
       axios({
         method: "POST",
         url: "/management/order/submit",

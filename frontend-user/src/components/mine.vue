@@ -3,12 +3,9 @@
     <div :class="{'alert':true, 'alert-danger':message[0] === 'danger', 'alert-success':message[0] === 'success',}" v-show="message[0].length !== 0">
       {{ message[1] }}
     </div>
-  <div class="card container align-items-baseline">
-    <br>
-    <h1>&nbsp; My Orders</h1>
-    <br>
+  <div class="card container align-items-baseline title">
+    <h1>My Orders</h1>
   </div>
-    <br>
     <div class="card container">
       <div class="card-header">Now Orders</div>
       <div class="card-body ">
@@ -37,7 +34,6 @@
         <div v-show="nowOrders.length === 0">No Data</div>
       </div>
     </div>
-  <br>
   <div class="card container">
     <div class="card-header">Past Orders</div>
     <div class="card-body ">
@@ -113,6 +109,7 @@ export default {
       store.dispatch("Finished")
     })
     const cancel = function (id) {
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
       store.dispatch("Load")
       axios({
         method:"PUT",
@@ -159,6 +156,7 @@ th{
 }
 .card{
   padding: 0;
+  margin-bottom: 10px;
 }
 .card-body{
   overflow: auto;
@@ -168,5 +166,10 @@ table{
 }
 button{
   margin: 2px;
+}
+.title{
+  padding: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 </style>

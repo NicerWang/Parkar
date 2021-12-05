@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="card container align-items-baseline">
-      <br>
-      <h1>&nbsp; Reserve</h1>
-      <br>
+    <div class="alert alert-danger" role="alert" v-show="message[0]" >
+      {{ message[1] }}
     </div>
-    <br>
+    <div class="card container align-items-baseline title">
+      <h1>Reserve</h1>
+    </div>
     <div class="card container card-form align-items-center">
       <div class="card-body container justify-content-center">
         <ul class="nav justify-content-center">
@@ -19,18 +19,12 @@
             <a :class="{'nav-link':true,'active':nowStep[0] === 2}" @click="jmp(3)"><h2>Step 3</h2></a>
           </li>
         </ul>
-        <br>
         <div class="row justify-content-evenly">
           <div class="col-12">
             <h1>{{ steps[nowStep[0]] }}</h1>
-            <br>
-            <div class="alert alert-danger" role="alert" v-show="message[0]">
-              {{ message[1] }}
-            </div>
           </div>
         </div>
 
-        <br>
         <div class="row justify-content-evenly">
         <div class="col-xs-12 col-md-12 col-lg-12 col-xl-8 selector-frame">
           <router-view v-slot="{ Component }" >
@@ -52,7 +46,7 @@
 import { useStore } from "vuex";
 
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import {ref, watch} from "vue";
 
 export default {
   name: "index",
@@ -77,6 +71,7 @@ export default {
       else if(id === 3) router.push("/index/step3")
     }
 
+
     return{
       steps,
       avails,
@@ -91,11 +86,16 @@ export default {
 
 <style scoped>
 .card-form{
-  padding-top: 50px;
-  padding-bottom: 50px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 .form-check{
   margin: 50px;
+}
+.title{
+  padding: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 label{
   font-size: 18px;
@@ -108,6 +108,12 @@ a.active h2{
 }
 .selector-frame{
   padding:0;
+}
+a.nav-link{
+  color: gray;
+}
+a.active{
+  color: #0d6efd !important;
 }
 
 </style>

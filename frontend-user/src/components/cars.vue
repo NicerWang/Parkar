@@ -3,12 +3,9 @@
     <div :class="{'alert':true, 'alert-danger':message[0] === 'danger', 'alert-success':message[0] === 'success',}" v-show="message[0].length !== 0">
       {{ message[1] }}
     </div>
-    <div class="card container align-items-baseline">
-      <br>
-      <h1>&nbsp; My Cars</h1>
-      <br>
+    <div class="card container align-items-baseline title">
+      <h1>My Cars</h1>
     </div>
-    <br>
     <div class="card container">
     <form class="row  align-items-center">
       <div class="col-7">
@@ -23,7 +20,6 @@
       </div>
     </form>
     </div>
-    <br>
     <div class="card container">
       <div class="card-body ">
         <table class="table">
@@ -68,6 +64,7 @@ export default {
       store.dispatch("Finished")
     })
     const remove = function (id) {
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
       store.dispatch("Load")
       axios({
         method:"POST",
@@ -91,6 +88,7 @@ export default {
       })
     }
     const add = function (id) {
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
       store.dispatch("Load")
       axios({
         method:"POST",
@@ -139,11 +137,17 @@ th{
 }
 .card{
   padding: 0px;
+  margin-bottom: 10px;
 }
 form{
   padding: 20px;
 }
 #add-new-car{
   width: 50%;
+}
+.title{
+  padding: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 </style>
