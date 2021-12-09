@@ -49,6 +49,7 @@ import {useStore} from "vuex";
 import axios from "axios";
 import {useRouter} from "vue-router";
 import {ref} from "vue";
+import {collect} from "../data/collector";
 
 export default {
   name: "step3",
@@ -85,6 +86,7 @@ export default {
 
     const confirm = () => {
       document.body.scrollTop = document.documentElement.scrollTop = 0;
+      collect(12,info[2],info[0],info[1],info[4]);
       axios({
         method: "POST",
         url: "/management/order/submit",

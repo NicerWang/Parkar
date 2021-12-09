@@ -46,6 +46,7 @@
 import { useStore } from "vuex";
 import axios from "axios";
 import {ref} from "vue";
+import {collect} from "./data/collector";
 
 export default {
   name: "cars",
@@ -55,6 +56,7 @@ export default {
     let message = ref(["",""])
     let newNumber = ref()
 
+    collect(20);
     axios({
       method:"GET",
       url:"user/getAllVehicleId",
@@ -65,6 +67,7 @@ export default {
     })
     const remove = function (id) {
       document.body.scrollTop = document.documentElement.scrollTop = 0;
+      collect(21,id);
       store.dispatch("Load")
       axios({
         method:"POST",
@@ -89,6 +92,7 @@ export default {
     }
     const add = function (id) {
       document.body.scrollTop = document.documentElement.scrollTop = 0;
+      collect(22,id);
       store.dispatch("Load")
       axios({
         method:"POST",

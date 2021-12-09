@@ -35,6 +35,7 @@ import {useStore} from 'vuex'
 import {useRouter} from "vue-router";
 import {ref, watch} from 'vue';
 import axios from "axios";
+import { collect } from "./data/collector.js"
 
 export default {
   name: "login",
@@ -64,6 +65,7 @@ export default {
 
 
     const sendRequest = () => {
+      collect(0);
       axios({
         method: "POST",
         url: "/user/login",

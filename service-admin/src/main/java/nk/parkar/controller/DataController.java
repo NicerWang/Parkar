@@ -19,15 +19,10 @@ public class DataController {
         this.dataService = dataService;
     }
 
-    // Defining behavioral data
-    // login 0 - userID
-    // register 1 - userID
-    // getOrders 2 - userID
-    // cancel order 3 - userID - Car Number - Price
-    // updateInfo 4 - userID
-    // reserve 5 - start - end - Car Number - spaceID
-    @PostMapping("/data/{type}/{userID}")
-    boolean insertData(@PathVariable("type") Integer type, @PathVariable("userID") String userID, String sa1, String sa2, String sa3, String sa4){
+    @PostMapping("/data/{type}/")
+    boolean insertData(@PathVariable("type") Integer type, String sa1, String sa2, String sa3, String sa4, @RequestHeader("token") String token){
+        String userID = JWTUtil.check(token);
+        if(userID == null) return false;
         return dataService.insert(new DataItem(type,userID,sa1,sa2,sa3,sa4));
     }
 

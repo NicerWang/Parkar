@@ -39,6 +39,7 @@ import axios from "axios";
 import {ref, watch} from 'vue';
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
+import {collect} from "./data/collector";
 
 
 export default {
@@ -90,6 +91,7 @@ export default {
           return;
         }
       }
+      collect(3);
       axios({
         method:"POST",
         url: "user/updateUserInfo",

@@ -42,6 +42,7 @@ import axios from "axios";
 import {ref, watch} from 'vue';
 import {useRouter} from "vue-router";
 import {useStore} from "vuex";
+import {collect} from "./data/collector";
 
 export default {
   name: "register",

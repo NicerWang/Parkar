@@ -69,6 +69,7 @@
 import { useStore } from "vuex";
 import axios from "axios";
 import {ref} from "vue";
+import {collect} from "./data/collector";
 
 export default {
   name: "mine",
@@ -92,6 +93,7 @@ export default {
         return h + m
       }
     }
+    collect(10);
     axios({
         method:"GET",
         url:"management/order",
@@ -109,6 +111,7 @@ export default {
       store.dispatch("Finished")
     })
     const cancel = function (id) {
+      collect(11,"cancel");
       document.body.scrollTop = document.documentElement.scrollTop = 0;
       store.dispatch("Load")
       axios({

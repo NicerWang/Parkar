@@ -68,24 +68,42 @@ export default {
     const next = function () {
       document.body.scrollTop = document.documentElement.scrollTop = 0;
       if (autoSelect.value) {
-        selectedInfo.value[1] = avails[Math.ceil(Math.random() * avails.length)];
-        for(let i = 0; i < positions.value.length; i++){
-          if(positions.value[i]['spaceId'] == selectedInfo.value[1])
-            selectedInfo.value[0] = positions.value[i]['floor']
+        console.log(props.info)
+        axios({
+          method: "GET",
+          url: "/management/order/space/rec",
+          params:{
+            startTime: props.info[0],
+            endTime: props.info[1],
+          },
+          headers: {'token': localStorage.getItem("token")},
+          async:false
+        }).then((res)=>{
+          selectedInfo.value[1] = res.data
+          for(let i = 0; i < positions.value.length; i++){
+            if(positions.value[i]['spaceId'] == selectedInfo.value[1])
+              selectedInfo.value[0] = positions.value[i]['floor']
+          }
+          props.info.push(selectedInfo.value[0])
+          props.info.push(selectedInfo.value[1])
+          router.push("/index/step3")
+        })
+      }
+      else{
+        if (selectedInfo.value[0] === 0) {
+          props.message[1] = "[ERROR] Empty Floor Selection"
+          props.message[0] = true
+          return
+        } else if (selectedInfo.value[1] === 0) {
+          props.message[1] = "[ERROR] Empty Position Selection"
+          props.message[0] = true
+          return
         }
+        props.info.push(selectedInfo.value[0])
+        props.info.push(selectedInfo.value[1])
+        router.push("/index/step3")
       }
-      if (selectedInfo.value[0] === 0) {
-        props.message[1] = "[ERROR] Empty Floor Selection"
-        props.message[0] = true
-        return
-      } else if (selectedInfo.value[1] === 0) {
-        props.message[1] = "[ERROR] Empty Position Selection"
-        props.message[0] = true
-        return
-      }
-      props.info.push(selectedInfo.value[0])
-      props.info.push(selectedInfo.value[1])
-      router.push("/index/step3")
+
     }
 
     axios({
