@@ -1,5 +1,6 @@
 package nk.parkar.management.controller;
 
+import nk.parkar.management.algo.OptimizedPlaceSelector;
 import nk.parkar.management.error.ControllerException.IllegalArgumentException;
 import nk.parkar.management.model.ParkingOrder;
 import nk.parkar.management.model.ParkingSpace;
@@ -22,6 +23,7 @@ public class UserParkingController {
 
     private ParkingSpaceService parkingSpaceService;
     private ParkingOrderService parkingOrderService;
+    private OptimizedPlaceSelector optimizedPlaceSelector;
 
     @Autowired
     public void setParkingSpaceService(ParkingSpaceService parkingSpaceService) {
@@ -31,6 +33,11 @@ public class UserParkingController {
     @Autowired
     public void setParkingOrderService(ParkingOrderService parkingOrderService) {
         this.parkingOrderService = parkingOrderService;
+    }
+
+    @Autowired
+    public void setOptimizedPlaceSelector(OptimizedPlaceSelector optimizedPlaceSelector) {
+        this.optimizedPlaceSelector = optimizedPlaceSelector;
     }
 
     private String tokenCheck(IllegalArgumentException illegalArgumentException, String token) {
@@ -177,5 +184,14 @@ public class UserParkingController {
         parkingTime.setEndTime(parkingOrder.getEndTime());
         parkingOrderService.cancelOrder(orderId, parkingTime);
         return true;
+    }
+
+    @GetMapping("/order/space/rec")
+    Integer getOptimizedPlace(@RequestParam Long startTime, @RequestParam Long endTime, @RequestHeader("token") String token){
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/order/space/rec");
+
+        tokenCheck(illegalArgumentException,token);
+
+        return optimizedPlaceSelector.select(parkingSpaceService, startTime, endTime);
     }
 }
