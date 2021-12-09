@@ -2,7 +2,8 @@ import axios from "axios";
 
 export function collect(type, sa1, sa2, sa3, sa4) {
     axios({
-        url:"/admin/data/" + type,
+        url:"/admin/data/" + type + "/",
+        method:"POST",
         params:{
             sa1:sa1,
             sa2:sa2,
