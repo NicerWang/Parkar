@@ -68,7 +68,7 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
         ParkingOrder parkingOrder = new ParkingOrder();
         parkingOrder.setMode(mode);
         parkingOrder.setPaid(false);
-        parkingOrder.setEndTime(new Date(endTime - 1000));
+        parkingOrder.setEndTime(new Date(endTime));
         parkingOrder.setStartTime(new Date(startTime));
         parkingOrder.setUserId(userId);
         parkingOrder.setPrice(PriceUtil.getPrice(mode,startTime,endTime));
@@ -77,7 +77,7 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
         parkingOrderMapper.insert(parkingOrder);
 
         ParkingTime parkingTime = new ParkingTime();
-        parkingTime.setEndTime(new Date(endTime - 1000));
+        parkingTime.setEndTime(new Date(endTime));
         parkingTime.setStartTime(new Date(startTime));
         parkingTime.setSpaceId(spaceId);
         parkingTimeMapper.insert(parkingTime);
@@ -106,8 +106,59 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
 
     @Override
     @Transactional
+    public Boolean extendOrder(ParkingOrder order,  ParkingTime parkingTime) {
+        TransactionException transactionException = new TransactionException("extendOrder");
+        // 保证订单对应车位和时间是空闲的
+        List<ParkingTime> parkingTimeList = parkingTimeMapper.selectBySpaceId(parkingTime.getSpaceId());
+        Long startTime = parkingTime.getStartTime().getTime();
+        Long endTime = parkingTime.getEndTime().getTime();
+        if (!parkingTimeList.isEmpty()) {
+            for (ParkingTime pt : parkingTimeList) {
+                Long tempStartTime = pt.getStartTime().getTime();
+                Long tempEndTime = pt.getEndTime().getTime();
+                if ((startTime.compareTo(tempStartTime) < 0 && endTime.compareTo(tempStartTime) > 0) ||
+                        (startTime.compareTo(tempStartTime) >= 0 && startTime.compareTo(tempEndTime) < 0)) {
+                    transactionException.addDescription("Sorry, The time period in the space has been occupied.");
+                    throw transactionException;
+                }
+            }
+        }
+
+        // 保证当前车辆在当前时间内只有一个车位的预约
+        List<ParkingOrder> parkingOrderListByLicense = parkingOrderMapper.selectByLicenseNumber(order.getLicenseNumber());
+        int licenseIndex = parkingOrderListByLicense.size() - 1;
+        while (licenseIndex >= 0) {
+            Long tempStartTime = parkingOrderListByLicense.get(licenseIndex).getStartTime().getTime();
+            Long tempEndTime = parkingOrderListByLicense.get(licenseIndex).getEndTime().getTime();
+            if ((startTime.compareTo(tempStartTime) < 0 && endTime.compareTo(tempStartTime) > 0) ||
+                    (startTime.compareTo(tempStartTime) >= 0 && startTime.compareTo(tempEndTime) < 0)) {
+                transactionException.addDescription("This License Number (" + order.getLicenseNumber() + ") already has a reservation of overlap time! Cancel before extend.");
+                throw transactionException;
+            }
+            licenseIndex--;
+        }
+        ParkingTime oldParkingTime = new ParkingTime();
+        oldParkingTime.setSpaceId(order.getSpaceId());
+        oldParkingTime.setStartTime(order.getStartTime());
+        oldParkingTime.setEndTime(order.getEndTime());
+
+        parkingTimeMapper.deleteWithoutId(oldParkingTime);
+
+        ParkingTime newParkingTime = new ParkingTime();
+        newParkingTime.setSpaceId(order.getSpaceId());
+        newParkingTime.setStartTime(order.getStartTime());
+        newParkingTime.setEndTime(parkingTime.getEndTime());
+        order.setEndTime(parkingTime.getEndTime());
+        order.setPrice(PriceUtil.getPrice(0,order.getStartTime().getTime(), order.getEndTime().getTime()));
+        parkingTimeMapper.insert(newParkingTime);
+
+        return parkingOrderMapper.updateById(order) == 1;
+    }
+
+    @Override
+    @Transactional
     public void cancelOrder(Integer orderId, ParkingTime parkingTime) {
-        TransactionException transactionException = new TransactionException("cancelOrder");
+        TransactionException transactionException = new TransactionException("extendOrder");
         if (parkingTimeMapper.deleteWithoutId(parkingTime) < 1) {
             transactionException.addDescription("[Internal Error] Time interval remove failed.");
             throw transactionException;

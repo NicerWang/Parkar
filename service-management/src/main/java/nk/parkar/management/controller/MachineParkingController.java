@@ -86,11 +86,13 @@ public class MachineParkingController {
                                        @RequestParam Integer spaceId,
                                        @RequestParam Long endTime,
                                        @RequestHeader("token") String token) {
+
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/machine/order");
         String userId = JWTUtil.check(token);
         Long startTime = new Date().getTime();
 
         String timeCheck = CheckUtil.checkTime(startTime,endTime);
+        endTime -= 1000;
         if(timeCheck != null){
             illegalArgumentException.addDescription(timeCheck);
             throw illegalArgumentException;

@@ -20,5 +20,7 @@ public interface ParkingOrderService {
 
     void cancelOrder(Integer orderId, ParkingTime parkingTime);
 
+    public Boolean extendOrder(ParkingOrder order, ParkingTime parkingTime);
+
     ParkingOrder querySpaceIdByLicenseNumber(String licenseNumber);
 }
