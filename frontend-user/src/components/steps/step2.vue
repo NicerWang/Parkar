@@ -58,9 +58,9 @@ export default {
     const router = useRouter();
     props.nowStep[0] = 1;
     props.message[0] = false
-    if (props.info.length < 3)
+    if (props.info.length < 4)
       router.push("/index/step1");
-    props.info.length = 3;
+    props.info.length = 4;
     let selectedInfo = ref([0,0]);
     let autoSelect = ref(false);
     let positions = ref([])
@@ -68,13 +68,12 @@ export default {
     const next = function () {
       document.body.scrollTop = document.documentElement.scrollTop = 0;
       if (autoSelect.value) {
-        console.log(props.info)
         axios({
           method: "GET",
           url: "/management/order/space/rec",
           params:{
-            startTime: props.info[0],
-            endTime: props.info[1],
+            startTime: props.info[1],
+            endTime: props.info[2],
           },
           headers: {'token': localStorage.getItem("token")},
           async:false

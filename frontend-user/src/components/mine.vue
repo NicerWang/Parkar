@@ -128,7 +128,6 @@ export default {
   name: "mine",
   setup(){
     const store = useStore()
-    const router = useRouter()
     let orders = ref([])
     let message = ref(["",""])
     let nowOrders = ref([])
@@ -176,7 +175,6 @@ export default {
     collect(10);
 
     const update = function () {
-
       axios({
         method:"GET",
         url:"management/order",

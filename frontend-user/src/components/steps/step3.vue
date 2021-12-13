@@ -10,16 +10,20 @@
         <input v-model="endTime" class="form-control" disabled type="text">
       </div>
       <div class="input-group mb-3">
-        <span class="input-group-text">Car Number</span>
-        <input v-model="info[2]" class="form-control" disabled type="text">
+        <span class="input-group-text">Mode</span>
+        <input v-model="modeStr" class="form-control" disabled type="text">
       </div>
       <div class="input-group mb-3">
-        <span class="input-group-text">Floor</span>
+        <span class="input-group-text">Car Number</span>
         <input v-model="info[3]" class="form-control" disabled type="text">
       </div>
       <div class="input-group mb-3">
-        <span class="input-group-text">Position ID</span>
+        <span class="input-group-text">Floor</span>
         <input v-model="info[4]" class="form-control" disabled type="text">
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text">Position ID</span>
+        <input v-model="info[5]" class="form-control" disabled type="text">
       </div>
       <div class="input-group mb-3">
         <span class="input-group-text">Price</span>
@@ -64,11 +68,16 @@ export default {
     let info = props.info;
     let ok = ref(false);
     let wrongSys = ref(false);
-    let startTime = new Date(info[0]).toString().slice(0, 21);
-    let endTime = new Date(info[1]).toString().slice(0, 21);
+    let startTime = new Date(info[1]).toString().slice(0, 21);
+    let endTime = new Date(info[2]).toString().slice(0, 21);
+    let modeStr = ref("");
+    if(info[0] === 0) modeStr = "Temporary";
+    if(info[0] === 1) modeStr = "For a Month";
+    if(info[0] === 2) modeStr = "For a Yaer";
+
     props.nowStep[0] = 2;
     props.message[0] = false
-    if (props.info.length < 5)
+    if (props.info.length < 6)
       router.push("/index/step2");
     let price = ref(0)
 
@@ -76,9 +85,9 @@ export default {
       method: "GET",
       url: "/management/order/price",
       params:{
-        mode:0,
-        startTime: info[0],
-        endTime: info[1],
+        mode:info[0],
+        startTime: info[1],
+        endTime: info[2],
       }
     }).then((res)=>{
       price.value = res.data.toFixed(2);
@@ -86,16 +95,16 @@ export default {
 
     const confirm = () => {
       document.body.scrollTop = document.documentElement.scrollTop = 0;
-      collect(12,info[2],info[0],info[1],info[4]);
+      collect(12,info[3],info[1],info[2],info[5]);
       axios({
         method: "POST",
         url: "/management/order/submit",
         params:{
-          mode: 0,
-          spaceId: info[4],
-          startTime: info[0],
-          endTime: info[1],
-          licenseNumber: info[2],
+          mode: info[0],
+          spaceId: info[5],
+          startTime: info[1],
+          endTime: info[2],
+          licenseNumber: info[3],
         },
         headers: {'token': localStorage.getItem("token")},
       }).then((res) => {
@@ -114,6 +123,7 @@ export default {
 
     store.dispatch("Finished");
     return {
+      modeStr,
       info,
       wrongSys,
       confirm,

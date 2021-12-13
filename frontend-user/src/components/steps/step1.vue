@@ -1,18 +1,29 @@
 <template>
   <div>
     <div class="row justify-content-evenly">
-      <div class="col-12 col-lg-6">
+      <div class="col-12 col-sm-6 col-lg-4">
         <label class="form-label" for="car-number">Car Number</label>
         <input id="car-number" v-model="license" class="form-control" list="datalistOptions"
-               placeholder="Your Car Number Here. eg. AE86">
+               placeholder="Your Car Number">
         <datalist id="datalistOptions">
           <option v-for="i in all_cars" :value="i"/>
         </datalist>
 
       </div>
+      <div class="col-12 col-sm-6 col-lg-4">
+        <label class="form-label">Reservation Type</label>
+        <div>
+          <select class="form-control" v-model="mode">
+            <option :value="0">Temporary</option>
+            <option :value="1">For One Month</option>
+            <option :value="2">For One Year</option>
+          </select>
+        </div>
+      </div>
     </div>
     <br>
     <div class="row justify-content-evenly">
+
       <div class="col-12 col-sm-6 col-lg-4">
         <label class="form-label" for="start-date">Start Date</label>
         <div><input id="start-date" v-model="startDate" type="date"></div>
@@ -47,7 +58,7 @@
       </div>
     </div>
     <br>
-    <div class="row justify-content-evenly">
+    <div class="row justify-content-evenly" v-show="mode === 0">
       <div class="col-12 col-sm-6 col-lg-4">
         <label class="form-label" for="end-date">End Date</label>
         <div><input id="end-date" v-model="endDate" type="date"></div>
@@ -110,6 +121,7 @@ export default {
     props.info.length = 0;
     props.message[0] = false
     let date = new Date();
+    let mode = ref(0);
 
     date = new Date(Math.ceil((date.getTime() + 1000 * 30 * 60) / 1800000) * 1800000);
     let nowStamp = date.getTime();
@@ -145,6 +157,14 @@ export default {
       document.body.scrollTop = document.documentElement.scrollTop = 0;
       startTimestamp = Date.parse(startDate.value.replaceAll("-","/") + " " + addPreZero(Number(startOffset.value) + Number(startHour.value)) + ":" + startMinute.value + ":00");
       endTimestamp = Date.parse(endDate.value.replaceAll("-","/") + " " + addPreZero(Number(endOffset.value) + Number(endHour.value)) + ":" + endMinute.value + ":00");
+
+      if(mode.value === 1){
+        endTimestamp = startTimestamp + 30 * 24 * 60 * 60 * 1000;
+      }
+      if(mode.value === 2){
+        endTimestamp = startTimestamp + 12 * 30 * 24 * 60 * 60 * 1000;
+      }
+
       if (startTimestamp == null || endTimestamp == null || license.value === "") {
         props.message[1] = "[ERROR]Need Car Number and Time"
         props.message[0] = true
@@ -162,6 +182,7 @@ export default {
       }
 
       store.dispatch("Load");
+      props.info.push(mode.value);
       props.info.push(startTimestamp);
       props.info.push(endTimestamp);
       props.info.push(license.value);
@@ -208,6 +229,7 @@ export default {
       endMinute,
       license,
       all_cars,
+      mode,
       submit
     }
   }
