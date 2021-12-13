@@ -18,7 +18,7 @@
         <div><input id="start-date" v-model="startDate" type="date"></div>
       </div>
       <div class="col-12 col-sm-6 col-lg-4">
-        <label class="form-label" for="start-date">Start Time</label>
+        <label class="form-label">Start Time</label>
         <div class="input-group">
           <select  class="form-control" v-model="startOffset">
             <option value="0">上午</option>
@@ -53,7 +53,7 @@
         <div><input id="end-date" v-model="endDate" type="date"></div>
       </div>
       <div class="col-12 col-sm-6 col-lg-4">
-        <label class="form-label" for="start-date">End Time</label>
+        <label class="form-label">End Time</label>
         <div class="input-group">
           <select  class="form-control" v-model="endOffset">
             <option value="0">上午</option>
