@@ -12,6 +12,7 @@
     "axios": "0.21.1",
     "bootstrap": "^5.0.2",
     "vue": "^3.0.5",
+    "echarts": "^5.1.2",
     "vue-echarts": "^6.0.0",
     "vue-router": "^4.0.10",
     "vuex": "4.0.2"
