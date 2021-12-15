@@ -53,7 +53,7 @@ export default {
         router.push("/info/users/all");
       }
       if(id === 2){
-        router.push("/info/orders/all");
+        router.push("/info/orders");
       }
       if(id === 3){
         router.push("/info/spaces");

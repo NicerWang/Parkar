@@ -40,11 +40,7 @@ const routes = [
     component: Users
   },
   {
-    path: "/info/orders",
-    redirect: "/info/orders/all"
-  },
-  {
-    path: '/info/orders/:id',
+    path: '/info/orders/',
     name: 'Orders',
     component: Orders
   },

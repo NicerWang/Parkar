@@ -17,14 +17,18 @@
             <th scope="col">User Name</th>
             <th scope="col">Telephone</th>
             <th scope="col">Register Time</th>
+            <th scope="col">Remove</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="i in users">
-            <th scope="row" @click="$router.push('/info/orders/' + i.id)" style="cursor: pointer">{{ i.id }}</th>
+            <th scope="row">{{ i.id }}</th>
             <td>{{ i.username }}</td>
             <td>{{ i.phone }}</td>
             <td>{{ formatDate(i.registerTime) }}</td>
+            <td>
+              <button class="btn btn-danger" @click="remove(i.id)">Remove</button>
+            </td>
           </tr>
           </tbody>
         </table>
@@ -66,23 +70,37 @@ export default {
       }
       return 0;
     }
-    axios({
-      method:"GET",
-      url:"user/getAllUsersInformation",
-      headers: {'token': localStorage.getItem("token")},
-    }).then((res)=>{
-      users.value =  res.data.data["allUsers"].sort(sortFunc);
-      if(id !== "all"){
-        users.value = users.value.filter((user)=>{
-          return user['id'] === id;
-        })
-      }
-      store.dispatch("Finished");
-    })
+    const update = function () {
+      axios({
+        method:"GET",
+        url:"user/getAllUsersInformation",
+        headers: {'token': localStorage.getItem("token")},
+      }).then((res)=>{
+        users.value =  res.data.data["allUsers"].sort(sortFunc);
+        if(id !== "all"){
+          users.value = users.value.filter((user)=>{
+            return user['id'] === id;
+          })
+        }
+        store.dispatch("Finished");
+      })
+    }
 
+    const remove = function (id) {
+      store.dispatch("Load")
+      axios({
+        method:"POST",
+        url:"user/remove/" + id,
+        headers: {'token': localStorage.getItem("token")},
+      }).then(()=>{
+        update();
+      })
+    }
+    update();
     return{
       users,
       formatDate,
+      remove
     }
   }
 }
