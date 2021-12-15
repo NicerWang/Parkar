@@ -8,18 +8,24 @@
     </div>
     <br>
     <div class="card container">
-      <div class="card-body ">
-        <div class="form-floating">
-          <select id="floorSelector" v-model="selectInfo[0]" class="form-select">
-            <option value="1">The First Floor</option>
-            <option value="2">The Second Floor</option>
-            <option value="3">The Third Floor</option>
-          </select>
-          <label for="floorSelector">Select the floor</label>
+      <div class="card-body row">
+        <div class="col-8">
+          <div class="form-floating">
+            <select id="floorSelector" v-model="selectInfo[0]" class="form-select">
+              <option value="1">The First Floor</option>
+              <option value="2">The Second Floor</option>
+              <option value="3">The Third Floor</option>
+            </select>
+            <label for="floorSelector">Select the floor</label>
+          </div>
+        </div>
+        <div class="col-3">
+          <button style="height: calc(3.5rem + 2px)" class="btn btn-primary" type="button" @click="$router.push('/info/spaces/add')">Add</button>
         </div>
         <br>
-          <selector v-show="selectInfo[0] !== 0" :key="selectInfo[0]" :select="selectInfo" :position="spaces"></selector>
       </div>
+      <selector v-show="selectInfo[0] !== 0" :key="selectInfo[0]" :select="selectInfo" :position="spaces"></selector>
+
     </div>
   </div>
 </template>

@@ -7,6 +7,7 @@ const Orders = ()=>import("../components/info/orders.vue")
 const Spaces = ()=>import("../components/info/spaces.vue")
 const Detail = () =>import("../components/info/spaceDetail.vue")
 const Data = ()=>import("../components/info/dataAnalyze.vue")
+const AddSpace = ()=>import("../components/info/addSpace.vue")
 
 import store from "../store";
 
@@ -53,6 +54,11 @@ const routes = [
     path: '/info/spaces/:id',
     name: 'Details',
     component: Detail
+  },
+  {
+    path: '/info/spaces/add',
+    name: 'AddSpace',
+    component: AddSpace
   },
   {
     path: '/info/data',

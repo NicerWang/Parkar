@@ -46,8 +46,11 @@
             </label>
           </div>
         </div>
-        <div class="col-12">
+        <div class="col-6">
           <button type="button" class="btn btn-primary" @click="updateInfo">Update Status</button>
+        </div>
+        <div class="col-6">
+          <button type="button" class="btn btn-danger" @click="remove">Remove</button>
         </div>
       </form>
     </div>
@@ -60,7 +63,7 @@
 </template>
 
 <script>
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {ref} from "vue";
 import axios from "axios";
 import {useStore} from "vuex";
@@ -69,6 +72,7 @@ export default {
   name: "spaceDetail",
   setup(){
     const route = useRoute();
+    const router = useRouter();
     const store = useStore()
     let space = ref({})
     axios({
@@ -102,9 +106,24 @@ export default {
         alert("Update failed!")
       })
     }
+    const remove = function () {
+      axios({
+        method:"PUT",
+        url:"/management/admin/space/remove/" + space.value['spaceId'],
+        headers: {'token': localStorage.getItem("token")},
+      }).then((res)=>{
+        alert("Successfully removed!")
+        router.push("/info/spaces")
+      }).catch((err)=>{
+        alert("Remove failed!")
+        router.push("/info/spaces")
+      })
+    }
+
     return{
       space,
-      updateInfo
+      updateInfo,
+      remove
     }
   }
 }
