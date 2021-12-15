@@ -14,14 +14,6 @@
           <label for="floor" class="form-label">Floor</label>
           <input type="number" class="form-control" id="floor" v-model="space['floor']">
         </div>
-        <div class="col-md-12">
-          <label for="inputState" class="form-label">Type</label>
-          <select id="inputState" class="form-select" v-model="space['mode']">
-            <option value="0">Temporary</option>
-            <option value="1">Month</option>
-            <option value="2">Year</option>
-          </select>
-        </div>
         <div class="col-md-6">
           <label for="xCoordinate" class="form-label">Position X</label>
           <input type="number" class="form-control" id="xCoordinate" v-model="space['xCoordinate']">

@@ -1,11 +1,9 @@
 package nk.parkar.controller;
 
 import nk.parkar.service.MapReduceService;
+import nk.parkar.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/mr")
@@ -18,7 +16,8 @@ public class MRController {
     }
 
     @GetMapping("/{type}")
-    public Object getMRResult(@PathVariable("type") Integer type){
+    public Object getMRResult(@PathVariable("type") Integer type, @RequestHeader("token") String token){
+        if(!JWTUtil.checkAdmin(token)) return null;
         switch (type){
             case 0:
                 return mapReduceService.getActivityList();

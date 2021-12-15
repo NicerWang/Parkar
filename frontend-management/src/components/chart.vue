@@ -62,7 +62,7 @@ export default {
         // trigger: 'axis',
       },
       dataset: {
-        dimensions: ['date', 'value'],
+        dimensions: ['time', 'value'],
         source: []
       },
       xAxis: {
@@ -70,7 +70,7 @@ export default {
         boundaryGap: false,
         axisLabel: {
           formatter: function (value, index) {
-            let date = new Date(value);
+            let date = new Date(value - 1);
             let y = date.getFullYear(),
                 m = (date.getMonth() + 1) < 10 ? '0'+(date.getMonth() + 1) : (date.getMonth() + 1),
                 d = date.getDate() < 10 ? '0'+date.getDate() : date.getDate();
@@ -132,12 +132,9 @@ export default {
       },1000)
     }
 
-    //AJAX Request
     axios({
-      url: "http://localhost:3000/test.json",
-      params: {
-        type: "0"
-      }
+      url: "admin/mr/" + props.id,
+      headers: {'token': localStorage.getItem("token")},
     }).then((res) => {
       chartData = res.data;
       update();
