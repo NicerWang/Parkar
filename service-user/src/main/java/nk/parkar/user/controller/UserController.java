@@ -74,5 +74,13 @@ public class UserController {
         List<User> allUsers = userService.getAllUsersInformation();
         return R.ok().message("Query successful!").data("allUsers",allUsers);
     }
+
+    @PostMapping("/remove/{userId}")
+    public R removeUser(@PathVariable String userId, @RequestHeader("token") String token){
+        if(!JWTUtil.checkAdmin(token)) return R.error().message("Invalid Token");
+        boolean removed = userService.removeById(userId);
+        if(removed) return R.ok().message("Ok");
+        else return R.error().message("Not Exist");
+    }
 }
 
