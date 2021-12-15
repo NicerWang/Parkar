@@ -153,4 +153,24 @@ public class AdminParkingController {
         return retMap;
     }
 
+    /**
+     * 删除订单
+     */
+    @GetMapping("/admin/order/remove/{orderId}")
+    public Boolean removeOrder(@PathVariable Integer orderId, @RequestHeader("token") String token) {
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/admin/order/remove/{orderId}");
+        tokenCheck(illegalArgumentException, token);
+        ParkingOrder parkingOrder = parkingOrderService.queryByOrderId(orderId);
+        if (parkingOrder == null) {
+            illegalArgumentException.addDescription("Order does not exist");
+            throw illegalArgumentException;
+        }
+        ParkingTime parkingTime = new ParkingTime();
+        parkingTime.setSpaceId(parkingOrder.getSpaceId());
+        parkingTime.setStartTime(parkingOrder.getStartTime());
+        parkingTime.setEndTime(parkingOrder.getEndTime());
+        parkingOrderService.cancelOrder(orderId, parkingTime);
+        return true;
+    }
+
 }
