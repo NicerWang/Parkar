@@ -189,12 +189,12 @@ export default {
           update();
       })
     }
-    const next = function (id) {
+    const next = function () {
       store.dispatch("Load")
       page.value++;
       update();
     }
-    const pre = function (id) {
+    const pre = function () {
       store.dispatch("Load")
       page.value--;
       update();

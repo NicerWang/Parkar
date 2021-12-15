@@ -55,7 +55,7 @@
   <div class="card container align-items-baseline title">
     <h1>My Orders</h1>
   </div>
-    <div class="card container">
+    <div class="card container" v-show="nowOrders.length !== 0">
       <div class="card-header">Now Orders</div>
       <div class="card-body ">
         <table class="table">
@@ -83,10 +83,9 @@
           </tr>
           </tbody>
         </table>
-        <div v-show="nowOrders.length === 0">No Data</div>
       </div>
     </div>
-  <div class="card container">
+    <div class="card container">
     <div class="card-header">Past Orders</div>
     <div class="card-body ">
       <table class="table">
@@ -114,6 +113,20 @@
       <div v-show="orders.length === 0">No Data</div>
     </div>
   </div>
+    <div class="card container">
+      <form class="row align-items-center">
+        <div class="col-5">
+          <button :disabled="page === 1" type="button" class="btn btn-secondary" @click="pre">&nbsp;&nbsp;Pre&nbsp;&nbsp;</button>
+        </div>
+        <div class="col-2">
+          {{ page }}
+        </div>
+        <div class="col-5">
+          <button :disabled="nowOrders.length + orders.length < 10" type="button" class="btn btn-secondary" @click="next">&nbsp;&nbsp;Next&nbsp;&nbsp;</button>
+        </div>
+
+      </form>
+    </div>
   </div>
 </template>
 
@@ -132,6 +145,8 @@ export default {
     let message = ref(["",""])
     let nowOrders = ref([])
     const date = new Date();
+    let page = ref(2);
+    const pageSize = 10;
 
     let endDate = ref("");
     let endOffset = ref(0)
@@ -178,6 +193,10 @@ export default {
       axios({
         method:"GET",
         url:"management/order",
+        params:{
+          page: page.value,
+          pageSize: pageSize
+        },
         headers: {'token': localStorage.getItem("token")},
       }).then((res)=>{
         const tempOrders =  res.data["orderList"].reverse()
@@ -249,6 +268,16 @@ export default {
         store.dispatch("Finished");
       })
     }
+    const next = function () {
+      store.dispatch("Load")
+      page.value++;
+      update();
+    }
+    const pre = function () {
+      store.dispatch("Load")
+      page.value--;
+      update();
+    }
     update();
     return{
       orders,
@@ -258,11 +287,14 @@ export default {
       pay,
       showModal,
       extend,
+      next,
+      pre,
       endOffset,
       endDate,
       endHour,
       endMinute,
-      message
+      message,
+      page
     }
   }
 }
@@ -313,5 +345,8 @@ input:focus{
 }
 .colon{
   font-weight: 900;
+}
+form{
+  padding: 20px;
 }
 </style>
