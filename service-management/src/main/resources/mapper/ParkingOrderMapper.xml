@@ -23,20 +23,6 @@
     where order_id = #{orderId,jdbcType=INTEGER}
   </select>
 
-  <select id="selectByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from parking_order
-    where user_id = #{userId,jdbcType=VARCHAR}
-  </select>
-
-  <select id="selectByPaidStat" parameterType="java.lang.Boolean" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from parking_order
-    where paid = #{paid,jdbcType=TINYINT}
-  </select>
-
   <select id="selectAll" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -49,6 +35,28 @@
     from parking_order
     where license_number = #{licenseNumber,jdbcType=VARCHAR}
     order by start_time desc
+  </select>
+
+  <select id="selectCondition" parameterType="map" resultMap="BaseResultMap">
+    select * from parking_order
+    <where>
+      <if test="userId != null">
+        user_id = #{userId}
+      </if>
+      <if test="licenseNumber != null">
+        AND license_number like #{licenseNumber}
+      </if>
+      <if test="paid != null">
+        AND paid = #{paid}
+      </if>
+      <if test="mode != null">
+        AND mode = #{mode}
+      </if>
+      <if test="spaceId != null">
+        AND space_id = #{spaceId}
+      </if>
+    </where>
+    order by order_id desc limit #{start},#{length}
   </select>
 
   <delete id="deleteById" parameterType="java.lang.Integer">

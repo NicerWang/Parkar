@@ -1,5 +1,6 @@
 package nk.parkar.management.controller;
 
+import io.swagger.models.auth.In;
 import nk.parkar.management.error.ControllerException.IllegalArgumentException;
 import nk.parkar.management.model.ParkingOrder;
 import nk.parkar.management.model.ParkingSpace;
@@ -92,29 +93,29 @@ public class AdminParkingController {
      * 查询所有订单
      */
     @GetMapping("/admin/order")
-    public Map<String, Object> getAllOrder(@RequestHeader("token") String token) {
+    public Map<String, Object> getAllOrder(@RequestHeader("token") String token,
+                                           @RequestParam Integer page,
+                                           @RequestParam Integer pageSize,
+                                           String userId,
+                                           String licenseNumber,
+                                           Integer mode,
+                                           Integer paid,
+                                           Integer space_id) {
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/admin/order");
         tokenCheck(illegalArgumentException, token);
-        List<ParkingOrder> parkingOrderList = parkingOrderService.queryAll();
+        int start = (page - 1) * pageSize;
+        Map<String,Object> map = new HashMap<>();
+        if(userId != null) map.put("userId",userId);
+        if(licenseNumber != null) map.put("licenseNumber","%" + licenseNumber + "%");
+        if(mode != null) map.put("mode",mode);
+        if(paid != null) map.put("paid",paid);
+        if(space_id != null) map.put("spaceId",space_id);
+        List<ParkingOrder> parkingOrderList = parkingOrderService.queryCondition(map,start,pageSize);
         Map<String, Object> retMap = new HashMap<>();
         retMap.put("orderList", parkingOrderList);
         return retMap;
     }
 
-
-    /**
-     * 根据支付状态查询订单
-     */
-    @GetMapping("/admin/order/pay")
-    public Map<String, Object> getAllOrderByPaidStat(@RequestParam Boolean paid,
-                                                     @RequestHeader("token") String token) {
-        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/admin/order/pay");
-        tokenCheck(illegalArgumentException, token);
-        List<ParkingOrder> parkingOrderList = parkingOrderService.queryByPaidStat(paid);
-        Map<String, Object> retMap = new HashMap<>();
-        retMap.put("orderList", parkingOrderList);
-        return retMap;
-    }
 
     /**
      * 更新车位的信息，更新时必须提供所有原有信息

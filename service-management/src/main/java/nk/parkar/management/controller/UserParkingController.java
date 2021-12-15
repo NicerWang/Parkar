@@ -145,11 +145,11 @@ public class UserParkingController {
      * 查询用户所有订单
      */
     @GetMapping("/order")
-    public Object getOrderListByUserId(@RequestHeader("token") String token) {
+    public Object getOrderListByUserId(@RequestHeader("token") String token,@RequestParam Integer page,@RequestParam Integer pageSize) {
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/order/{userId}");
         String userId = tokenCheck(illegalArgumentException,token);
-
-        List<ParkingOrder> parkingOrderList = parkingOrderService.queryByUserId(userId);
+        int start = (page - 1) * pageSize;
+        List<ParkingOrder> parkingOrderList = parkingOrderService.queryByUserId(userId, start, pageSize);
         Map<String, Object> retMap = new HashMap<>();
         retMap.put("orderList", parkingOrderList);
         return retMap;
@@ -201,6 +201,9 @@ public class UserParkingController {
         return true;
     }
 
+    /**
+     * 获取推荐车位
+     */
     @GetMapping("/order/space/rec")
     Integer getOptimizedPlace(@RequestParam Long startTime, @RequestParam Long endTime, @RequestHeader("token") String token){
         endTime -= 1000;
@@ -212,13 +215,13 @@ public class UserParkingController {
         return optimizedPlaceSelector.select(parkingSpaceService, startTime, endTime);
     }
 
+    /**
+     * 延长订单
+     */
     @PostMapping("/order/extend/{orderId}")
     Boolean extendOrder(@RequestParam Long newEndTime, @PathVariable("orderId") Integer orderId, @RequestHeader("token") String token){
-
-
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/order/extend");
         String userId = tokenCheck(illegalArgumentException,token);
-
 
         ParkingOrder parkingOrder = parkingOrderService.queryByOrderId(orderId);
         if (parkingOrder == null) {

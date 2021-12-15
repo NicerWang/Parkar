@@ -10,17 +10,15 @@ import java.util.Map;
 public interface ParkingOrderService {
     Boolean insertOrder(String userId, String licenseNumber, Integer spaceId, Integer mode, Long startTime, Long endTime);
 
-    List<ParkingOrder> queryByUserId(String userId);
-
-    List<ParkingOrder> queryAll();
-
-    List<ParkingOrder> queryByPaidStat(Boolean paid);
-
     ParkingOrder queryByOrderId(Integer orderId);
+
+    List<ParkingOrder> queryByUserId(String userId, Integer start, Integer length);
 
     void cancelOrder(Integer orderId, ParkingTime parkingTime);
 
     public Boolean extendOrder(ParkingOrder order, ParkingTime parkingTime);
 
     ParkingOrder querySpaceIdByLicenseNumber(String licenseNumber);
+
+    public List<ParkingOrder> queryCondition(Map<String,Object> map, Integer start, Integer length);
 }

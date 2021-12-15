@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ParkingOrderServiceImpl implements ParkingOrderService {
@@ -85,18 +87,19 @@ public class ParkingOrderServiceImpl implements ParkingOrderService {
     }
 
     @Override
-    public List<ParkingOrder> queryByUserId(String userId) {
-        return parkingOrderMapper.selectByUserId(userId);
+    public List<ParkingOrder> queryByUserId(String userId, Integer start, Integer length) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("userId",userId);
+        map.put("start",start);
+        map.put("length",length);
+        return parkingOrderMapper.selectCondition(map);
     }
 
     @Override
-    public List<ParkingOrder> queryAll() {
-        return parkingOrderMapper.selectAll();
-    }
-
-    @Override
-    public List<ParkingOrder> queryByPaidStat(Boolean paid) {
-        return parkingOrderMapper.selectByPaidStat(paid);
+    public List<ParkingOrder> queryCondition(Map<String,Object> map, Integer start, Integer length){
+        map.put("start", start);
+        map.put("length", length);
+        return parkingOrderMapper.selectCondition(map);
     }
 
     @Override

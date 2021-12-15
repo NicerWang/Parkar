@@ -4,18 +4,17 @@ import nk.parkar.management.model.ParkingOrder;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ParkingOrderMapper {
     ParkingOrder selectById(Integer orderId);
 
-    List<ParkingOrder> selectByUserId(String userId);
-
-    List<ParkingOrder> selectByPaidStat(Boolean paid);
-
     List<ParkingOrder> selectAll();
 
     List<ParkingOrder> selectByLicenseNumber(String licenseNumber);
+
+    List<ParkingOrder> selectCondition(Map<String,Object> map);
 
     int deleteById(Integer orderId);
 
