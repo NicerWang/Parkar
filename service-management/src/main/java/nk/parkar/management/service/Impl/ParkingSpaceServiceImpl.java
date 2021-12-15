@@ -49,6 +49,16 @@ public class ParkingSpaceServiceImpl implements ParkingSpaceService {
     }
 
     @Override
+    public Integer addSpace(ParkingSpace parkingSpace) {
+        return parkingSpaceMapper.insert(parkingSpace);
+    }
+
+    @Override
+    public Integer remove(Integer spaceId) {
+        return parkingSpaceMapper.deleteById(spaceId);
+    }
+
+    @Override
     public List<ParkingSpace> getAllSpaces() {
         return parkingSpaceMapper.selectAll();
     }

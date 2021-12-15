@@ -15,5 +15,10 @@ public interface ParkingSpaceService {
 
     Integer updateSelective(ParkingSpace parkingSpace);
 
-    public boolean checkExist(Integer spaceId);
+    Integer addSpace(ParkingSpace parkingSpace);
+
+    Integer remove(Integer spaceId);
+
+    boolean checkExist(Integer spaceId);
+
 }

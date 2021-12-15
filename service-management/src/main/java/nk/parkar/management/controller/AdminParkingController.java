@@ -139,6 +139,36 @@ public class AdminParkingController {
         return parkingSpaceService.update(parkingSpace) == 1;
     }
 
+    /**
+     * 添加新的车位
+     */
+    @PutMapping("/admin/space/add")
+    public Boolean addSpaceInfo(@RequestHeader("token") String token,
+                                @RequestBody ParkingSpace parkingSpace) {
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/admin/space/{spaceId}");
+        tokenCheck(illegalArgumentException, token);
+        if(parkingSpace.getMode() < 0 || parkingSpace.getMode() > 3){
+            illegalArgumentException.addDescription("Illegal Mode.");
+            throw illegalArgumentException;
+        }
+        if (parkingSpaceService.checkExist(parkingSpace.getSpaceId())) {
+            illegalArgumentException.addDescription("SpaceId " + parkingSpace.getSpaceId() + " is Exist.");
+            throw illegalArgumentException;
+        }
+        parkingSpace.setBooked(false);
+        return parkingSpaceService.addSpace(parkingSpace) == 1;
+    }
+
+    /**
+     * 删除车位
+     */
+    @PutMapping("/admin/space/remove/{spaceId}")
+    public Boolean addSpaceInfo(@RequestHeader("token") String token,
+                                @PathVariable Integer spaceId) {
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/admin/space/{spaceId}");
+        tokenCheck(illegalArgumentException, token);
+        return parkingSpaceService.remove(spaceId) == 1;
+    }
 
     /**
      * 查询所有车位
