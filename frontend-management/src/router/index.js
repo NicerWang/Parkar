@@ -8,6 +8,7 @@ const Spaces = ()=>import("../components/info/spaces.vue")
 const Detail = () =>import("../components/info/spaceDetail.vue")
 const Data = ()=>import("../components/info/dataAnalyze.vue")
 const AddSpace = ()=>import("../components/info/addSpace.vue")
+const Price = ()=>import("../components/price.vue")
 
 import store from "../store";
 
@@ -51,6 +52,11 @@ const routes = [
     component: Spaces
   },
   {
+    path: '/price',
+    name: 'Prices',
+    component: Price
+  },
+  {
     path: '/info/spaces/:id',
     name: 'Details',
     component: Detail
@@ -76,7 +82,7 @@ router.beforeEach((to,from,next)=>{
     router.push("/index");
     return;
   }
-  if(to.fullPath.search("index|info|logout|update") !== -1){
+  if(to.fullPath.search("index|info|logout|update|price") !== -1){
     if(store.state.isSignedIn){
       store.dispatch("Load");
       next();

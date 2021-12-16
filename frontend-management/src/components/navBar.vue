@@ -32,12 +32,16 @@ export default {
       return store.state.isSignedIn;
     })
     let items_before = ref([
-      reactive({to:"/login",msg:"Sign in",cls:activated}),
+      reactive({to:"/login",msg:"Sign in",cls: activated}),
     ])
     if(status.value === true){
       items_before = ref([
-        reactive({to:"/index",msg:"Home",cls:activated}),
-        reactive({to:"/update",msg:"UpdateInfo",cls: common}),
+        reactive({to:"/index",msg:"Home",cls: activated}),
+        reactive({to:"/price",msg:"Price",cls: common}),
+        reactive({to:"/info/users/all",msg:"User",cls: common}),
+        reactive({to:"/info/orders",msg:"Order",cls: common}),
+        reactive({to:"/info/spaces",msg:"Space",cls: common}),
+        reactive({to:"/info/data",msg:"Analyze",cls: common}),
       ])
     }
     const logout = ()=>{
@@ -67,12 +71,16 @@ export default {
       if(newVal === oldVal){}
       else if(newVal){
         this.items_before = ref([
-          reactive({to:"/index",msg:"Home",cls:this.activated}),
-          reactive({to:"/update",msg:"UpdateInfo",cls: this.common}),
+          reactive({to:"/index",msg:"Home",cls: this.activated}),
+          reactive({to:"/price",msg:"Price",cls: this.common}),
+          reactive({to:"/info/users/all",msg:"User",cls: this.common}),
+          reactive({to:"/info/orders",msg:"Order",cls: this.common}),
+          reactive({to:"/info/spaces",msg:"Space",cls: this.common}),
+          reactive({to:"/info/data",msg:"Analyze",cls: this.common}),
         ])
       }else{
         this.items_before = ref([
-          reactive({to:"/login",msg:"Sign in",cls:this.activated}),
+          reactive({to:"/login",msg:"Sign in",cls: this.activated}),
         ])
       }
     }

@@ -186,7 +186,8 @@ export default {
         url:"management/admin/order/remove/" + id,
         headers: {'token': localStorage.getItem("token")},
       }).then((res)=>{
-          update();
+        update();
+        alert("Successfully removed")
       })
     }
     const next = function () {

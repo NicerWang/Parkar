@@ -32,7 +32,20 @@
         </div>
       </div>
     </div>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11;display: block">
+      <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <img src="../assets/logo.ico" class="rounded me-2" width="24" height="24" alt="icon"/>
+          <strong class="me-auto">Developer</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          Hello, Enjoy The Parkar.
+        </div>
 
+      </div>
+
+    </div>
   </div>
 
 </template>

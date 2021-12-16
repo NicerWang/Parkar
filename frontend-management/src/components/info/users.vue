@@ -94,6 +94,7 @@ export default {
         headers: {'token': localStorage.getItem("token")},
       }).then(()=>{
         update();
+        alert("Successfully removed")
       })
     }
     update();
