@@ -62,13 +62,15 @@ public class UserParkingController {
      */
     @GetMapping("/order/price")
     public Double getPrice(@RequestParam Integer mode, Long startTime, Long endTime) {
-        endTime -= 1000;
         if(mode == 0 && ( startTime == null )){
             IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/order/price");
             illegalArgumentException.addDescription("mode 0 need start and end time");
             throw illegalArgumentException;
         }
-        return PriceUtil.getPrice(mode, startTime, endTime - 1);
+        if(startTime == null){
+            startTime = endTime = 10000L;
+        }
+        return PriceUtil.getPrice(mode, startTime, endTime - 1000);
     }
 
     /**

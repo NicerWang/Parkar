@@ -34,3 +34,11 @@ CREATE TABLE `parking_order` (
      CONSTRAINT `space_id` FOREIGN KEY (`space_id`) REFERENCES `parking_space` (`space_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
+create table parking_price
+(
+    `key`    varchar(255)      primary key,
+    `value`   double               null
+);
+INSERT INTO parkar.parking_price (`key`, value) VALUES ('0', 1.8);
+INSERT INTO parkar.parking_price (`key`, value) VALUES ('1', 188);
+INSERT INTO parkar.parking_price (`key`, value) VALUES ('2', 888);

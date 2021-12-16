@@ -1,9 +1,13 @@
 package nk.parkar.management.util;
 
+import nk.parkar.management.mapper.ParkingPriceMapper;
+import nk.parkar.management.service.ParkingPriceService;
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class PriceUtil {
-    public static double priceForDayPerHalfHour = 2.8;
-    public static double priceForMonthPerMonth = 188.0;
-    public static double priceForYearPerYear = 888.0;
+    public static double priceForDayPerHalfHour;
+    public static double priceForMonthPerMonth;
+    public static double priceForYearPerYear;
 
     public static double getPrice(int mode, Long startTime, Long endTime){
         switch (mode) {

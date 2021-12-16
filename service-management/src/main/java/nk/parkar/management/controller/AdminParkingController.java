@@ -3,12 +3,15 @@ package nk.parkar.management.controller;
 import io.swagger.models.auth.In;
 import nk.parkar.management.error.ControllerException.IllegalArgumentException;
 import nk.parkar.management.model.ParkingOrder;
+import nk.parkar.management.model.ParkingPrice;
 import nk.parkar.management.model.ParkingSpace;
 import nk.parkar.management.model.ParkingTime;
 import nk.parkar.management.service.ParkingOrderService;
+import nk.parkar.management.service.ParkingPriceService;
 import nk.parkar.management.service.ParkingSpaceService;
 import nk.parkar.management.service.ParkingTimeService;
 import nk.parkar.management.util.JWTUtil;
+import nk.parkar.management.util.PriceUtil;
 import nk.parkar.management.util.entity.UnavailableTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +24,7 @@ public class AdminParkingController {
     private ParkingSpaceService parkingSpaceService;
     private ParkingTimeService parkingTimeService;
     private ParkingOrderService parkingOrderService;
+    private ParkingPriceService parkingPriceService;
 
     @Autowired
     public void setParkingOrderService(ParkingOrderService parkingOrderService) {
@@ -35,6 +39,11 @@ public class AdminParkingController {
     @Autowired
     public void setParkingTimeService(ParkingTimeService parkingTimeService) {
         this.parkingTimeService = parkingTimeService;
+    }
+
+    @Autowired
+    public void setParkingPriceService(ParkingPriceService parkingPriceService) {
+        this.parkingPriceService = parkingPriceService;
     }
 
     private void tokenCheck(IllegalArgumentException illegalArgumentException, String token) {
@@ -200,6 +209,32 @@ public class AdminParkingController {
         parkingTime.setStartTime(parkingOrder.getStartTime());
         parkingTime.setEndTime(parkingOrder.getEndTime());
         parkingOrderService.cancelOrder(orderId, parkingTime);
+        return true;
+    }
+
+    @GetMapping("/admin/price")
+    public Double[] getPrice(@RequestHeader("token") String token) {
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/admin/order/remove/{orderId}");
+        tokenCheck(illegalArgumentException, token);
+        return new Double[]{PriceUtil.priceForDayPerHalfHour, PriceUtil.priceForMonthPerMonth, PriceUtil.priceForYearPerYear};
+    }
+
+    @PostMapping("/admin/price")
+    public Boolean setPrice(@RequestHeader("token") String token, Integer type, Double value) {
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("/admin/order/remove/{orderId}");
+        tokenCheck(illegalArgumentException, token);
+        if(type == 0) {
+            PriceUtil.priceForDayPerHalfHour = value;
+            parkingPriceService.setPriceDetail("temporary",value);
+        }
+        else if(type == 1) {
+            PriceUtil.priceForMonthPerMonth = value;
+            parkingPriceService.setPriceDetail("month",value);
+        }
+        else if(type == 2) {
+            PriceUtil.priceForYearPerYear = value;
+            parkingPriceService.setPriceDetail("year",value);
+        }
         return true;
     }
 

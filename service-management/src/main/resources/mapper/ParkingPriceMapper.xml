@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nk.parkar.management.mapper.ParkingPriceMapper">
+    <resultMap id="BaseResultMap" type="nk.parkar.management.model.ParkingPrice">
+        <id column="key" jdbcType="VARCHAR" property="key" />
+        <result column="value" jdbcType="DOUBLE" property="value" />
+    </resultMap>
+
+    <select id="getPriceDetail" resultMap="BaseResultMap">
+        select *
+        from parking_price
+    </select>
+
+    <update id="setPriceDetail" parameterType="nk.parkar.management.model.ParkingPrice">
+        update parking_price
+        set value = #{value}
+        where `key` = #{key}
+    </update>
+
+</mapper>
