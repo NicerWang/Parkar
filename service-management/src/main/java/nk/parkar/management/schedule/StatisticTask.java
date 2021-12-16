@@ -24,7 +24,7 @@ public class StatisticTask {
 
     ParkingSpaceService parkingSpaceService;
 
-    @Scheduled(cron = "0 10 0 * * ?")
+    @Scheduled(cron = "0 10 0 * * ?", zone = "Asia/Shanghai")
     public void UpdateOccupyRate() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH) - 1,0,0,0);
