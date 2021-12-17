@@ -81,7 +81,7 @@
             <td>{{ formatDate(i.startTime) }}</td>
             <td>{{ formatDate(i.endTime)  }}</td>
             <td>{{ i.price }}</td>
-            <td>{{ i.paid === 0 ? "NO" : "YES" }}</td>
+            <td>{{ i.paid ? "NO" : "YES" }}</td>
             <td>
               <button class="btn btn-danger" @click="remove(i.orderId)">Remove</button>
             </td>

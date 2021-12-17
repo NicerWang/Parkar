@@ -145,7 +145,7 @@ export default {
     let message = ref(["",""])
     let nowOrders = ref([])
     const date = new Date();
-    let page = ref(2);
+    let page = ref(1);
     const pageSize = 10;
 
     let endDate = ref("");
