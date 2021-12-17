@@ -1,26 +1,6 @@
 
 # Service-Admin
 
-## All DataBase Manipulations:
-```sql
-create database parkar;
-
-use parkar;
-
-create table admin(
-id int AUTO_INCREMENT PRIMARY KEY ,
-name varchar(255) UNIQUE,
-pwd varchar(255)
-);
-
-insert into admin value(null,"nicer","11111111");
-```
-
-##  API Reference:
-run and visit:
-
-/swagger-ui.html
-
 ## 数据收集类型约定(type)
 
 * 0 登陆
@@ -33,3 +13,4 @@ run and visit:
   * 21 删除车牌 参数1：车牌ID
   * 22 添加车牌 参数2：车牌ID
 * 3 信息更新
+* 4 车位占用信息
