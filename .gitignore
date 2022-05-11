@@ -1,0 +1,9 @@
+.DS_Store
+.idea
+*.iml
+adapter/target
+service-user/target
+service-management/target
+service-admin/target
+frontend-management/node_modules
+frontend-user/node_modules
