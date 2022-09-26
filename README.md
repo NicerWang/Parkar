@@ -79,7 +79,7 @@
 
 * 通过响应式布局和`PWA`，支持了移动端。
 
-  <img src="https://pictures-nicerwang-1256891306.cos.ap-beijing.myqcloud.com//imgIMG_0471%202.PNG" alt="IMG_0471 2" style="zoom:50%;" />
+  <img src="assets/移动端.png" style="zoom:40%;" />
 
 * 可视化车位选择。
 
@@ -95,15 +95,15 @@
 
 * 模糊查询
 
-  ![截屏2021-12-17 上午10.52.44](https://pictures-nicerwang-1256891306.cos.ap-beijing.myqcloud.com//img%E6%88%AA%E5%B1%8F2021-12-17%20%E4%B8%8A%E5%8D%8810.52.44.png)
+  ![](assets/模糊查询.png)
 
-* 可视化车位选择。
+* 可视化车位选择
 
-  ![截屏2021-12-17 上午10.52.57](https://pictures-nicerwang-1256891306.cos.ap-beijing.myqcloud.com//img%E6%88%AA%E5%B1%8F2021-12-17%20%E4%B8%8A%E5%8D%8810.52.57.png)
+  ![](assets/可视化车位选择.png)
 
 * 基于`Echart`的数据展示
 
-  ![截屏2021-12-17 上午10.52.30](https://pictures-nicerwang-1256891306.cos.ap-beijing.myqcloud.com//img%E6%88%AA%E5%B1%8F2021-12-17%20%E4%B8%8A%E5%8D%8810.52.30.png)
+  ![](assets/数据展示.png)
 
 ## 关于部署
 
